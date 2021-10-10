@@ -18,7 +18,7 @@
  * char* end = NULL;
  * int val = (int) strtol(str_num, &end, 0);
  * if (end != '\0') {
- *     //ERROR ((((((())))))
+ *     //ERROR
  * }
  *
  * */
