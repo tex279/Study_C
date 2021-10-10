@@ -1,8 +1,8 @@
 #include "utils.h"
 
-size_t timer_from(unsigned char from) {
+size_t timer_from(char from) {
     size_t counter;
-    for (unsigned char i = from; i >= 0; --i) {
+    for (char i = from; i >= 0; --i) {
         ++counter;
         printf(i);
     }
@@ -10,8 +10,8 @@ size_t timer_from(unsigned char from) {
 }
 
 // TODO: Implement `power of` function
-/*
+
 int custom_pow(int base, int power) {
-    return 0;
+    return (base^power);
 }
-*/
+
