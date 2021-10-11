@@ -31,7 +31,7 @@ int main(int argc, const char** argv) {
         return ERR_ARGS_COUNT;
     }
 
-    int Test_case = atoi(*argv[1]);
+    int Test_case = atoi(argv[1]);
     const char* data;
     data = argv[2];
 
