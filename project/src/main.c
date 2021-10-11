@@ -2,6 +2,7 @@
 #include "case_4.h"
 #include <stdio.h>
 #include <stddef.h>
+#include <stdlib.h>
 
 #define ERR_ARGS_COUNT (-1)
 #define ERR_WRONG_FLG (-2)
@@ -43,7 +44,7 @@ int main(int argc, const char** argv) {
             break;
         }
         case TST_FOO_IMPL: {
-            if (argc == 4))))))) {
+            if (argc == 4) {
                  int base = atoi(data);
                  int pow =  atoi(argv[3]);
                  int res = custom_pow(base, pow);    // TODO: Implement me
