@@ -1,10 +1,13 @@
 #include "utils.h"
+#include <stddef.h>
+#include <stdio.h>
 
-size_t timer_from(char from) {
-    size_t counter;
-    for (char i = from; i >= 0; --i) {
+
+size_t timer_from(unsigned char from) {
+    size_t counter = 0;
+    for (unsigned char i = from; i == 0; --i) {
         ++counter;
-        printf(i);
+        printf("%zu\n", ticks_count);
     }
     return counter;
 }

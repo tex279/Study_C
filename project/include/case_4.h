@@ -1,8 +1,8 @@
-//
-// Created by andeo on 11.10.2021.
-//
+#ifndef CASE_4_H
+#define CASE_4_H
 
-#ifndef TECHPARK_2021_CASE_4_H
-#define TECHPARK_2021_CASE_4_H
 
-#endif //TECHPARK_2021_CASE_4_H
+int custom_pow(int base, int power);
+void Special_printf_of_num(int num);
+
+#endif //CASE_4_H
