@@ -52,6 +52,7 @@ int main(int argc, const char** argv) {
             } else {
                 return ERR_ARGS_COUNT;
             }
+            break;
         }
         case TST_MOD_IMPL: {
              int num = atoi(data);
