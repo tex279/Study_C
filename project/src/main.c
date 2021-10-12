@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "case_3.h"
 #include "case_4.h"
 #include <stdio.h>
 #include <stddef.h>
@@ -64,21 +65,10 @@ int main(int argc, const char** argv) {
             // a separate C-module (not in `main` or `utils` module)
         }
         case TST_4: {
-            int end_out = atoi(data);
-            if (end_out > 0) {
-                for (int i = 1; i <= end_out; ++i) {
-                    printf("%d", i);
-                    if (i < end_out)
-                        printf(" ");
-                }
-            } else {
-                for (int i = 1; i >= end_out; --i) {
-                    printf("%d", i);
-                    if (i > end_out)
-                        printf(" ");
-                }
-            }
-            return 0;
+            int num = atoi(data);
+            int pos = 1;
+            rec_counter(num, pos);
+            break;
         }
         default: {
             return ERR_WRONG_FLG;

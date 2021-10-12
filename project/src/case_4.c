@@ -1,16 +1,18 @@
 #include "case_4.h"
 #include <stdio.h>
 
-void Special_printf_of_num(int num) {
-    for (int i = 2; i < num; ++i) {
-        if (num % i == 0) {
-            printf("%d\n", 0);
-            break;
-        }
+int rec_counter(int num, int pos) {
+    printf("%d", pos);
+    if (pos == num) {
+       return 0;
+    } else {
+       if (num > 1) {
+           printf(" ");
+           rec_counter(num, ++pos);
+       } else {
+           printf(" ");
+           rec_counter(num, --pos);
+       }
     }
-    if (num <= 1)
-        printf("%d\n", 0);
-    else
-        printf("%d\n", 1);
+    return 0;
 }
-
