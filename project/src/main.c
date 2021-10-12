@@ -2,6 +2,7 @@
 #include "case_4.h"
 #include <stdio.h>
 #include <stddef.h>
+#include <stdlib.h>
 
 #define ERR_ARGS_COUNT (-1)
 #define ERR_WRONG_FLG (-2)
