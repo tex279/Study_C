@@ -8,15 +8,15 @@ size_t timer_from(int from) {
     for (int i = from; i >= 0; --i) {
         ++counter;
         printf("%d", i);
-        if (i>0)
+        if (i > 0)
             printf(" ");
     }
-    if (from>0)
-        printf("\n" );
+    if (from > 0)
+        printf("\n");
     return counter;
 }
 
-// TODO: Implement `power of` function
+// TODO(Alexandr_Anofrikov): Implement `power of` function
 
 int custom_pow(int base, int power) {
     int result = 1;

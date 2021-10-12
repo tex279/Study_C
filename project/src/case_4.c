@@ -8,7 +8,7 @@ void Special_printf_of_num(int num) {
             break;
         }
     }
-    if (num<=1)
+    if (num <= 1)
         printf("%d\n", 0);
     else
         printf("%d\n", 1);

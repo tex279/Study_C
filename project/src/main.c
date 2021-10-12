@@ -19,7 +19,7 @@
  * For safety program we recommend using `strtol` and its analogs.
  * (See `man atoi` and `man strtol` for more info).
  *
- * const char str_num[] = "1234";
+ * const char str_num[] = "12345";
  * char* end = NULL;
  * int val = (int) strtol(str_num, &end, 0);
  * if (end != '\0') {
@@ -48,7 +48,7 @@ int main(int argc, const char** argv) {
             if (argc == 4) {
                  int base = atoi(data);
                  int pow =  atoi(argv[3]);
-                 int res = custom_pow(base, pow);    // TODO: Implement me
+                 int res = custom_pow(base, pow);    // TODO(Alexandr_Anofrikov): Implement me
                  printf("%i\n", res);
             } else {
                 return ERR_ARGS_COUNT;
@@ -59,19 +59,19 @@ int main(int argc, const char** argv) {
              int num = atoi(data);
              Special_printf_of_num(num);
              break;
-            // TODO: Print to stdout `1` if `num` is prime number and `0` otherwise
+            // TODO(Alexandr_Anofrikov): Print to stdout `1` if `num` is prime number and `0` otherwise
             // This function MUST be implemented in
             // a separate C-module (not in `main` or `utils` module)
         }
         case TST_4: {
             int end_out = atoi(data);
-            if (end_out>0)
+            if (end_out > 0) {
                 for (int i = 1; i <= end_out; ++i) {
                     printf("%d", i);
                     if (i < end_out)
                         printf(" ");
                 }
-            else {
+            } else {
                 for (int i = 1; i >= end_out; --i) {
                     printf("%d", i);
                     if (i > end_out)
