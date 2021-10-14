@@ -1,18 +1,35 @@
 #include "case_4.h"
 #include <stdio.h>
 
-int rec_counter(int num, int pos) {
-    printf("%d", pos);
+
+
+void Dire(int num, int pos) {
+    if (num > pos)
+        rec_up(num, pos);
+    else
+        rec_down(num, pos);
+}
+
+
+int rec_up(int num, int pos) {
     if (pos == num) {
-       return 0;
+        printf("%d", pos);
+        return 0;
     } else {
-       if (num > 1) {
-           printf(" ");
-           rec_counter(num, ++pos);
-       } else {
-           printf(" ");
-           rec_counter(num, --pos);
-       }
+        printf("%d ", pos);
+        rec_up(num, ++pos);
     }
     return 0;
 }
+
+int rec_down(int num, int pos) {
+    if (pos == num) {
+        printf("%d", pos);
+        return 0;
+    } else {
+        printf("%d ", pos);
+        rec_down(num, --pos);
+    }
+    return 0;
+}
+

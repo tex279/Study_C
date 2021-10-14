@@ -67,7 +67,7 @@ int main(int argc, const char** argv) {
         case TST_4: {
             int num = atoi(data);
             int pos = 1;
-            rec_counter(num, pos);
+            Dire(num, pos);
             break;
         }
         default: {
