@@ -1,9 +1,9 @@
-#include "case_4.h"
+#include "my_rec.h"
 #include <stdio.h>
 
 
 
-void Dire(int num, int pos) {
+void direct(int num, int pos) {
     if (num > pos)
         rec_up(num, pos);
     else

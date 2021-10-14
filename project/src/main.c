@@ -1,6 +1,6 @@
 #include "utils.h"
-#include "case_3.h"
-#include "case_4.h"
+#include "check_num.h"
+#include "my_rec.h"
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -11,7 +11,7 @@
 #define TST_FOO_FIX     1
 #define TST_FOO_IMPL    2
 #define TST_MOD_IMPL    3
-#define TST_4           4
+#define TST_FOO_REC     4
 
 
 /* NOTE(stitaevskiy):
@@ -34,22 +34,23 @@ int main(int argc, const char** argv) {
         return ERR_ARGS_COUNT;
     }
 
-    int Test_case = atoi(argv[1]);
+    char* end = NULL;
+    int Test_case = strtol(argv[1], &end, 0);
     const char* data;
     data = argv[2];
 
     switch (Test_case) {
         case TST_FOO_FIX: {
-            int to = atoi(data);
+            int to = strtol(data, &end, 0);
             size_t ticks_count = timer_from(to);
             printf("%zu\n", ticks_count);
             break;
         }
         case TST_FOO_IMPL: {
             if (argc == 4) {
-                 int base = atoi(data);
-                 int pow =  atoi(argv[3]);
-                 int res = custom_pow(base, pow);    // TODO(Alexandr_Anofrikov): Implement me
+                 int base = strtol(data, &end, 0);
+                 int pow =  strtol(argv[3], &end, 0);
+                 int res = custom_pow(base, pow);
                  printf("%i\n", res);
             } else {
                 return ERR_ARGS_COUNT;
@@ -57,17 +58,14 @@ int main(int argc, const char** argv) {
             break;
         }
         case TST_MOD_IMPL: {
-             int num = atoi(data);
-             Special_printf_of_num(num);
+             int num = strtol(data, &end, 0);
+             check_prime_num(num);
              break;
-            // TODO(Alexandr_Anofrikov): Print to stdout `1` if `num` is prime number and `0` otherwise
-            // This function MUST be implemented in
-            // a separate C-module (not in `main` or `utils` module)
         }
-        case TST_4: {
-            int num = atoi(data);
+        case TST_FOO_REC: {
+            int num = strtol(data, &end, 0);
             int pos = 1;
-            Dire(num, pos);
+            direct(num, pos);
             break;
         }
         default: {

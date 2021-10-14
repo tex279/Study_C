@@ -1,7 +1,7 @@
-#include "case_3.h"
+#include "check_num.h"
 #include <stdio.h>
 
-void Special_printf_of_num(int num) {
+void check_prime_num(int num) {
     for (int i = 2; i < num; ++i) {
         if (num % i == 0) {
             printf("%d\n", 0);

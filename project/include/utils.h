@@ -3,7 +3,6 @@
 #include <stddef.h>
 
 size_t timer_from(int from);
-// TODO(Alexandr_Anofrikov): Implement `power of` function
 int custom_pow(int base, int power);
 
 
