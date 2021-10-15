@@ -1,5 +1,5 @@
-#include "check_num.h"
-#include "stdio.h"
+#include <check_num.h>
+#include <stdio.h>
 
 void check_prime_num(int num) {
     for (int i = 2; i < num; i++) {

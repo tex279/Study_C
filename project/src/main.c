@@ -1,9 +1,9 @@
-#include "utils.h"
-#include "check_num.h"
-#include "my_rec.h"
-#include "stdio.h"
-#include "stddef.h"
-#include "stdlib.h"
+#include <utils.h>
+#include <check_num.h>
+#include <my_rec.h>
+#include <stdio.h>
+#include <stddef.h>
+#include <stdlib.h>
 
 #define ERR_ARGS_COUNT (-1)
 #define ERR_WRONG_FLG (-2)
