@@ -20,11 +20,11 @@ int main(int argc, const char** argv) {
     }
 
     char* end = NULL;
-    int Test_case = strtol(argv[1], &end, 0);
+    int test_case = strtol(argv[1], &end, 0);
     const char* data;
     data = argv[2];
 
-    switch (Test_case) {
+    switch (test_case) {
         case TST_FOO_FIX: {
             int to = strtol(data, &end, 0);
             size_t ticks_count = timer_from(to);
