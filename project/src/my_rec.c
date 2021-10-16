@@ -3,7 +3,7 @@
 
 
 
-void direct(int num, int pos) {
+void direct_rec_foo(int num, int pos) {
     if (num > pos)
         rec_up(num, pos);
     else

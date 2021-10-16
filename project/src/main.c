@@ -50,7 +50,7 @@ int main(int argc, const char** argv) {
         case TST_FOO_REC: {
             int num = strtol(data, &end, 0);
             int pos = 1;
-            direct(num, pos);
+            direct_rec_foo(num, pos);
             break;
         }
         default: {
