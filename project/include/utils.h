@@ -1,9 +1,9 @@
-#define UTILS_H
-#ifndef UTILS_H
+#define PROJECT_INCLUDE_UTILS_H_
+#ifndef PROJECT_INCLUDE_UTILS_H_
 
-#define filename "transaction.dat";
+#include <struct_and_const.h>
+#include <stdio.h>
 
-// This comment is very useful
-printf("This message is very useful too")
+void transaction_write(FILE *ofPtr, Data transfer);
 
-#endif //UTILS_H
+#endif  //  PROJECT_INCLUDE_UTILS_H_
