@@ -4,7 +4,11 @@
 #include <base_struct.h>
 #include <stdio.h>
 
-void transaction_write(FILE *ofPtr, Data *transfer);
-void black_record(FILE *ofPTR, FILE *ofPTR_2, FILE *blackrecord, Data *client_data, Data *transfer);
+extern void transaction_write(const char *filename, Data *transfer);
+void black_record(const char *filename_out_general,
+                  const char *filename_out,
+                  const char *filename_update,
+                  Data *client_data,
+                  Data *transfer);
 
 #endif  //  PROJECT_INCLUDE_UTILS_H_

@@ -22,44 +22,19 @@ Data client_data, transfer;
                "2 enter data transaction:\n"
                "3 update base\n");
         while (scanf("%d", &choice) != -1) {
+            printf("%s %d\n", "Your ------------------CHOISE---------------------", choice);
             switch (choice) {
                 case INPUT_DATA: {
-                    FILE *Ptr;
-                    Ptr = fopen(FILENAME_REC, "r+");
-                    if (Ptr == NULL) {
-                        puts("Not access");
-                    } else {
-                        master_write(Ptr, &client_data);
-                        fclose(Ptr);
-                    }
+                    master_write(FILENAME_REC , &client_data);
                     break;
                 }
                 case TRANSACTION_DATA: {
-                    FILE *Ptr;
-                    Ptr = fopen(FILENAME_TRAN, "r+");
-                    if (Ptr == NULL) {
-                        puts("Not access");
-                    } else {
-                        transaction_write(Ptr, &transfer);
-                        fclose(Ptr);
-                    }
+                    transaction_write(FILENAME_TRAN, &transfer);
                     break;
                 }
                 case UPDATE_CREDIT_LIMIT: {
-                    FILE *Ptr, *Ptr_2, *blackrecord;
-                    Ptr = fopen(FILENAME_REC, "r");
-                    Ptr_2 = fopen(FILENAME_TRAN, "r");
-                    blackrecord = fopen(FILENAME_BLACK, "w");
-                    if (Ptr == NULL || Ptr_2 == NULL || blackrecord == NULL) {
-                        puts("exit");
-                        break;
-                    } else {
-                        black_record(Ptr, Ptr_2, blackrecord, &client_data, &transfer);
-                        fclose(Ptr);
-                        fclose(Ptr_2);
-                        fclose(blackrecord);
-                        break;
-                    }
+                    black_record(FILENAME_REC, FILENAME_TRAN, FILENAME_BLACK , &client_data, &transfer);
+                    break;
                 }
                 case TEST_W_R: {
                     test_write_to_file();
