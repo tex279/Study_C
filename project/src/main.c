@@ -22,7 +22,8 @@ Data client_data, transfer;
                "2 enter data transaction:\n"
                "3 update base\n");
         while (scanf("%d", &choice) != -1) {
-            printf("%s %d\n", "Your ------------------CHOISE---------------------", choice);
+            //  debug code
+            {printf("%s %d\n", "Your ------------------CHOISE---------------------", choice);}
             switch (choice) {
                 case INPUT_DATA: {
                     master_write(FILENAME_REC , &client_data);
