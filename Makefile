@@ -4,7 +4,9 @@ HDRS_DIR = project/include
 SRCS = \
        project/src/main.c \
        project/src/w_r_files.c \
-       project/src/test_compare.c
+       project/src/test_compare.c \
+       project/src/input.c \
+       project/src/utils.c
 
 .PHONY: all build rebuild check test memtest clean
 

@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <test_compare.h>
+#include <input.h>
+#include <utils.h>
 
 #define INPUT_DATA           1
 #define TRANSACTION_DATA     2
@@ -10,7 +12,7 @@
 #define FILENAME_TRAN    "transaction.dat"
 #define FILENAME_BLACK   "blackrecord.dat"
 
-struct masterRecord {
+/*struct masterRecord {
     int 		Number;
     char 		Name[20];
     char 		Surname[20];
@@ -23,11 +25,11 @@ struct masterRecord {
 
 typedef  struct  masterRecord Data;
 
-Data client_data, transfer;
+Data client_data, transfer; */
 
-void transaction_write(FILE *ofPtr, Data transfer);
-void black_record(FILE *ofPTR, FILE *ofPTR_2, FILE *blackrecord, Data client_data, Data transfer);
-void master_write(FILE *ofPTR, Data Client);
+//void master_write(FILE *ofPTR, Data Client);
+//void transaction_write(FILE *ofPtr, Data transfer);
+//void black_record(FILE *ofPTR, FILE *ofPTR_2, FILE *blackrecord, Data client_data, Data transfer);
 
 
 	int main(void) {
@@ -93,7 +95,7 @@ void master_write(FILE *ofPTR, Data Client);
 
 
 // It should be in another module
-void transaction_write(FILE *ofPtr, Data transfer) {
+/*void transaction_write(FILE *ofPtr, Data transfer) {
     printf("%s\n%s\n",
            "1 Number account: ",
            "2 Client cash payments: ");
@@ -138,9 +140,9 @@ void black_record(FILE *ofPTR, FILE *ofPTR_2, FILE *blackrecord, Data client_dat
                 client_data.cash_payments);
         rewind(ofPTR_2);
     }
-}
+}*/
 
-void master_write(FILE *ofPTR, Data Client) {
+/*void master_write(FILE *ofPTR, Data Client) {
     printf("%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n\n",
            "1 Number account: ",
            "2 Client name: ",
@@ -178,4 +180,4 @@ void master_write(FILE *ofPTR, Data Client) {
                "7 Client credit limit: ",
                "9 Client cash payments:");
     }
-}
+}*/
