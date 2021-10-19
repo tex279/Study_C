@@ -1,9 +1,10 @@
-#ifndef TECHPARK_2021_UTILS_H
-#define TECHPARK_2021_UTILS_H
+#ifndef PROJECT_INCLUDE_UTILS_H_
+#define PROJECT_INCLUDE_UTILS_H_
 
-#include <struct_&_const>
+#include <base_struct.h>
+#include <stdio.h>
 
-void transaction_write(FILE *ofPtr, Data transfer);
-void black_record(FILE *ofPTR, FILE *ofPTR_2, FILE *blackrecord, Data client_data, Data transfer);
+void transaction_write(FILE *ofPtr, Data *transfer);
+void black_record(FILE *ofPTR, FILE *ofPTR_2, FILE *blackrecord, Data *client_data, Data *transfer);
 
-#endif //TECHPARK_2021_UTILS_H
+#endif  //  PROJECT_INCLUDE_UTILS_H_

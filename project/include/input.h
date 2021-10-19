@@ -1,8 +1,10 @@
-#ifndef TECHPARK_2021_INPUT_H
-#define TECHPARK_2021_INPUT_H
+#ifndef  PROJECT_INCLUDE_INPUT_H_
+#define  PROJECT_INCLUDE_INPUT_H_
 
-#include <struct_&_const.h>
+#include <base_struct.h>
+#include <stdio.h>
 
-void master_write(FILE *ofPTR, Data Client);
 
-#endif  //  TECHPARK_2021_INPUT_H
+void master_write(FILE *ofPTR, Data *Client);
+
+#endif  //   PROJECT_INCLUDE_INPUT_H_

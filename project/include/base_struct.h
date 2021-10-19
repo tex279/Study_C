@@ -1,5 +1,5 @@
-#ifndef TECHPARK_2021_STRUCT___CONST_H
-#define TECHPARK_2021_STRUCT___CONST_H
+#ifndef  PROJECT_INCLUDE_BASE_STRUCT_H_
+#define  PROJECT_INCLUDE_BASE_STRUCT_H_
 
 struct masterRecord {
     int 		Number;
@@ -14,6 +14,5 @@ struct masterRecord {
 
 typedef  struct  masterRecord Data;
 
-Data client_data, transfer;
 
-#endif //TECHPARK_2021_STRUCT___CONST_H
+#endif  //   PROJECT_INCLUDE_BASE_STRUCT_H_
