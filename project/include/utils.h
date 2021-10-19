@@ -2,7 +2,6 @@
 #define PROJECT_INCLUDE_UTILS_H_
 
 #include <base_struct.h>
-#include <stdio.h>
 
 extern void transaction_write(const char *filename, Data *transfer);
 void black_record(const char *filename_out_general,
