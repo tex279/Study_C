@@ -1,8 +1,14 @@
 #include <stdio.h>
+#include <test_compare.h>
 
-#define FILENAME_REC "record.dat"
-#define FILENAME_TRAN "transaction.dat"
-#define FILENAME_BLACK "blackrecord.dat"
+#define INPUT_DATA           1
+#define TRANSACTION_DATA     2
+#define UPDATE_CREDIT_LIMIT  3
+#define TEST_W_R             4
+
+#define FILENAME_REC     "record.dat"
+#define FILENAME_TRAN    "transaction.dat"
+#define FILENAME_BLACK   "blackrecord.dat"
 
 struct masterRecord {
     int 		Number;
@@ -17,16 +23,11 @@ struct masterRecord {
 
 typedef  struct  masterRecord Data;
 
-FILE *Ptr, *Ptr_2, *blackrecord;
 Data client_data, transfer;
 
 void transaction_write(FILE *ofPtr, Data transfer);
 void black_record(FILE *ofPTR, FILE *ofPTR_2, FILE *blackrecord, Data client_data, Data transfer);
 void master_write(FILE *ofPTR, Data Client);
-
-#define INPUT_DATA          1
-#define TRANSACTION_DATA    2
-#define UPDATE_CREDIT_LIMIT  3
 
 
 	int main(void) {
@@ -39,6 +40,7 @@ void master_write(FILE *ofPTR, Data Client);
         while (scanf("%d", &choice) != -1) {
             switch (choice) {
                 case INPUT_DATA: {
+                    FILE *Ptr;
                     Ptr = fopen(FILENAME_REC, "r+");
                     if (Ptr == NULL) {
                         puts("Not access");
@@ -49,6 +51,7 @@ void master_write(FILE *ofPTR, Data Client);
                     break;
                 }
                 case TRANSACTION_DATA: {
+                    FILE *Ptr;
                     Ptr = fopen(FILENAME_TRAN, "r+");
                     if (Ptr == NULL) {
                         puts("Not access");
@@ -59,11 +62,13 @@ void master_write(FILE *ofPTR, Data Client);
                     break;
                 }
                 case UPDATE_CREDIT_LIMIT: {
+                    FILE *Ptr, *Ptr_2, *blackrecord;
                     Ptr = fopen(FILENAME_REC, "r");
                     Ptr_2 = fopen(FILENAME_TRAN, "r");
                     blackrecord = fopen(FILENAME_BLACK, "w");
                     if (Ptr == NULL || Ptr_2 == NULL || blackrecord == NULL) {
                         puts("exit");
+                        break;
                     } else {
                         black_record(Ptr, Ptr_2, blackrecord, client_data, transfer);
                         fclose(Ptr);
@@ -71,6 +76,10 @@ void master_write(FILE *ofPTR, Data Client);
                         fclose(blackrecord);
                         break;
                     }
+                }
+                case TEST_W_R: {
+                    test_write_to_file();
+                    break;
                 }
                 default: {
                     puts("error");
@@ -83,7 +92,7 @@ void master_write(FILE *ofPTR, Data Client);
 
 
 
-
+// It should be in another module
 void transaction_write(FILE *ofPtr, Data transfer) {
     printf("%s\n%s\n",
            "1 Number account: ",
@@ -136,7 +145,7 @@ void master_write(FILE *ofPTR, Data Client) {
            "1 Number account: ",
            "2 Client name: ",
            "3 Surname: ",
-           "4 Addres client: ",
+           "4 Address client: ",
            "5 Client Telnum: ",
            "6 Client indebtedness: ",
            "7 Client credit limit: ",
@@ -163,7 +172,7 @@ void master_write(FILE *ofPTR, Data Client) {
                "1 Number account: ",
                "2 Client name: ",
                "3 Surname: ",
-               "4 Addres client: ",
+               "4 Address client: ",
                "5 Client Telnum: ",
                "6 Client indebtedness: ",
                "7 Client credit limit: ",
