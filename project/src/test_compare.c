@@ -5,13 +5,6 @@
 
 #define TEST    "testingfile.dat"
 
-/*struct some {
-    int 		id;
-    char 		Name[20];
-};
-
-typedef  struct  some Some;*/
-
 void test_write_to_file() {
     const char *filename = TEST;
     Some expected_data;
