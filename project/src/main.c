@@ -20,7 +20,8 @@ Data client_data, transfer;
                "please enter action\n"
                "1 enter data client:\n"
                "2 enter data transaction:\n"
-               "3 update base\n");
+               "3 update base\n"
+               "4 test compare\n");
         while (scanf("%d", &choice) != -1) {
             //  debug code
             {printf("%s %d\n", "Your ------------------CHOISE---------------------", choice);}

@@ -3,7 +3,7 @@
 
 #include <base_struct.h>
 
-extern void transaction_write(const char *filename, Data *transfer);
+void transaction_write(const char *filename, Data *transfer);
 void black_record(const char *filename_out_general,
                   const char *filename_out,
                   const char *filename_update,

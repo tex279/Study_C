@@ -12,7 +12,7 @@ struct masterRecord {
     double  	cash_payments;
 };
 
-typedef  struct  masterRecord Data;
+typedef  struct  masterRecord Data, Some;
 
 
 #endif  //   PROJECT_INCLUDE_BASE_STRUCT_H_
