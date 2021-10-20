@@ -14,11 +14,7 @@ void transaction_write(const char *filename, Data *transfer) {
         while (scanf( "%d%lf",
                       &transfer->Number,
                       &transfer->cash_payments) != -1) {
-            //  debug code
-            {printf("%-3d%4.2lf\n",
-                    transfer->Number,
-                    transfer->cash_payments);}
-            fprintf(ofPtr, "%-3d%4.2f\n",
+            fprintf(ofPtr, "%-3d%-6.2f\n",
                     transfer->Number,
                     transfer->cash_payments);
             printf("%s\n%s\n",
