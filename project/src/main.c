@@ -23,8 +23,6 @@ Data client_data, transfer;
                "3 update base\n"
                "4 test compare\n");
         while (scanf("%d", &choice) != -1) {
-            //  debug code
-            {printf("%s %d\n", "Your ------------------CHOISE---------------------", choice);}
             switch (choice) {
                 case INPUT_DATA: {
                     master_write(FILENAME_REC , &client_data);
