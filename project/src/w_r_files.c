@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <w_r_files.h>
 
+
 void write_to_file(const char *filename, Some *data) {
     FILE *fp;
     fp = fopen(filename, "w");
@@ -16,6 +17,15 @@ void write_to_file(const char *filename, Some *data) {
                 data->indebtedness,
                 data->credit_limit,
                 data->cash_payments);
+        printf("%d %20s %20s %30s %15s %f %f %f\n",
+               data->Number,
+               data->Name,
+               data->Surname,
+               data->address,
+               data->TelNumber,
+               data->indebtedness,
+               data->credit_limit,
+               data->cash_payments);
         fclose(fp);
     }
 }
@@ -35,6 +45,15 @@ void read_from_file(const char *filename, Some *data) {
                &data->indebtedness,
                &data->credit_limit,
                &data->cash_payments);
+        printf("%d %20s %20s %30s %15s %f %f %f\n",
+               data->Number,
+               data->Name,
+               data->Surname,
+               data->address,
+               data->TelNumber,
+               data->indebtedness,
+               data->credit_limit,
+               data->cash_payments);
         fclose(fp);
     }
 }
