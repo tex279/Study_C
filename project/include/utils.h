@@ -3,8 +3,8 @@
 
 #include <base_struct.h>
 
-void transaction_write(const char *filename, Data *transfer);
-void black_record(const char *filename_out_general,
+int transaction_write(const char *filename, Data *transfer);
+int black_record(const char *filename_out_general,
                   const char *filename_out,
                   const char *filename_update,
                   Data *client_data,

@@ -4,11 +4,12 @@
 #include <utils.h>
 
 
-void transaction_write(const char *filename, Data *transfer) {
+int transaction_write(const char *filename, Data *transfer) {
     FILE *ofPtr;
     ofPtr = fopen(filename, "w+r");
-    if (ofPtr == NULL) {
+    if (!ofPtr) {
         puts("exit");
+        return -1;
     } else {
         printf("%s\n%s\n",
                "1 Number account: ",
@@ -21,10 +22,11 @@ void transaction_write(const char *filename, Data *transfer) {
                     transfer->Cash_payments);
         }
         fclose(ofPtr);
+        return 1;
     }
 }
 
-void black_record(const char *filename_out_general,
+int black_record(const char *filename_out_general,
                   const char *filename_out,
                   const char *filename_update,
                   Data *client_data,
@@ -34,6 +36,7 @@ void black_record(const char *filename_out_general,
     ptr_2 = fopen(filename_out, "r");
     if (!ptr || !ptr_2) {
         puts("exit");
+        return -1;
     } else {
         while (scan_data(ptr, client_data)) {
             while (fscanf(ptr_2, "%d%lf\n",
@@ -48,6 +51,7 @@ void black_record(const char *filename_out_general,
         }
         fclose(ptr);
         fclose(ptr_2);
+        return 1;
     }
 }
 
