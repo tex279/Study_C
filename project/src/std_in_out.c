@@ -19,6 +19,19 @@ int scan_data(FILE *filename, Data *data) {
 }
 
 
+void print_data(FILE *filename, Data *data) {
+    fprintf(filename, "%-12d%-11s%-11s%-16s%20s%12.2f%12.2f%12.2f\n",
+            data->Number,
+            data->Name,
+            data->Surname,
+            data->Address,
+            data->TelNumber,
+            data->Indebtedness,
+            data->Credit_limit,
+            data->Cash_payments);
+}
+
+
 int input(Data *data) {
     fprintf(stdout, "%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n\n",
             "1 Number account: ",
@@ -36,8 +49,8 @@ int input(Data *data) {
     }
 }
 
-void output(Data *data) {
-    printf("%d %20s %20s %30s %15s %f %f %f\n",
+/* void output(Data *data) {
+    fprintf(stdout, "%d %20s %20s %30s %15s %f %f %f\n",
            data->Number,
            data->Name,
            data->Surname,
@@ -46,5 +59,5 @@ void output(Data *data) {
            data->Indebtedness,
            data->Credit_limit,
            data->Cash_payments);
-}
+} */
 
