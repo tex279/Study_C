@@ -51,13 +51,3 @@ void black_record(const char *filename_out_general,
     }
 }
 
-
-/*        while (fscanf(ptr, "%d%20s%20s%30s%15s%lf%lf%lf\n",
-                      &client_data->Number,
-                      client_data->Name,
-                      client_data->Surname,
-                      client_data->Address,
-                      client_data->TelNumber,
-                      &client_data->Indebtedness,
-                      &client_data->Credit_limit,
-                      &client_data->Cash_payments) != -1) {*/
