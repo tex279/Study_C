@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <test_compare.h>
-#include <input.h>
 #include <utils.h>
+#include <base_utils_file.h>
+#include <std_in_out.h>
 
 #define INPUT_DATA           1
 #define TRANSACTION_DATA     2
@@ -25,7 +26,9 @@ Data client_data, transfer;
         while (scanf("%d", &choice) != -1) {
             switch (choice) {
                 case INPUT_DATA: {
-                    master_write(FILENAME_REC , &client_data);
+                    while (input(&client_data)) {
+                        write_to_file(FILENAME_REC, &client_data);
+                    }
                     break;
                 }
                 case TRANSACTION_DATA: {
@@ -33,7 +36,7 @@ Data client_data, transfer;
                     break;
                 }
                 case UPDATE_CREDIT_LIMIT: {
-                    black_record(FILENAME_REC, FILENAME_TRAN, FILENAME_BLACK , &client_data, &transfer);
+                   black_record(FILENAME_REC, FILENAME_TRAN, FILENAME_BLACK , &client_data, &transfer);
                     break;
                 }
                 case TEST_W_R: {

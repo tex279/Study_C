@@ -77,14 +77,6 @@ else
 	echo "${IN}" | eval "${PROG_PATH}"	
 fi
 
-IN="4"
-
-if [[ ${2} == ${CHECK_MEM_ARG} ]]; then
-	check_mem "${IN}"
-else
-	echo "${IN}" | eval "${PROG_PATH}"
-fi
-
 for file in $RECORDS_F_NAME $TRANSACTIONS_F_NAME $BLACKRECORDS_F_NAME; do
 	diff -uN $file $ROOT/${file}.gold
 	if [[ "$?" != "0" ]]; then
