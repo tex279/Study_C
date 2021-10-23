@@ -16,12 +16,13 @@
 
 	int main(void) {
         int choice = 0;
-        printf("%s",
-               "please enter action\n"
-               "1 enter data client:\n"
-               "2 enter data transaction:\n"
-               "3 update base\n"
-               "4 test compare\n");
+        fprintf(stdout, "%s\n%s\n%s\n%s\n%s\n\n",
+                "please enter action",
+                "1 enter data client:",
+                "2 enter data transaction:",
+                "3 update base",
+                "4 test compare");
+
         while (fscanf(stdin, "%d", &choice) != -1) {
             switch (choice) {
                 case INPUT_DATA: {
