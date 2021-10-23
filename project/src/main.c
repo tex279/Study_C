@@ -22,7 +22,6 @@
                 "2 enter data transaction:",
                 "3 update base",
                 "4 test compare");
-
         while (fscanf(stdin, "%d", &choice) != -1) {
             switch (choice) {
                 case INPUT_DATA: {
