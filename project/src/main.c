@@ -3,7 +3,6 @@
 #include <utils_for_file.h>
 #include <w_r_file.h>
 
-
 #define INPUT_DATA           1
 #define TRANSACTION_DATA     2
 #define UPDATE_CREDIT_LIMIT  3

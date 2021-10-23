@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <std_in_out_data.h>
 
-
 int scan_data(FILE *filename, Data *data) {
     if (!(fscanf(filename, "%d%20s%20s%30s%15s%lf%lf%lf",
                &data->number,
@@ -17,7 +16,6 @@ int scan_data(FILE *filename, Data *data) {
     return SUCCESS;
 }
 
-
 void print_data(FILE *filename, Data *data) {
     fprintf(filename, "%-12d%-11s%-11s%-16s%20s%12.2f%12.2f%12.2f\n",
             data->number,
@@ -29,7 +27,6 @@ void print_data(FILE *filename, Data *data) {
             data->credit_limit,
             data->cash_payments);
 }
-
 
 int input(Data *data) {
     fprintf(stdout, "%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n\n",

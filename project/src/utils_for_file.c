@@ -3,7 +3,6 @@
 #include <std_in_out_data.h>
 #include <utils_for_file.h>
 
-
 int transaction_write(const char *filename, Data *transfer) {
     FILE *ofptr = fopen(filename, "w+r");
     if (!ofptr) {
