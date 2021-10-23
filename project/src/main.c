@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include <test_compare.h>
-#include <utils.h>
-#include <base_utils_file.h>
-#include <std_in_out.h>
+#include <test_w_to_file.h>
+#include <utils_for_file.h>
+#include <w_r_file.h>
+
 
 #define INPUT_DATA           1
 #define TRANSACTION_DATA     2
@@ -12,8 +12,7 @@
 #define FILENAME_REC     "record.dat"
 #define FILENAME_TRAN    "transaction.dat"
 #define FILENAME_BLACK   "blackrecord.dat"
-
-Data client_data, transfer;
+#define TARGET_TEST      "TEST.dat"
 
 	int main(void) {
         int choice = 0;
@@ -23,28 +22,29 @@ Data client_data, transfer;
                "2 enter data transaction:\n"
                "3 update base\n"
                "4 test compare\n");
-        while (scanf("%d", &choice) != -1) {
+        while (fscanf(stdin, "%d", &choice) != -1) {
             switch (choice) {
                 case INPUT_DATA: {
-                    while (input(&client_data)) {
-                        write_to_file(FILENAME_REC, &client_data);
-                    }
+                    Data client_data;
+                    write_to_file(FILENAME_REC, &client_data);
                     break;
                 }
                 case TRANSACTION_DATA: {
+                    Data transfer;
                     transaction_write(FILENAME_TRAN, &transfer);
                     break;
                 }
                 case UPDATE_CREDIT_LIMIT: {
-                   black_record(FILENAME_REC, FILENAME_TRAN, FILENAME_BLACK , &client_data, &transfer);
+                    Data client_data, transfer;
+                    black_record(FILENAME_REC, FILENAME_TRAN, FILENAME_BLACK , &client_data, &transfer);
                     break;
                 }
                 case TEST_W_R: {
-                    test_write_to_file();
+                    test_write_to_file(TARGET_TEST);
                     break;
                 }
                 default: {
-                    puts("error");
+                    fprintf(stdout, "%s\n", "error");
                     break;
                 }
             }

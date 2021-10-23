@@ -1,5 +1,5 @@
-#ifndef PROJECT_INCLUDE_UTILS_H_
-#define PROJECT_INCLUDE_UTILS_H_
+#ifndef PROJECT_INCLUDE_UTILS_FOR_FILE_H_
+#define PROJECT_INCLUDE_UTILS_FOR_FILE_H_
 
 #include <base_struct.h>
 
@@ -10,4 +10,4 @@ int black_record(const char *filename_out_general,
                   Data *client_data,
                   Data *transfer);
 
-#endif  //  PROJECT_INCLUDE_UTILS_H_
+#endif  //  PROJECT_INCLUDE_UTILS_FOR_FILE_H_
