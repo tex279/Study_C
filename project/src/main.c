@@ -13,6 +13,7 @@
 #define TST_MOD_IMPL    3
 #define TST_FOO_REC     4
 
+#define DATA_FOR_CUSTOM_POW 4
 
 int main(int argc, const char** argv) {
     if (argc < 3) {
@@ -32,7 +33,7 @@ int main(int argc, const char** argv) {
             break;
         }
         case TST_FOO_IMPL: {
-            if (argc == 4) {
+            if (argc == DATA_FOR_CUSTOM_POW) {
                  int base = strtol(data, &end, 0);
                  int pow =  strtol(argv[3], &end, 0);
                  int res = custom_pow(base, pow);
@@ -44,7 +45,7 @@ int main(int argc, const char** argv) {
         }
         case TST_MOD_IMPL: {
              int num = strtol(data, &end, 0);
-             check_prime_num(num);
+             fprintf(stdout, "%d\n", check_prime_num(num));
              break;
         }
         case TST_FOO_REC: {

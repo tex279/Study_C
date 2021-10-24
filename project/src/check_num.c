@@ -1,16 +1,16 @@
 #include <check_num.h>
 #include <stdio.h>
+#include <math.h>
 
-void check_prime_num(int num) {
-    for (int i = 2; i < num; i++) {
+int check_prime_num(int num) {
+    if (num <= 1) {
+        return 0;
+    }
+    for (int i = 2; i < round(num/2)-1; i++) {
         if (num % i == 0) {
-            printf("%d\n", 0);
-            break;
+            return 0;
         }
     }
-    if (num <= 1)
-        printf("%d\n", 0);
-    else
-        printf("%d\n", 1);
+    return 1;
 }
 

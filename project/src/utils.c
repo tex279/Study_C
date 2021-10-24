@@ -1,6 +1,7 @@
 #include <stddef.h>
 #include <stdio.h>
 
+#define INCORRECT_INPUT -1;
 
 size_t timer_from(int from) {
     size_t counter = 0;
@@ -17,6 +18,10 @@ size_t timer_from(int from) {
 
 int custom_pow(int base, int power) {
     int result = 1;
+    if (power < 0) {
+        fprintf(stdout, "%s\n", "incorrect input");
+        return INCORRECT_INPUT;
+    }
     for (int i = 1; i <= power; ++i)
         result = result*base;
     return result;
