@@ -6,7 +6,7 @@
 
 void direct_rec_foo(int num, int pos) {
     int direct = IN_UP;
-    if (num < pos) {direct =IN_DOWN;}
+    if (num < pos) {direct = IN_DOWN;}
     rec(num, pos, direct);
 }
 
