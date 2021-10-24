@@ -45,7 +45,7 @@ int main(int argc, const char** argv) {
         }
         case TST_MOD_IMPL: {
              int num = strtol(data, &end, 0);
-             fprintf(stdout, "%d\n", check_prime_num(num));
+             printf("%d\n", check_prime_num(num));
              break;
         }
         case TST_FOO_REC: {
