@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+#include <matrix.h>
 
 int main(void) {
     /* NOTE(stitaevskiy):
