@@ -23,4 +23,5 @@ struct master_record {
 
 typedef  struct  master_record Data;
 
+
 #endif  //   PROJECT_INCLUDE_BASE_STRUCT_H_

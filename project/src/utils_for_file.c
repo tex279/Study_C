@@ -1,7 +1,21 @@
 #include <stdio.h>
+
 #include <w_r_file.h>
 #include <std_in_out_data.h>
 #include <utils_for_file.h>
+
+
+int input_transaction(Data *data) {
+    fprintf(stdout, "%s\n%s\n",
+            "1 number account: ",
+            "2 Client cash payments: ");
+    if (!(fscanf(stdin, "%d%lf",
+               &data->number,
+               &data->cash_payments)!= -1)) {
+        return INCORRECT_INPUT;
+    }
+    return SUCCESS;
+}
 
 int transaction_write(const char *filename, Data *transfer) {
     FILE *ofptr = fopen(filename, "w+r");
@@ -9,12 +23,7 @@ int transaction_write(const char *filename, Data *transfer) {
         fprintf(stdout, "%s\n", "error");
         return ERROR_OPEN_FILE;
     }
-    printf("%s\n%s\n",
-           "1 number account: ",
-           "2 Client cash payments: ");
-    while (fscanf(stdin, "%d%lf",
-                  &transfer->number,
-                  &transfer->cash_payments) != -1) {
+    while (input_transaction(transfer)) {
         fprintf(ofptr, "%-3d%-6.2f\n",
                 transfer->number,
                 transfer->cash_payments);

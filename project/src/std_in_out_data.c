@@ -1,4 +1,5 @@
 #include <stdio.h>
+
 #include <std_in_out_data.h>
 
 int scan_data(FILE *filename, Data *data) {

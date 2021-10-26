@@ -3,6 +3,7 @@
 
 #include <base_struct.h>
 
+int input_transaction(Data *data);
 int transaction_write(const char *filename, Data *transfer);
 int black_record(const char *filename_out_general,
                   const char *filename_out,
