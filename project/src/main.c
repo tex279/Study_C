@@ -2,10 +2,9 @@
 
 #include <matrix.h>
 
+#define PATH "/project/tests/data/test_matrix_creating/case_0/in.txt"
+
 int main(void) {
-    /* NOTE(stitaevskiy):
-     * You could check your implementation here.
-     */
+    create_matrix_from_file(PATH);
     return 0;
 }
-
