@@ -42,7 +42,6 @@ void print_matrix_my(const Matrix* matrix);
 int check_index(const int rows , const int cols);
 double mul_element(const Matrix* l, const Matrix* r, const size_t row, const size_t col);
 Matrix* create_minor(const Matrix* matrix, const size_t row, const size_t col);
-int clear_col_down(Matrix* matrix, const size_t start);
-int matrix_to_gaus(Matrix* matrix);
+int triangle_viev(Matrix* matrix);
 
 #endif  //  PROJECT_INCLUDE_MATRIX_H_

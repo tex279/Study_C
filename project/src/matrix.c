@@ -47,7 +47,8 @@ void free_matrix(Matrix* matrix) {
         free(matrix->m_data[i]);
     }
     free(matrix->m_data);
-    free(matrix);
+    //  free(matrix);
+    //  fprintf(stdout, "SUCCESS\n");
 }
 
 Matrix* create_matrix_from_file(const char* path_file) {
@@ -172,74 +173,74 @@ Matrix* mul(const Matrix* l, const Matrix* r) {
 }
 
 Matrix* create_minor(const Matrix* matrix, const size_t row, const size_t col) {
-    Matrix *minor = create_matrix(matrix->n-1, matrix->m-1);
+    Matrix* minor = create_matrix(matrix->n-1, matrix->m-1);
+    size_t min_row = 0;
     for (size_t i = 0; i < matrix->n; i++) {
+        if (i == row) { continue;}
+        size_t min_col = 0;
         for (size_t j = 0; j < matrix->m; j++) {
-            if (i != row || j != col) {
-                minor->m_data[i][j] = matrix->m_data[i][j];
+            if (j != col) {
+                minor->m_data[min_row][min_col] = matrix->m_data[i][j];
+                min_col++;
             }
         }
+        min_row++;
     }
     return minor;
 }
 
-int clear_col_down(Matrix* matrix, const size_t start) {
-    if (start < 2) {
-        fprintf(stdout, "incorrect input, first row is const\n");
-        return INCORRECT_INPUT;
-    }
-    for (size_t i = start; i < matrix->n; i++) {
-        int mull = matrix->m_data[i][1] / matrix->m_data[i-1][1];
-        for (size_t j = start-1; j < matrix->m; j++) {
-            matrix->m_data[i][j] = matrix->m_data[i][j] - mull * matrix->m_data[i-1][j];
-            mull = 0;
-        }
-    }
-    return SUCCESS;
-}
 
-int matrix_to_gaus(Matrix* matrix) {
-    for (size_t i = 2; i < matrix->n; i++) {
-        clear_col_down(matrix, i);
+int triangle_viev(Matrix* matrix) {
+    size_t s_mat = matrix->n;
+    for (size_t k = 0; k < s_mat; k++) {
+        for (size_t i = 1 + k; i < s_mat; i++) {
+            double mull = matrix->m_data[i][k] / matrix->m_data[k][k];
+            for (size_t j = 0; j < s_mat; j++) {
+                matrix->m_data[i][j] = matrix->m_data[i][j] - mull * matrix->m_data[k][j];
+            }
+        }
     }
     return SUCCESS;
 }
 
 int det(const Matrix* matrix, double* val) {
     *val = 1;
-    Matrix *matrix_res = create_matrix(matrix->n, matrix->m);
+    Matrix* matrix_res = create_matrix(matrix->n, matrix->m);
     for (size_t i = 0; i < matrix->n; i++) {
         for (size_t j = 0; j < matrix->m; j++) {
             matrix_res->m_data[i][j] = matrix->m_data[i][j];
         }
     }
-    matrix_to_gaus(matrix_res);
+    triangle_viev(matrix_res);
     for (size_t i = 0; i < matrix->n; i++) {
-        for (size_t j = 0; j < matrix->m; j++) {
-            *val = *val * matrix_res->m_data[i][j];
-        }
+        *val = *val * matrix_res->m_data[i][i];
     }
     free_matrix(matrix_res);
     return SUCCESS;
 }
 
 Matrix* adj(const Matrix* matrix) {
-    Matrix *matrix_out = create_matrix(matrix->n, matrix->m);
+    Matrix* matrix_cur = create_matrix(matrix->n, matrix->m);
+    Matrix* curmunor, *matrix_out;
     for (size_t i = 0; i < matrix->n; i++) {
+        double val = 0;
         for (size_t j = 0; j < matrix->m; j++) {
-            double val = 0;
-            det(create_minor(matrix, i, j), &val);
-            matrix_out->m_data[i][j] = pow(-1, (i+j)) * val;
+            curmunor = create_minor(matrix, i, j);
+            det(curmunor, &val);
+            free_matrix(curmunor);
+            matrix_cur->m_data[i][j] = pow(-1, (i+j)) * val;
         }
     }
-    return matrix_out;
+    matrix_out = transp(matrix_cur);
+    free_matrix(matrix_cur);
+    return  matrix_out;
 }
 
 Matrix* inv(const Matrix* matrix) {
     double val = 0;
     det(matrix, &val);
-    Matrix *adt_to_matrix = transp(adj(matrix));
-    Matrix *matrix_inv = mul_scalar((adt_to_matrix), 1/val);
+    Matrix* adt_to_matrix = adj(matrix);
+    Matrix* matrix_inv = mul_scalar((adt_to_matrix), 1.0/val);
     free_matrix(adt_to_matrix);
     return matrix_inv;
 }
