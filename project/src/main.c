@@ -3,7 +3,7 @@
 #include <matrix.h>
 
 #define PATH_CRE "/home/andeo/GitHub/TechPark-2021/project/tests/data/test_matrix_creating/case_3/in.txt"
-#define PATH_INV "/home/andeo/GitHub/TechPark-2021/project/tests/data/test_matrix_inverse/case_2/in.txt"
+#define PATH_INV "/home/andeo/GitHub/TechPark-2021/project/tests/data/test_matrix_inverse/case_1/in.txt"
 #define PATH_DET "/home/andeo/GitHub/TechPark-2021/project/tests/data/test_matrix_determinant/case_0/in.txt"
 #define PATH_ADJ_IN "/home/andeo/GitHub/TechPark-2021/project/tests/data/test_matrix_adjugate/case_1/in.txt"
 #define PATH_ADJ_OUT "/home/andeo/GitHub/TechPark-2021/project/tests/data/test_matrix_adjugate/case_1/out.txt"
@@ -68,7 +68,7 @@ int main(void) {
                 Matrix mat, inv_mat;
                 mat = *(create_matrix_from_file(PATH_INV));
                 print_matrix_my(&mat);
-                inv_mat = *(adj(&mat));
+                inv_mat = *(inv(&mat));
                 print_matrix_my(&inv_mat);
                 free_matrix(&mat);
                 free_matrix(&inv_mat);
