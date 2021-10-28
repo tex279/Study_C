@@ -12,6 +12,15 @@ int check_index(const int rows , const int cols) {
     return NO_INTERSECTION;
 }
 
+void print_matrix_my(const Matrix* matrix) {
+    for (size_t i = 0; i < matrix->n; i++) {
+        for (size_t j = 0; j < matrix->m; j++) {
+            fprintf(stdout, "%f ", matrix->m_data[i][j]);
+        }
+        fprintf(stdout, "\n");
+    }
+}
+
 Matrix* create_matrix(size_t rows, size_t cols) {
     if (check_index(rows , cols)) {return NULL;}
     Matrix *matrix = (Matrix*)calloc(1, sizeof(Matrix));
@@ -49,7 +58,7 @@ Matrix* create_matrix_from_file(const char* path_file) {
     }
     size_t rows = 0;
     size_t cols = 0;
-    if (fscanf(source, "%zu %zu", &rows, &cols) != 2) {
+    if (fscanf(source, "%zu%zu", &rows, &cols) != 2) {
         fclose(source);
         fprintf(stdout, "incorrect input, there should be 2 values type - double\n");
         return NULL;
@@ -174,7 +183,7 @@ Matrix* create_minor(const Matrix* matrix, const size_t row, const size_t col) {
     return minor;
 }
 
-int clear_col_down(Matrix* matrix, size_t start) {
+int clear_col_down(Matrix* matrix, const size_t start) {
     if (start < 2) {
         fprintf(stdout, "incorrect input, first row is const\n");
         return INCORRECT_INPUT;
