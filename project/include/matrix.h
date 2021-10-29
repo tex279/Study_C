@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 
-#define SUCCESS              1;
+#define SUCCESS              0;
 #define INCORRECT_INPUT     -1;
 #define NO_INTERSECTION      0;
 

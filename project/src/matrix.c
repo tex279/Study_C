@@ -7,7 +7,7 @@
 int check_index(const int rows , const int cols) {
     if (rows < 1 || cols < 1) {
         fprintf(stdout, "incorrect input, indices must be greater than zero\n");
-        return SUCCESS;
+        return 1;
     }
     return NO_INTERSECTION;
 }
@@ -92,6 +92,9 @@ int get_rows(const Matrix* matrix, size_t* rows) {
     return SUCCESS;
 }
 int get_cols(const Matrix* matrix, size_t* cols) {
+    if (!matrix || !cols) {
+        return INCORRECT_INPUT;
+    }
     if (check_index(matrix->n, matrix->m)) {return INCORRECT_INPUT;}
     *cols = matrix->m;
     return SUCCESS;
@@ -134,7 +137,7 @@ Matrix* sum(const Matrix* l, const Matrix* r) {
         fprintf(stdout, "these matrices cannot be multiplied\n");
         return NULL;
     }
-    Matrix *matrix = create_matrix(l->n, l->m);
+    Matrix *matrix = create_matrix(r->n, r->m);
     for (size_t i = 0; i < matrix->n; i++) {
         for (size_t j = 0; j < matrix->m; j++) {
             matrix->m_data[i][j] = l->m_data[i][j] + r->m_data[i][j];
@@ -156,13 +159,16 @@ Matrix* sub(const Matrix* l, const Matrix* r) {
 double mul_element(const Matrix* l, const Matrix* r, const size_t row, const size_t col) {
     double res = 0;
     size_t num_iter = l->m;
-    for (size_t pos = 1; pos < num_iter; pos++) {
+    for (size_t pos = 0; pos < num_iter; pos++) {
         res = res + r->m_data[row][pos] * r->m_data[pos][col];
     }
     return res;
 }
 
 Matrix* mul(const Matrix* l, const Matrix* r) {
+    if (l->m != r->n) {
+        return NULL;
+    }
     Matrix *matrix = create_matrix(l->n, r->m);
     for (size_t i = 0; i < matrix->n; i++) {
         for (size_t j = 0; j < matrix->m; j++) {
