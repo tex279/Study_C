@@ -5,7 +5,9 @@
 
 #define SUCCESS              0;
 #define INCORRECT_INPUT     -1;
-#define NO_INTERSECTION      0;
+#define FALSE                0;
+#define TRUE                 1;
+#define ACCURACY  1e+7;
 
 typedef double base_element;
 typedef struct Matrix {
@@ -38,9 +40,8 @@ Matrix* adj(const Matrix* matrix);
 Matrix* inv(const Matrix* matrix);
 
 // Support
-void print_matrix_my(const Matrix* matrix);
+void print_matrix_custom(const Matrix* matrix);
 int check_index(const int rows , const int cols);
-double mul_element(const Matrix* l, const Matrix* r, const size_t row, const size_t col);
 Matrix* create_minor(const Matrix* matrix, const size_t row, const size_t col);
 int triangle_viev(Matrix* matrix);
 
