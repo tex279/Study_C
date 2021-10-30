@@ -1,9 +1,15 @@
+#include <stdio.h>
 #include <math.h>
 
 #include <matrix.h>
 
 int det(const Matrix* matrix, double* val) {
     if (check_ptr_matrix(matrix)) {
+        return INCORRECT_INPUT;
+    }
+
+    if (matrix->m_rows != matrix->m_cols) {
+        fprintf(stdout, "incorrect input, matrix must be square\n");
         return INCORRECT_INPUT;
     }
 
@@ -16,7 +22,7 @@ int det(const Matrix* matrix, double* val) {
     }
 
     if (!step_viev(matrix_out)) {
-        *val = 0.0;
+        *val = 0;
         free_matrix(matrix_out);
         return SUCCESS;
     }

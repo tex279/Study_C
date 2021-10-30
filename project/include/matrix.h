@@ -49,6 +49,7 @@ Matrix* create_minor(const Matrix* matrix, const size_t row, const size_t col);
 
 //  Support step viev foo
 int check_null_row(const Matrix* matrix, const size_t row);
+int check_null_col(const Matrix* matrix, const size_t col);
 int check_null_diag_el(Matrix* matrix, const size_t pos);
 int plus_col(Matrix* matrix, const size_t target, const size_t sourse);
 

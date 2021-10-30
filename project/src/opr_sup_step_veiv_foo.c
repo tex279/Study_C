@@ -4,8 +4,21 @@
 
 int check_null_row(const Matrix* matrix, const size_t row) {
     size_t pos = 0;
+
     while (matrix->m_data[row][pos] == 0) {
         if (pos == matrix->m_rows - 1) {
+            return TRUE;
+        }
+        pos++;
+    }
+    return FALSE;
+}
+
+int check_null_col(const Matrix* matrix, const size_t col) {
+    size_t pos = 0;
+
+    while (matrix->m_data[pos][col] == 0) {
+        if (pos == matrix->m_cols - 1) {
             return TRUE;
         }
         pos++;

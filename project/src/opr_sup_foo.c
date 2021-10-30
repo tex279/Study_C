@@ -37,6 +37,9 @@ int step_viev(Matrix* matrix) {
         if (check_null_row(matrix, k)) {
             return FALSE;
         }
+        if (check_null_col(matrix, k)) {
+            return FALSE;
+        }
 
         for (size_t i = 1 + k; i < matrix->m_rows; i++) {
             check_null_diag_el(matrix, k);
