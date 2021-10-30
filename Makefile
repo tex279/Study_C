@@ -9,6 +9,7 @@ HDRS = \
 
 SRCS = \
 	   project/src/main.c \
+	   project/src/opr_*.c \
 	   project/src/matrix.c
 
 # Test
@@ -18,6 +19,7 @@ TST_HDRS = \
 
 TST_SRCS = \
            project/src/matrix.c \
+           project/src/opr_*.c \
 		   project/tests/src/*.c
 
 .PHONY: all check build test memtest testextra memtestextra rebuild clean

@@ -2,9 +2,9 @@
 
 #include <matrix.h>
 
-#define PATH_CRE "/home/andeo/GitHub/TechPark-2021/project/tests/data/test_matrix_creating/case_3/in.txt"
-#define PATH_INV "/home/andeo/GitHub/TechPark-2021/project/tests/data/test_matrix_inverse/case_1/in.txt"
-#define PATH_DET "/home/andeo/GitHub/TechPark-2021/project/tests/data/test_matrix_determinant/case_4/in.txt"
+#define PATH_CRE    "/home/andeo/GitHub/TechPark-2021/project/tests/data/test_matrix_creating/case_3/in.txt"
+#define PATH_INV    "/home/andeo/GitHub/TechPark-2021/project/tests/data/test_matrix_inverse/case_3/in.txt"
+#define PATH_DET   "/home/andeo/GitHub/TechPark-2021/project/tests/data/test_matrix_determinant/case_4/in.txt"
 #define PATH_ADJ_IN "/home/andeo/GitHub/TechPark-2021/project/tests/data/test_matrix_adjugate/case_1/in.txt"
 #define PATH_ADJ_OUT "/home/andeo/GitHub/TechPark-2021/project/tests/data/test_matrix_adjugate/case_1/out.txt"
 
@@ -51,7 +51,7 @@ int main(void) {
 
                 print_matrix_custom(mat);
 
-                double val;
+                double val = 0;
                 det(mat, &val);
 
                 fprintf(stdout, "%f\n", val);
