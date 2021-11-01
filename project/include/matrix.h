@@ -7,12 +7,13 @@
 #define INCORRECT_INPUT     -1
 #define FALSE                0
 #define TRUE                 1
+#define ERR_ALLOCATION      -1
 
 typedef double base_element;
 typedef struct Matrix {
     base_element **m_data;   //  указатель на массив указателей;
-    size_t m_rows;   //  m_rows - строки,
-    size_t m_cols;   //  m_cols - столбцы;
+    size_t m_rows;           //   - строки,
+    size_t m_cols;           //   - столбцы;
 } Matrix;
 
 // Init/release operations

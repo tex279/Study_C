@@ -34,10 +34,7 @@ Matrix* create_minor(const Matrix* matrix, const size_t row, const size_t col) {
 
 int step_viev(Matrix* matrix) {
     for (size_t k = 0; k < matrix->m_rows; k++) {
-        if (check_null_row(matrix, k)) {
-            return FALSE;
-        }
-        if (check_null_col(matrix, k)) {
+        if (check_null_row(matrix, k) || check_null_col(matrix, k)) {
             return FALSE;
         }
 

@@ -51,7 +51,7 @@ int main(void) {
 
                 print_matrix_custom(mat);
 
-                double val = 0;
+                base_element val = 0;
                 det(mat, &val);
 
                 fprintf(stdout, "%f\n", val);
@@ -84,7 +84,7 @@ int main(void) {
                 break;
             }
             default: {
-                fprintf(stdout, "%s\n", "error");
+                fprintf(stdout,  "error\n");
                 break;
             }
         }

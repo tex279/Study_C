@@ -9,6 +9,11 @@ Matrix* mul_scalar(const Matrix* matrix, double val) {
 
     Matrix *matrix_out = create_matrix(matrix->m_rows, matrix->m_cols);
 
+    if (!matrix_out) {
+        fprintf(stdout, "memory allocation error\n");
+        return NULL;
+    }
+
     for (size_t i = 0; i < matrix->m_rows; i++) {
         for (size_t j = 0; j < matrix->m_cols; j++) {
             matrix_out->m_data[i][j] = val*matrix->m_data[i][j];
@@ -23,6 +28,11 @@ Matrix* transp(const Matrix* matrix) {
     }
 
     Matrix *matrix_out = create_matrix(matrix->m_cols, matrix->m_rows);
+
+    if (!matrix_out) {
+        fprintf(stdout, "memory allocation error\n");
+        return NULL;
+    }
 
     for (size_t i = 0; i < matrix->m_cols; i++) {
         for (size_t j = 0; j < matrix->m_rows; j++) {
@@ -43,6 +53,11 @@ Matrix* sum(const Matrix* l, const Matrix* r) {
 
     Matrix *matrix_out = create_matrix(r->m_rows, r->m_cols);
 
+    if (!matrix_out) {
+        fprintf(stdout, "memory allocation error\n");
+        return NULL;
+    }
+
     for (size_t i = 0; i < matrix_out->m_rows; i++) {
         for (size_t j = 0; j < matrix_out->m_cols; j++) {
             matrix_out->m_data[i][j] = l->m_data[i][j] + r->m_data[i][j];
@@ -52,15 +67,16 @@ Matrix* sum(const Matrix* l, const Matrix* r) {
 }
 
 Matrix* sub(const Matrix* l, const Matrix* r) {
-    if (check_ptr_matrix(l)) {
-        return NULL;
-    }
-
-    if (check_ptr_matrix(r)) {
+    if (check_ptr_matrix(l) || check_ptr_matrix(r)) {
         return NULL;
     }
 
     Matrix *matrix_out = create_matrix(l->m_rows, l->m_cols);
+
+    if (!matrix_out) {
+        fprintf(stdout, "memory allocation error\n");
+        return NULL;
+    }
 
     for (size_t i = 0; i < matrix_out->m_rows; i++) {
         for (size_t j = 0; j < matrix_out->m_cols; j++) {
@@ -71,11 +87,7 @@ Matrix* sub(const Matrix* l, const Matrix* r) {
 }
 
 Matrix* mul(const Matrix* l, const Matrix* r) {
-    if (check_ptr_matrix(l)) {
-        return NULL;
-    }
-
-    if (check_ptr_matrix(r)) {
+    if (check_ptr_matrix(l) || check_ptr_matrix(r)) {
         return NULL;
     }
 
@@ -85,6 +97,11 @@ Matrix* mul(const Matrix* l, const Matrix* r) {
     }
 
     Matrix *matrix_out = create_matrix(l->m_rows, r->m_cols);
+
+    if (!matrix_out) {
+        fprintf(stdout, "memory allocation error\n");
+        return NULL;
+    }
 
     size_t num_iter = l->m_cols;
 

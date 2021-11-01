@@ -15,6 +15,11 @@ int det(const Matrix* matrix, double* val) {
 
     Matrix* matrix_out = create_matrix(matrix->m_rows, matrix->m_cols);
 
+    if (!matrix_out) {
+        fprintf(stdout, "memory allocation error\n");
+        return ERR_ALLOCATION;
+    }
+
     for (size_t i = 0; i < matrix->m_rows; i++) {
         for (size_t j = 0; j < matrix->m_cols; j++) {
             matrix_out->m_data[i][j] = matrix->m_data[i][j];
@@ -32,6 +37,7 @@ int det(const Matrix* matrix, double* val) {
     for (size_t i = 0; i < matrix->m_rows; i++) {
         *val = *val * matrix_out->m_data[i][i];
     }
+
     free_matrix(matrix_out);
     return SUCCESS;
 }
@@ -49,6 +55,11 @@ Matrix* adj(const Matrix* matrix) {
 
     Matrix* matrix_cur = create_matrix(matrix->m_rows, matrix->m_cols);
 
+    if (!matrix_cur) {
+        fprintf(stdout, "memory allocation error\n");
+        return NULL;
+    }
+
     for (size_t i = 0; i < matrix->m_rows; i++) {
         base_element val = 0;
         for (size_t j = 0; j < matrix->m_cols; j++) {
@@ -60,6 +71,11 @@ Matrix* adj(const Matrix* matrix) {
     }
 
     Matrix* matrix_out = transp(matrix_cur);
+
+    if (!matrix_out) {
+        fprintf(stdout, "memory allocation error\n");
+        return NULL;
+    }
 
     free_matrix(transp(matrix_cur));
     free_matrix(matrix_cur);
@@ -77,7 +93,18 @@ Matrix* inv(const Matrix* matrix) {
 
     Matrix* adt_to_matrix = adj(matrix);
 
+    if (!adt_to_matrix) {
+        fprintf(stdout, "memory allocation error\n");
+        return NULL;
+    }
+
     Matrix* matrix_out = mul_scalar((adt_to_matrix), 1.0 / val);
+
+    if (!matrix_out) {
+        fprintf(stdout, "memory allocation error\n");
+        free_matrix(adt_to_matrix);
+        return NULL;
+    }
 
     free_matrix(adt_to_matrix);
     return matrix_out;
