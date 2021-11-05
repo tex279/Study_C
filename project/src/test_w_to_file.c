@@ -5,7 +5,7 @@
 #include <test_w_to_file.h>
 #include <std_in_out_data.h>
 
-int foo_comparator(Data *expected_data, Data *got_data) {
+int data_comparator(fin_profile_t *expected_data, fin_profile_t *got_data) {
     if (!(expected_data->number == got_data->number &&
         (strcmp(expected_data->name, got_data->name) == 0) &&
         (strcmp(expected_data->surname, got_data->surname) == 0) &&
@@ -20,12 +20,15 @@ int foo_comparator(Data *expected_data, Data *got_data) {
 }
 
 void test_write_to_file(const char *filename) {
-    Data expected_data;
+    fin_profile_t expected_data;
     write_to_file(filename, &expected_data);
-    Data got_data;
+
+    fin_profile_t got_data;
     read_from_file(filename, &got_data);
+
     output(&got_data);
-    foo_comparator(&expected_data, &got_data) ?
+
+    data_comparator(&expected_data, &got_data) ?
     printf("%s\n", "TEST COMPARE STRUCT SUCCESS") :
     printf("%s\n", "TEST COMPARE STRUCT FAILED");
 }

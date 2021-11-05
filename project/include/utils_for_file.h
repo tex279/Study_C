@@ -3,12 +3,12 @@
 
 #include <base_struct.h>
 
-int input_transaction(Data *data);
-int transaction_write(const char *filename, Data *transfer);
-int black_record(const char *filename_out_general,
-                  const char *filename_out,
-                  const char *filename_update,
-                  Data *client_data,
-                  Data *transfer);
+int input_transaction(fin_profile_t *data);
+int transaction_write(const char *filename, fin_profile_t *transfer);
+int rerecord(const char *filename_source,
+             const char *filename_source_upd,
+             const char *filename_target,
+             fin_profile_t *client_data,
+             fin_profile_t *transfer_data);
 
 #endif  //  PROJECT_INCLUDE_UTILS_FOR_FILE_H_

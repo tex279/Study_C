@@ -10,18 +10,16 @@
 #define ERROR_OPEN_FILE -1
 #define INCORRECT_INPUT 0
 
-struct master_record {
-    int 		number;
-    char 		name[LENGTH_NAME];
-    char 		surname[LENGTH_SURNAME];
-    char 		address[LENGTH_ADDRESS];
-    char        tel_number[LENGTH_TELNUMBER];
-    double  	indebtedness;
-    double    	credit_limit;
-    double  	cash_payments;
-};
-
-typedef  struct  master_record Data;
+typedef struct fin_profile {
+    int       number;
+    char      name[LENGTH_NAME];
+    char      surname[LENGTH_SURNAME];
+    char      address[LENGTH_ADDRESS];
+    char      tel_number[LENGTH_TELNUMBER];
+    double    indebtedness;
+    double    credit_limit;
+    double    cash_payments;
+} fin_profile_t;
 
 
 #endif  //   PROJECT_INCLUDE_BASE_STRUCT_H_

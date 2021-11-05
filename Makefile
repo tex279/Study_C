@@ -12,7 +12,7 @@ SRCS = \
 
 all: clean check test memtest
 
-$(TARGET): $(SRCS) 
+$(TARGET): $(SRCS)
 	$(CC) -Wpedantic -Wall -Wextra -Werror -I $(HDRS_DIR) -o $(TARGET) $(CFLAGS) $(SRCS)
 
 build: $(TARGET)
@@ -29,4 +29,4 @@ memtest: $(TARGET)
 	./btests/run.sh $(TARGET) --memcheck
 
 clean:
-	rm -rf $(TARGET)
+	rm -rf $(TARGET) *.dat

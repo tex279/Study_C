@@ -5,10 +5,7 @@
 #include <utils_for_file.h>
 
 
-int input_transaction(Data *data) {
-    fprintf(stdout, "%s\n%s\n",
-            "1 number account: ",
-            "2 Client cash payments: ");
+int input_transaction(fin_profile_t *data) {
     if (!(fscanf(stdin, "%d%lf",
                &data->number,
                &data->cash_payments)!= -1)) {
@@ -17,47 +14,50 @@ int input_transaction(Data *data) {
     return SUCCESS;
 }
 
-int transaction_write(const char *filename, Data *transfer) {
-    FILE *ofptr = fopen(filename, "w+r");
-    if (!ofptr) {
+int transaction_write(const char *filename, fin_profile_t *transfer) {
+    FILE *target = fopen(filename, "w+r");
+    if (!target) {
         fprintf(stdout, "%s\n", "error");
         return ERROR_OPEN_FILE;
     }
+    fprintf(stdout, "%s\n%s\n",
+            "1 number account: ",
+            "2 Client cash payments: ");
     while (input_transaction(transfer)) {
-        fprintf(ofptr, "%-3d%-6.2f\n",
+        fprintf(target, "%-3d%-6.2f\n",
                 transfer->number,
                 transfer->cash_payments);
     }
-    fclose(ofptr);
+    fclose(target);
     return SUCCESS;
 }
 
-int black_record(const char *filename_out_general,
-                  const char *filename_out,
-                  const char *filename_update,
-                  Data *client_data,
-                  Data *transfer) {
-    FILE *ptr = fopen(filename_out_general, "r");
-    FILE *ptr_2 = fopen(filename_out, "r");
-    FILE *ptr_3 = fopen(filename_update, "w");
-    if (!ptr || !ptr_2 || !ptr_3) {
+int rerecord(const char *filename_source,
+             const char *filename_source_upd,
+             const char *filename_target,
+             fin_profile_t *client_data,
+             fin_profile_t *transfer_data) {
+    FILE *sourse = fopen(filename_source, "r");
+    FILE *sourse_upd = fopen(filename_source_upd, "r");
+    FILE *target = fopen(filename_target, "w");
+    if (!sourse || !sourse_upd || !target) {
         fprintf(stdout, "%s\n", "error");
         return ERROR_OPEN_FILE;
     }
-    while (scan_data(ptr, client_data)) {
-        while (fscanf(ptr_2, "%d%lf\n",
-                      &transfer->number,
-                      &transfer->cash_payments) != -1) {
-            if ((client_data->number == transfer->number) != 0) {
-                client_data->credit_limit += transfer->cash_payments;
-                print_data(ptr_3, client_data);
+    while (scan_data(sourse, client_data)) {
+        while (fscanf(sourse_upd, "%d%lf\n",
+                      &transfer_data->number,
+                      &transfer_data->cash_payments) != -1) {
+            if ((client_data->number == transfer_data->number) != 0) {
+                client_data->credit_limit += transfer_data->cash_payments;
+                print_data(target, client_data);
             }
         }
-        rewind(ptr_2);
+        rewind(sourse_upd);
     }
-    fclose(ptr);
-    fclose(ptr_2);
-    fclose(ptr_3);
+    fclose(sourse);
+    fclose(sourse_upd);
+    fclose(target);
     return SUCCESS;
 }
 

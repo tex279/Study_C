@@ -4,9 +4,9 @@
 #include <stdio.h>
 #include <base_struct.h>
 
-int scan_data(FILE *filename, Data *data);
-void print_data(FILE *filename, Data *data);
-int input(Data *data);
-void output(Data *data);
+int scan_data(FILE *filename, fin_profile_t *data);
+void print_data(FILE *filename, fin_profile_t *data);
+int input(fin_profile_t *data);
+void output(fin_profile_t *data);
 
 #endif  //  PROJECT_INCLUDE_STD_IN_OUT_DATA_H_
