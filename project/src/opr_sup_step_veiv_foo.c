@@ -7,11 +7,11 @@ int check_null_row(const Matrix* matrix, const size_t row) {
 
     while (matrix->m_data[row][pos] == 0) {
         if (pos == matrix->m_rows - 1) {
-            return TRUE;
+            return true;
         }
         pos++;
     }
-    return FALSE;
+    return false;
 }
 
 int check_null_col(const Matrix* matrix, const size_t col) {
@@ -19,11 +19,11 @@ int check_null_col(const Matrix* matrix, const size_t col) {
 
     while (matrix->m_data[pos][col] == 0) {
         if (pos == matrix->m_cols - 1) {
-            return TRUE;
+            return true;
         }
         pos++;
     }
-    return FALSE;
+    return false;
 }
 
 int check_null_diag_el(Matrix* matrix, const size_t pos) {
@@ -35,9 +35,9 @@ int check_null_diag_el(Matrix* matrix, const size_t pos) {
         }
 
         plus_col(matrix, pos, pos + not_zero_col);
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    return false;
 }
 
 int plus_col(Matrix* matrix, const size_t target, const size_t sourse) {

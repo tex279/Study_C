@@ -10,7 +10,7 @@ Matrix* mul_scalar(const Matrix* matrix, double val) {
     Matrix *matrix_out = create_matrix(matrix->m_rows, matrix->m_cols);
 
     if (!matrix_out) {
-        fprintf(stdout, "memory allocation error\n");
+        fprintf(stderr, "memory allocation error\n");
         return NULL;
     }
 
@@ -30,7 +30,7 @@ Matrix* transp(const Matrix* matrix) {
     Matrix *matrix_out = create_matrix(matrix->m_cols, matrix->m_rows);
 
     if (!matrix_out) {
-        fprintf(stdout, "memory allocation error\n");
+        fprintf(stderr, "memory allocation error\n");
         return NULL;
     }
 
@@ -43,18 +43,14 @@ Matrix* transp(const Matrix* matrix) {
 }
 
 Matrix* sum(const Matrix* l, const Matrix* r) {
-    if (check_ptr_matrix(l)) {
-        return NULL;
-    }
-
-    if (check_ptr_matrix(r)) {
+    if (check_ptr_matrix(l) || check_ptr_matrix(r)) {
         return NULL;
     }
 
     Matrix *matrix_out = create_matrix(r->m_rows, r->m_cols);
 
     if (!matrix_out) {
-        fprintf(stdout, "memory allocation error\n");
+        fprintf(stderr, "memory allocation error\n");
         return NULL;
     }
 
@@ -74,7 +70,7 @@ Matrix* sub(const Matrix* l, const Matrix* r) {
     Matrix *matrix_out = create_matrix(l->m_rows, l->m_cols);
 
     if (!matrix_out) {
-        fprintf(stdout, "memory allocation error\n");
+        fprintf(stderr, "memory allocation error\n");
         return NULL;
     }
 
@@ -92,7 +88,7 @@ Matrix* mul(const Matrix* l, const Matrix* r) {
     }
 
     if (l->m_cols != r->m_rows) {
-        fprintf(stdout, "these matrices cannot be multiplied\n");
+        fprintf(stderr, "these matrices cannot be multiplied\n");
         return NULL;
     }
 

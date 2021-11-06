@@ -11,7 +11,7 @@ Matrix* create_matrix(size_t rows, size_t cols) {
     Matrix *matrix_out = (Matrix*)calloc(1, sizeof(Matrix));
 
     if (!matrix_out) {
-        fprintf(stdout, "memory allocation error\n");
+        fprintf(stderr, "memory allocation error\n");
         return NULL;
     }
 
@@ -25,7 +25,7 @@ Matrix* create_matrix(size_t rows, size_t cols) {
         matrix_out->m_data[i] = calloc(cols, sizeof(base_element));
 
         if (!matrix_out->m_data[i]) {
-            fprintf(stdout, "memory allocation error\n");
+            fprintf(stderr, "memory allocation error\n");
             for (size_t j = 0; j < i; j++) {
                 free(matrix_out->m_data[i]);
             }
@@ -54,7 +54,7 @@ Matrix* create_matrix_from_file(const char* path_file) {
     FILE* source = fopen(path_file, "r");
 
     if (!source) {
-        fprintf(stdout, "impossible open file in your path\n");
+        fprintf(stderr, "impossible open file in your path\n");
         return NULL;
     }
 
@@ -63,7 +63,7 @@ Matrix* create_matrix_from_file(const char* path_file) {
 
     if (fscanf(source, "%zu %zu", &rows, &cols) != 2) {
         fclose(source);
-        fprintf(stdout, "incorrect input, there should be 2 values type - double\n");
+        fprintf(stderr, "incorrect input, there should be 2 values type - double\n");
         return NULL;
     }
 
@@ -75,7 +75,7 @@ Matrix* create_matrix_from_file(const char* path_file) {
     Matrix *matrix_out = create_matrix(rows, cols);
 
     if (!matrix_out) {
-        fprintf(stdout, "memory allocation error\n");
+        fprintf(stderr, "memory allocation error\n");
         fclose(source);
         return NULL;
     }
@@ -85,7 +85,7 @@ Matrix* create_matrix_from_file(const char* path_file) {
             if (fscanf(source, "%lf", &(matrix_out->m_data[i][j])) != 1) {
                 fclose(source);
                 free_matrix(matrix_out);
-                fprintf(stdout, "incorrect input, there should be 1 values type - double\n");
+                fprintf(stderr, "incorrect input, there should be 1 values type - double\n");
                 return NULL;
             }
         }

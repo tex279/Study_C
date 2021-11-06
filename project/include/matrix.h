@@ -2,11 +2,10 @@
 #define PROJECT_INCLUDE_MATRIX_H_
 
 #include <stddef.h>
+#include <stdbool.h>
 
 #define SUCCESS              0
 #define INCORRECT_INPUT     -1
-#define FALSE                0
-#define TRUE                 1
 #define ERR_ALLOCATION      -1
 
 typedef double base_element;
@@ -44,7 +43,6 @@ int check_index(const int rows , const int cols);
 int check_ptr_matrix(const Matrix* matrix);
 
 // Support
-void print_matrix_custom(const Matrix* matrix);
 int step_viev(Matrix* matrix);
 Matrix* create_minor(const Matrix* matrix, const size_t row, const size_t col);
 

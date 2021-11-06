@@ -9,14 +9,14 @@ int det(const Matrix* matrix, double* val) {
     }
 
     if (matrix->m_rows != matrix->m_cols) {
-        fprintf(stdout, "incorrect input, matrix must be square\n");
+        fprintf(stderr, "incorrect input, matrix must be square\n");
         return INCORRECT_INPUT;
     }
 
     Matrix* matrix_out = create_matrix(matrix->m_rows, matrix->m_cols);
 
     if (!matrix_out) {
-        fprintf(stdout, "memory allocation error\n");
+        fprintf(stderr, "memory allocation error\n");
         return ERR_ALLOCATION;
     }
 
@@ -56,7 +56,7 @@ Matrix* adj(const Matrix* matrix) {
     Matrix* matrix_cur = create_matrix(matrix->m_rows, matrix->m_cols);
 
     if (!matrix_cur) {
-        fprintf(stdout, "memory allocation error\n");
+        fprintf(stderr, "memory allocation error\n");
         return NULL;
     }
 
@@ -73,11 +73,10 @@ Matrix* adj(const Matrix* matrix) {
     Matrix* matrix_out = transp(matrix_cur);
 
     if (!matrix_out) {
-        fprintf(stdout, "memory allocation error\n");
+        fprintf(stderr, "memory allocation error\n");
         return NULL;
     }
 
-    free_matrix(transp(matrix_cur));
     free_matrix(matrix_cur);
     return  matrix_out;
 }
@@ -94,14 +93,19 @@ Matrix* inv(const Matrix* matrix) {
     Matrix* adt_to_matrix = adj(matrix);
 
     if (!adt_to_matrix) {
-        fprintf(stdout, "memory allocation error\n");
+        fprintf(stderr, "memory allocation error\n");
+        return NULL;
+    }
+
+    if (!val) {
+        fprintf(stderr, "division by zero\n");
         return NULL;
     }
 
     Matrix* matrix_out = mul_scalar((adt_to_matrix), 1.0 / val);
 
     if (!matrix_out) {
-        fprintf(stdout, "memory allocation error\n");
+        fprintf(stderr, "memory allocation error\n");
         free_matrix(adt_to_matrix);
         return NULL;
     }

@@ -2,15 +2,6 @@
 
 #include <matrix.h>
 
-void print_matrix_custom(const Matrix* matrix) {
-    for (size_t i = 0; i < matrix->m_rows; i++) {
-        for (size_t j = 0; j < matrix->m_cols; j++) {
-            fprintf(stdout, "%f ", matrix->m_data[i][j]);
-        }
-        fprintf(stdout, "\n");
-    }
-}
-
 Matrix* create_minor(const Matrix* matrix, const size_t row, const size_t col) {
     Matrix* minor = create_matrix(matrix->m_rows-1, matrix->m_cols-1);
 
@@ -35,7 +26,7 @@ Matrix* create_minor(const Matrix* matrix, const size_t row, const size_t col) {
 int step_viev(Matrix* matrix) {
     for (size_t k = 0; k < matrix->m_rows; k++) {
         if (check_null_row(matrix, k) || check_null_col(matrix, k)) {
-            return FALSE;
+            return false;
         }
 
         for (size_t i = 1 + k; i < matrix->m_rows; i++) {
@@ -48,5 +39,5 @@ int step_viev(Matrix* matrix) {
             }
         }
     }
-    return TRUE;
+    return true;
 }

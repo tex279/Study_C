@@ -7,19 +7,11 @@ int get_rows(const Matrix* matrix, size_t* rows) {
         return INCORRECT_INPUT;
     }
 
-    if (check_index(matrix->m_rows, matrix->m_cols)) {
-        return INCORRECT_INPUT;
-    }
-
     *rows = matrix->m_rows;
     return SUCCESS;
 }
 int get_cols(const Matrix* matrix, size_t* cols) {
     if (check_ptr_matrix(matrix)) {
-        return INCORRECT_INPUT;
-    }
-
-    if (check_index(matrix->m_rows, matrix->m_cols)) {
         return INCORRECT_INPUT;
     }
 
@@ -32,7 +24,7 @@ int get_elem(const Matrix* matrix, size_t row, size_t col, double* val) {
     }
 
     if (row > matrix->m_rows || col > matrix->m_cols) {
-        fprintf(stdout, "incorrect input, the requested element is out of the dimension of the matrix\n");
+        fprintf(stderr, "incorrect input, the requested element is out of the dimension of the matrix\n");
         return INCORRECT_INPUT;
     }
 
@@ -45,7 +37,7 @@ int set_elem(Matrix* matrix, size_t row, size_t col, double val) {
     }
 
     if (row > matrix->m_rows || col > matrix->m_cols) {
-        fprintf(stdout, "incorrect input, the requested element is out of the dimension of the matrix\n");
+        fprintf(stderr, "incorrect input, the requested element is out of the dimension of the matrix\n");
         return INCORRECT_INPUT;
     }
 
