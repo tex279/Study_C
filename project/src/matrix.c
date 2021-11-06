@@ -15,14 +15,14 @@ Matrix* create_matrix(size_t rows, size_t cols) {
         return NULL;
     }
 
-    matrix_out->m_data = calloc(rows, sizeof(base_element*));
+    matrix_out->m_data = calloc(rows, sizeof(base_element_t*));
 
     if (!matrix_out->m_data) {
         free(matrix_out);
         return NULL;
     }
     for (size_t i = 0; i < rows; i++) {
-        matrix_out->m_data[i] = calloc(cols, sizeof(base_element));
+        matrix_out->m_data[i] = calloc(cols, sizeof(base_element_t));
 
         if (!matrix_out->m_data[i]) {
             fprintf(stderr, "memory allocation error\n");

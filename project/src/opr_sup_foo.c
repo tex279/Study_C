@@ -32,7 +32,7 @@ int step_viev(Matrix* matrix) {
         for (size_t i = 1 + k; i < matrix->m_rows; i++) {
             check_null_diag_el(matrix, k);
 
-            base_element mull = matrix->m_data[i][k] / matrix->m_data[k][k];
+            base_element_t mull = matrix->m_data[i][k] / matrix->m_data[k][k];
 
             for (size_t j = 0; j < matrix->m_rows; j++) {
                 matrix->m_data[i][j] = matrix->m_data[i][j] - mull * matrix->m_data[k][j];

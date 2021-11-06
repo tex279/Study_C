@@ -8,9 +8,9 @@
 #define INCORRECT_INPUT     -1
 #define ERR_ALLOCATION      -1
 
-typedef double base_element;
+typedef double base_element_t;
 typedef struct Matrix {
-    base_element **m_data;   //  указатель на массив указателей;
+    base_element_t **m_data;   //  указатель на массив указателей;
     size_t m_rows;           //   - строки,
     size_t m_cols;           //   - столбцы;
 } Matrix;

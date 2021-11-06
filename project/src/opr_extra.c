@@ -61,7 +61,7 @@ Matrix* adj(const Matrix* matrix) {
     }
 
     for (size_t i = 0; i < matrix->m_rows; i++) {
-        base_element val = 0;
+        base_element_t val = 0;
         for (size_t j = 0; j < matrix->m_cols; j++) {
             Matrix* cur_munor = create_minor(matrix, i, j);
             det(cur_munor, &val);
@@ -86,7 +86,7 @@ Matrix* inv(const Matrix* matrix) {
         return NULL;
     }
 
-    base_element val = 0;
+    base_element_t val = 0;
 
     det(matrix, &val);
 
