@@ -14,7 +14,7 @@ int input_transaction(fin_profile_t *data) {
     return SUCCESS;
 }
 
-int transaction_write(const char *filename, fin_profile_t *transfer) {
+int transaction_write(const char *filename, fin_profile_t *transfer_data) {
     FILE *target = fopen(filename, "w+r");
     if (!target) {
         fprintf(stdout, "%s\n", "error");
@@ -23,10 +23,10 @@ int transaction_write(const char *filename, fin_profile_t *transfer) {
     fprintf(stdout, "%s\n%s\n",
             "1 number account: ",
             "2 Client cash payments: ");
-    while (input_transaction(transfer)) {
+    while (input_transaction(transfer_data)) {
         fprintf(target, "%-3d%-6.2f\n",
-                transfer->number,
-                transfer->cash_payments);
+                transfer_data->number,
+                transfer_data->cash_payments);
     }
     fclose(target);
     return SUCCESS;

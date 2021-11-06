@@ -7,7 +7,7 @@
 int write_to_file(const char *filename, fin_profile_t *data) {
     FILE *target = fopen(filename, "w");
     if (!target) {
-        fprintf(stdout, "%s\n", "error from foo write to file");
+        fprintf(stderr, "%s\n", "error write to file");
         return ERROR_OPEN_FILE;
     }
     while (input(data)) {
@@ -21,7 +21,7 @@ int write_to_file(const char *filename, fin_profile_t *data) {
 int read_from_file(const char *filename, fin_profile_t *data) {
     FILE *target = fopen(filename, "r");
     if (!target) {
-        fprintf(stdout, "%s\n", "error from foo read from file");
+        fprintf(stderr, "%s\n", "error from foo read from file");
         return ERROR_OPEN_FILE;
     }
     while (scan_data(target, data)) {}
