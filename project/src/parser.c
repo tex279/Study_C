@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,106 +7,122 @@
 
 #include <parser.h>
 
-size_t check_header(char const *source, size_t const pos) {
-    if (pos == 0 || source[pos - 1] == '\n' || source[pos - 1] == '\r') {
-        return true;
+size_t skip_space(char *pos) {
+    size_t i = 0;
+    while (isspace(*pos++)) {
+        i++;
+    }
+    return i;
+}
+
+char *search_header(char *source, char const *key) {
+    char *ptr_header = strcasestr(source, key);
+    if (!ptr_header) {
+        return NULL;
+    }
+
+    if (ptr_header == source) {
+        return ptr_header + skip_space(ptr_header) + strlen(key) + 1;
+    }
+
+    while (*(ptr_header - 1) != '\n') {
+        char *skip_search = ptr_header + 1;
+        ptr_header = strcasestr(skip_search, key);
+    }
+
+    return ptr_header + skip_space(ptr_header) + strlen(key) + 1;
+}
+
+int check_end_header(char *source) {
+    if (*source == '\n' || *source == '\r') {
+        for (size_t i = 2; i < BUF; i++) {
+            if (*(source + i) == '\n' || *(source + i) == '\r') {
+                return false;
+            }
+            if (*(source + i) == ':') {
+                return true;
+            }
+        }
     }
     return false;
 }
 
-int search_header(char const *source, char const *key) {
-    int pos = 0;
-    pos = search(pos, source, key);
-    if (!pos) {
-        return pos;
-    }
-    if (pos == -1) {
-        return -1;
-    }
-    while (!check_header(source, pos)) {
-        pos += strlen(key);
-        pos = search(pos, source, key);
-    }
-    return pos;
-}
+char *parser_key_header(char *source, char const *key) {
+    char *pos = search_header(source, key);
 
-char *parser_key_header(char const *source, char const *key, size_t const flag_rule) {
-    int pos = search_header(source, key);
-    if (pos == -1) {
-        char *value;
+    char *value = (char*)calloc(400, sizeof(char));
+
+    if (!pos) {
         value = "";
         return value;
     }
-    char *value = get_value(source, pos + strlen(key) + skip_space(source, pos + strlen(key)));
-    if (!value) {
-        return NULL;
-    }
-
-    if (flag_rule) {
-        if (!strchr(value, '@')) {
-            pos = search(pos, source, "\n");
-            char *more_value = get_value(source, pos + 1);
-            value = strncat(value, more_value, strlen(more_value));
+    size_t i = 0;
+    size_t k = 0;
+    while (!check_end_header(pos + i)) {
+        if (*(pos + i) == '\n' || *(pos + i) == '\r') {
+            i++;
         }
+        *(value + k) = *(pos + i);
+        i++;
+        k++;
     }
-
     return value;
 }
 
-size_t parser_key_parts(char const *source) {
+size_t parser_key_parts(char *source) {
     size_t res = 1;
-    int pos = search_header(source, TYPE);
-    if (pos != -1) {
-        pos = search(pos, source, MULTIPART);
-        if (pos != -1) {
-            pos = search(pos, source, BOUNDARY);
-            if (pos != -1) {
-                char *key_part = get_value(source, pos + strlen(BOUNDARY));
-                //  fprintf(stdout, "MAIN    %s\n", key_part);
-                if (key_part[0] == '\"') {
-                    key_part = rm_aptr(key_part);
+    char *pos = search_header(source, TYPE);
+    if (pos) {
+        pos = strcasestr(pos, MULTIPART);
+        //  fprintf(stdout, "FIND\n");
+        if (pos) {
+            pos = strcasestr(pos, BOUNDARY);
+            //  fprintf(stdout, "FIND\n");
+            if (pos) {
+                pos += strlen(BOUNDARY);
+
+                char *key_boundary = (char*)calloc(400, sizeof(char));;
+
+                if (*pos == '\"') {
+                    pos++;
                 }
-                //  fprintf(stdout, "MAIN    %s\n", key_part);
-                res = 0;
-                pos = search(pos, source, key_part);
-                /*for (size_t i = 0; i < 100; i++) {
-                    fprintf(stdout, "%c", source[pos - 10 +i]);
-                }*/
-                while (pos != -1) {
-                    //  fprintf(stdout, "FIND\n");
-                    if (source[pos + strlen(key_part)] != '-') {
-                        res++;
-                    }
-                    //  fprintf(stdout, "FIND\n");
-                    //  fprintf(stdout, "-----%c----\n", source[pos]);
-                    if (source[pos + strlen(key_part)] == '-') {
+                //  fprintf(stdout, "FIND\n");
+                size_t i = 0;
+                while (true) {
+                    if (*(pos + i) == '\"' || *(pos + i) == '\n' || *(pos + i) == '\r' || *(pos + i) == ':') {
                         break;
                     }
-                    //  fprintf(stdout, "%ld\n", res);
-                    pos += strlen(key_part);
-                    pos = search(pos, source, key_part);
-                    //  fprintf(stdout, "!----%c----!", source[pos + strlen(key_part)]);
-                    //  fprintf(stdout, "\n");
+                    *(key_boundary + i) = *(pos + i);
+                    i++;
                 }
-                if (res > 1) {
-                    res = res - 1;
+                //  fprintf(stdout, "%s\n", key_boundary);
+                pos = strcasestr(pos, key_boundary);
+                while (pos) {
+                    //  fprintf(stdout, "FIND\n");
+                    char *skip_search = pos + 1;
+                    pos = strcasestr(skip_search, key_boundary);
+                    if (pos && *(pos + strlen(key_boundary)) != '-') {
+                        //  fprintf(stdout, "FIND\n");
+                        res++;
+                    }
                 }
+                res = res - 1;
             }
         }
     }
     return res;
 }
 
-eml_t *parser(char const *source) {
+eml_t *parser(char *source) {
     eml_t *eml = calloc(sizeof(eml_t), 1);
 
     if (!eml) {
         return NULL;
     }
 
-    eml->source = parser_key_header(source, FROM, 1);
-    eml->target = parser_key_header(source, TO, 1);
-    eml->date = parser_key_header(source, DATE, 0);
+    eml->source = parser_key_header(source, FROM);
+    eml->target = parser_key_header(source, TO);
+    eml->date = parser_key_header(source, DATE);
     eml->parts = parser_key_parts(source);
 
     return eml;
