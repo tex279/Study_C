@@ -1,10 +1,12 @@
 #ifndef PROJECT_INCLUDE_PARSER_H_
 #define PROJECT_INCLUDE_PARSER_H_
 
-#include <stddef.h>
-#include <stdio.h>
 
-#define MAX_LENGTH_STR 255
+#define ERR_OPEN -1
+#define ERR_STAT -2
+#define NOT_FIND -3
+
+#define MAX_LENGTH_STR 1000
 
 #define FROM "From:"
 #define TO "To:"
@@ -18,25 +20,21 @@ typedef struct {
 char *source;
 char *target;
 char *date;
-int part;
+size_t parts;
 } eml_t;
 
-eml_t *create_eml(void);
-void free_eml(eml_t *data);
-char *search_value(char const *source, char const *key);
-char *get_value(char const *source, char const *pos);
-char *parser_key(char const *str, char const *key);
-int parser(FILE *filename);
+//  Parser
+size_t check_header(char const *source, size_t const pos);
+char *parser_key_header(char const *source, char const *key, size_t const flag_rule);
+eml_t *parser(char const *source);
 
-// Utils
-eml_t *create_eml(void);
-void output(eml_t *data);
-void free_eml(eml_t *data);
-
-//  Support
-size_t check_zero_end(char const *source, char const *pos);
-size_t skip_space(char *pos);
-char *rm_apst(char const *source);
-char *check_type_eml(char const *str);
+// Support
+size_t skip_space(char const *source, size_t const pos);
+char *create_str(size_t const length);
+int cmp_str(size_t const begin, char const *source, char const *key);
+int search(size_t const begin, char const *source, char const *key);
+char *get_value(char const *source, size_t const pos);
+eml_t *parser(char const *source);
+char *rm_aptr(char const *value);
 
 #endif  //  PROJECT_INCLUDE_PARSER_H_

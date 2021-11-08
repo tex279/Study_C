@@ -1,39 +1,65 @@
-#include <ctype.h>
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <ctype.h>
 
 #include <parser.h>
 
-size_t check_zero_end(char const *source, char const *pos) {
-    for (size_t i = strlen(source) - (pos - source); i > 0; i--) {
-        if (!isspace(source[i])) {
+size_t skip_space(char const *source, size_t const pos) {
+    size_t k = 0;
+    while (isspace(source[pos + k])) {
+        k++;
+    }
+    return k;
+}
+
+int cmp_str(size_t const begin, char const *source, char const *key) {
+    for (size_t k = 0; k < strlen(key); k++) {
+        if (toupper(source[begin + k]) != toupper(key[k])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+int search(size_t const begin, char const *source, char const *key) {
+    for (size_t i = begin; i < strlen(source); i++) {
+        if (cmp_str(i, source, key)) {
             return i;
         }
     }
-    return 0;
+    return -1 ;
 }
 
-size_t skip_space(char *pos) {
-    size_t i = 0;
-    while (isspace(*pos++)) {
-        i++;
+char *get_value(char const *source, size_t const pos) {
+    char *res = create_str(MAX_LENGTH_STR);
+
+    for (size_t i = 0; i < MAX_LENGTH_STR; i++) {
+        if (source[pos + i] == '\n' || source[pos + i] == '\r') {
+            break;
+        }
+        res[i] = source[pos + i];
     }
-    return i;
+    return res;
 }
 
-char *rm_apst(char const *source) {
-    char *res = (char*)calloc(strlen(source), sizeof(char));
+char *rm_aptr(char const *value) {
+    char *res = create_str(strlen(value) - 2);
+    for (size_t i = 0; i < strlen(value); i++) {
+        if (value[i + 1] == '\"') {
+            break;
+        }
+        res[i] = value[i + 1];
+    }
+    return res;
+}
 
+char *create_str(size_t const length) {
+    char *res = (char*)calloc(length, sizeof(char));
     if (!res) {
         fprintf(stderr, "failed to allocate memory\n");
         return NULL;
-    }
-
-    size_t k = 0;
-    for (size_t i = 1; i < strlen(source) - 1; i++) {
-        res[k] = source[i];
-        k++;
     }
     return res;
 }

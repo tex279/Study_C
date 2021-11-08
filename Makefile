@@ -6,7 +6,7 @@ HDRS = \
 
 SRCS = \
        project/src/main.c \
-       project/src/parser*.c
+       project/src/parser*.c \
 
 .PHONY: all check build test memtest rebuild clean
 
