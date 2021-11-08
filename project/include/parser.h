@@ -24,6 +24,7 @@ size_t parts;
 } eml_t;
 
 //  Parser
+char *get_boundary_key(char *source);
 char *parser_key_header(char *source, char const *key);
 size_t parser_key_parts(char *source);
 eml_t *parser(char *source);
