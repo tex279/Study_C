@@ -7,25 +7,6 @@
 
 #include <parser.h>
 
-void free_eml(eml_t *eml) {
-    free(eml->source);
-    free(eml->target);
-    free(eml->date);
-    free(eml);
-}
-
-void print_eml(eml_t *eml) {
-    fprintf(stdout, "%s|%s|%s|%zu\n", eml->source, eml->target, eml->date, eml->parts);
-}
-
-size_t skip_space(char *pos) {
-    size_t i = 0;
-    while (isspace(*pos++)) {
-        i++;
-    }
-    return i;
-}
-
 char *search_header(char *source, char const *key) {
     char *ptr_header = strcasestr(source, key);
     if (!ptr_header) {
@@ -44,27 +25,6 @@ char *search_header(char *source, char const *key) {
     return ptr_header + skip_space(ptr_header + strlen(key)) + strlen(key);
 }
 
-size_t check_str(char const *in) {
-    size_t i = 0;
-    while (true) {
-        if (*(in + i) == ':') {
-            return false;
-        }
-
-        if (*(in + i) == '=') {
-            return true;
-        }
-
-        if (*(in + i) == '@') {
-            return true;
-        }
-        if (*(in + i) == '\n' || *(in + i) == '\r') {
-            return false;
-        }
-        i++;
-    }
-}
-
 char* parser_key_header(char *source, char const *key) {
     char *pos = search_header(source, key);
     char *start;
@@ -72,6 +32,9 @@ char* parser_key_header(char *source, char const *key) {
 
     if (!pos) {
         char *value = calloc(1, sizeof(char));
+        if (!value) {
+            return NULL;
+        }
         return value;
     }
 
@@ -97,51 +60,8 @@ char* parser_key_header(char *source, char const *key) {
         pos = end + 1;
     }
 
-    size_t length_value = (size_t)(pos - start);
-
-    char *value = calloc((length_value + 1), sizeof(char));
-
-    size_t k = 0;
-    size_t i = 0;
-    while (k < length_value) {
-        if (*(start + i) == '\n' || *(start + i) == '\r') {
-            i++;
-            length_value--;
-            continue;
-        }
-        *(value + k) = *(start + i);
-        k++;
-        i++;
-    }
-    *(value + length_value) = '\0';
+    char *value = get_value_header(pos, start);
     return value;
-}
-
-char *get_boundary_key(char *source) {
-    if (*source == '\"') {
-        source++;
-    }
-
-    size_t i = 0;
-    while (true) {
-        if (*(source + i) == '\"' || isspace(*(source + i))) {
-            break;
-        }
-        i++;
-    }
-
-    size_t length_value = i;
-
-    char *key_boundary = calloc(length_value + 1, sizeof(char));;
-
-    size_t k = 0;
-    while (k < length_value) {
-        *(key_boundary + k) = *(source + k);
-        k++;
-    }
-
-    *(key_boundary + length_value) = '\0';
-    return key_boundary;
 }
 
 size_t parser_key_parts(char *source) {

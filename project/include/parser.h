@@ -20,14 +20,17 @@ char *date;
 size_t parts;
 } eml_t;
 
+// Support
 void free_eml(eml_t *eml);
 void print_eml(eml_t *eml);
-
 size_t skip_space(char *pos);
 size_t check_str(char const *in);
+char *get_value_header(char const *end, char *start);
+char *get_boundary_key(char *source);
+
+//  Main
 char *search_header(char *source, char const *key);
 char *parser_key_header(char *source, char const *key);
-char *get_boundary_key(char *source);
 size_t parser_key_parts(char *source);
 eml_t *parser(char *source);
 
