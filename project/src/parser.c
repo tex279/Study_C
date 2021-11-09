@@ -81,7 +81,7 @@ char* parser_key_header(char *source, char const *key) {
             end = strchr(pos, '\n');
         }
 
-        pos = end - 1;
+        pos = end;
 
         if (*end == '\n' && *(end + 1) == '\r') {
             end++;
@@ -97,7 +97,7 @@ char* parser_key_header(char *source, char const *key) {
         pos = end + 1;
     }
 
-    size_t length_value = (size_t)(pos - start + 1);
+    size_t length_value = (size_t)(pos - start);
 
     char *value = (char*)calloc((length_value + 1), sizeof(char));
 
