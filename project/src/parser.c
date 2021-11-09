@@ -99,7 +99,7 @@ char* parser_key_header(char *source, char const *key) {
 
     size_t length_value = (size_t)(pos - start);
 
-    char *value = (char*)calloc((length_value + 1), sizeof(char));
+    char *value = calloc((length_value + 1), sizeof(char));
 
     size_t k = 0;
     size_t i = 0;
@@ -113,7 +113,7 @@ char* parser_key_header(char *source, char const *key) {
         k++;
         i++;
     }
-    *(value + length_value + 1) = '\0';
+    *(value + length_value) = '\0';
     return value;
 }
 
@@ -132,7 +132,7 @@ char *get_boundary_key(char *source) {
 
     size_t length_value = i;
 
-    char *key_boundary = (char*)calloc(length_value + 1, sizeof(char));;
+    char *key_boundary = calloc(length_value + 1, sizeof(char));;
 
     size_t k = 0;
     while (k < length_value) {
@@ -140,7 +140,7 @@ char *get_boundary_key(char *source) {
         k++;
     }
 
-    *(key_boundary + length_value + 1) = '\0';
+    *(key_boundary + length_value) = '\0';
     return key_boundary;
 }
 
@@ -175,7 +175,6 @@ size_t parser_key_parts(char *source) {
     while (pos) {
         pos++;
         pos = strstr(pos, key_boundary);
-
         if (pos && isspace(*(pos + strlen(key_boundary)))) {
             res++;
         }
@@ -187,7 +186,6 @@ size_t parser_key_parts(char *source) {
 
 eml_t *parser(char *source) {
     eml_t *eml = calloc(1, sizeof(eml_t));
-
     if (!eml) {
         return NULL;
     }
