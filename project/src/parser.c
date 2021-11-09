@@ -37,8 +37,8 @@ char *search_header(char *source, char const *key) {
     }
 
     while (*(ptr_header - 1) != '\n') {
-        char *skip_search = ptr_header + 1;
-        ptr_header = strcasestr(skip_search, key);
+        ptr_header++;
+        ptr_header = strcasestr(ptr_header, key);
     }
 
     return ptr_header + skip_space(ptr_header + strlen(key)) + strlen(key);
