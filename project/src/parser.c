@@ -99,9 +99,6 @@ char* parser_key_header(char *source, char const *key) {
 
     size_t length_value = (size_t)(pos - start + 1);
 
-    //  fprintf(stdout, "\n%zu\n", length_value);
-    //  fprintf(stdout, "\nPOS_OUT-----%c-------\n", *pos);
-
     char *value = (char*)calloc((length_value + 1), sizeof(char));
 
     size_t k = 0;
@@ -109,8 +106,6 @@ char* parser_key_header(char *source, char const *key) {
     while (k != length_value) {
         //  fprintf(stdout, "%c", *(start + i));
         if (*(start + i) == '\n' || *(start + i) == '\r') {
-            //  fprintf(stdout, "%c", *(start + i - 1));
-            //  fprintf(stdout, "FIND\n");
             i++;
             length_value--;
             continue;
@@ -118,7 +113,6 @@ char* parser_key_header(char *source, char const *key) {
         *(value + k) = *(start + i);
         k++;
         i++;
-        //  fprintf(stdout, "%s\n", value);
     }
     *(value + length_value + 1) = '\0';
     return value;
