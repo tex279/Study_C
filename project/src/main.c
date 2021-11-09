@@ -1,17 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
-#include <unistd.h>
 #include <fcntl.h>
+
+#define ERR_OPEN -1
+#define ERR_STAT -2
+#define ERR_INPUT -3
 
 #include <parser.h>
 
 int main(int argc, char const **argv) {
     if (argc != 2) {
         fprintf(stdout, "incorrect input\n");
-        return -1;
+        return ERR_INPUT;
     }
     char const *path_to_eml = argv[1];
 

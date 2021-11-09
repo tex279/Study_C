@@ -3,9 +3,6 @@
 
 #include <stdlib.h>
 
-#define ERR_OPEN -1
-#define ERR_STAT -2
-
 #define MAX_LENGTH_COMPARE 100
 
 #define FROM "From:"
