@@ -36,7 +36,7 @@ int main(int argc, char const **argv) {
 
     eml_t *eml = parser(data);
 
-    fprintf(stdout, "%s|%s|%s|%ld\n", eml->source, eml->target, eml->date, eml->parts);
+    print_eml(eml);
 
     return 0;
 }

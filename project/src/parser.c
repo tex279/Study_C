@@ -7,6 +7,17 @@
 
 #include <parser.h>
 
+void free_eml(eml_t *eml) {
+    free(eml->source);
+    free(eml->target);
+    free(eml->date);
+    free(eml);
+}
+
+void print_eml(eml_t *eml) {
+    fprintf(stdout, "%s|%s|%s|%zu\n", eml->source, eml->target, eml->date, eml->parts);
+}
+
 size_t skip_space(char *pos) {
     size_t i = 0;
     while (isspace(*pos++)) {
@@ -33,43 +44,61 @@ char *search_header(char *source, char const *key) {
     return ptr_header + skip_space(ptr_header + strlen(key)) + strlen(key);
 }
 
-int check_end_header(char *source) {
-    if (*source == '\n' || *source == '\r') {
-        for (size_t i = 2; i < BUF; i++) {
-            if (*(source + i) == '\n' || *(source + i) == '\r') {
+size_t check_next_str(char *source) {
+    size_t i = 0;
+    size_t k = 0;
+    while (true) {
+        if (*(source + i) == '@') {
+            return true;
+        }
+
+        if (*(source + i) == '=') {
+            return true;
+        }
+
+        if (*(source + i) == ':') {
+            return false;
+        }
+        if (*(source + i) == '\r' || *(source + i) == '\n') {
+            k++;
+
+            if (k == 2) {
                 return false;
             }
-
-            if (*(source + i) == ':') {
-                return true;
-            }
         }
+
+        i++;
     }
-    return false;
 }
 
 char *parser_key_header(char *source, char const *key) {
     char *pos = search_header(source, key);
 
-    char *value = (char*)calloc(90000000, sizeof(char));
+    char *value;
 
     if (!pos) {
         value = "";
         return value;
     }
 
+    value = (char*)calloc(90000000, sizeof(char));
+
     size_t i = 0;
     size_t k = 0;
-    while (!check_end_header(pos + i)) {
-        while (*(pos + i) == '\n' || *(pos + i) == '\r') {
+    while (true) {
+        if (*(pos + i) == '\r' || *(pos + i) == '\n') {
+            if (!check_next_str(pos + i + 1)) {
+                return value;
+            }
+            i++;
+        }
+        if (*(pos + i) == '\r' || *(pos + i) == '\n') {
             i++;
         }
         *(value + k) = *(pos + i);
         i++;
         k++;
     }
-
-    return value;
 }
 
 char *get_boundary_key(char *source) {
@@ -93,66 +122,41 @@ char *get_boundary_key(char *source) {
 
 size_t parser_key_parts(char *source) {
     size_t res = 1;
+
     char *pos_type = search_header(source, TYPE);
     if (!pos_type) {
         return res;
     }
+
     char* pos = strcasestr(pos_type, MULTIPART);
     if (!pos) {
         return res;
     }
-    pos = strcasestr(pos, BOUNDARY);
 
+    pos = strcasestr(pos, BOUNDARY);
     if (!pos || isalpha(*(pos - 1))) {
         return res;
     }
 
-    /*for (size_t i = 0; i < 100; i++) {
-        fprintf(stdout, "%c", *(pos_type - 50 + i));
-    }
-
-    for (size_t i = 0; i < 100; i++) {
-        fprintf(stdout, "%c", *(pos - 50 + i));
-    } */
-
-    if ((pos - pos_type) > 100) {
+    if ((pos - pos_type) > MAX_LENGTH_COMPARE) {
         return res;
     }
 
-
-
-    //  fprintf(stdout, "FIND\n");
-    //  fprintf(stdout, "%c\n", *(pos - 1));
-    //  fprintf(stdout, "%d\n", (isalpha(*(pos - 1))));
-
     pos += strlen(BOUNDARY);
+
     char *key_boundary = get_boundary_key(pos);
-    //  fprintf(stdout, "%s\n", key_boundary);
-    res = 0;
+
     pos = strcasestr(pos, key_boundary);
 
     while (pos) {
-        if (!pos) {
-            break;
-        }
-        if (*(pos + 1) == '\0') {
-            return res;
-        }
         char *skip_search = pos + 1;
-
         pos = strcasestr(skip_search, key_boundary);
 
-        if (pos && *(pos + strlen(key_boundary)) != '-') {
-
-
-            /*for (size_t i = 0; i < 40; i++) {
-                fprintf(stdout, "%c", *(pos - 20 + i));
-                }*/
-
+        if (pos && (*(pos + strlen(key_boundary)) == '\n' || *(pos + strlen(key_boundary)) == '\r')) {
             res++;
         }
     }
-    return res;
+    return res - 1;
 }
 
 eml_t *parser(char *source) {
