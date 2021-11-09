@@ -172,9 +172,11 @@ size_t parser_key_parts(char *source) {
 
     pos = strstr(pos, key_boundary);
 
+    //  fprintf(stdout, "%s\n", key_boundary);
+
     while (pos) {
-        char *skip_search = pos + 1;
-        pos = strstr(skip_search, key_boundary);
+        pos++;
+        pos = strstr(pos, key_boundary);
 
         if (pos && isspace(*(pos + strlen(key_boundary)))) {
             res++;
