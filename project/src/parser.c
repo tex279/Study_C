@@ -152,7 +152,7 @@ size_t parser_key_parts(char *source) {
         char *skip_search = pos + 1;
         pos = strcasestr(skip_search, key_boundary);
 
-        if (pos && (*(pos + strlen(key_boundary)) == '\n' || *(pos + strlen(key_boundary)) == '\r')) {
+        if (pos && isspace(*(pos + strlen(key_boundary)))) {
             res++;
         }
     }
