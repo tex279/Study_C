@@ -124,7 +124,7 @@ char *get_boundary_key(char *source) {
 
     size_t i = 0;
     while (true) {
-        if (*(source + i) == '\"' || *(source + i) == '\n' || *(source + i) == '\r') {
+        if (*(source + i) == '\"' || isspace(*(source + i))) {
             break;
         }
         i++;
@@ -171,8 +171,6 @@ size_t parser_key_parts(char *source) {
     char *key_boundary = get_boundary_key(pos);
 
     pos = strstr(pos, key_boundary);
-
-    //  fprintf(stdout, "%s\n", key_boundary);
 
     while (pos) {
         pos++;
