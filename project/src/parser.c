@@ -44,75 +44,87 @@ char *search_header(char *source, char const *key) {
     return ptr_header + skip_space(ptr_header + strlen(key)) + strlen(key);
 }
 
-size_t check_next_str(char *source) {
+size_t check_str(char const *in) {
     size_t i = 0;
-    size_t k = 0;
     while (true) {
-        if (*(source + i) == '=') {
-            return true;
-        }
-
-        if (*(source + i) == '@') {
-            return true;
-        }
-
-        if (*(source + i) == ':') {
+        if (*(in + i) == ':') {
             return false;
         }
-        if (*(source + i) == '\r' || *(source + i) == '\n') {
-            k++;
-            if (k == 2) {
-                return false;
-            }
+
+        if (*(in + i) == '=') {
+            return true;
         }
 
+        if (*(in + i) == '@') {
+            return true;
+        }
+        if (*(in + i) == '\n' || *(in + i) == '\r') {
+            return false;
+        }
         i++;
     }
 }
 
-char *parser_key_header(char *source, char const *key) {
+char* parser_key_header(char *source, char const *key) {
     char *pos = search_header(source, key);
-
-    char *value = calloc(1, sizeof(char));
-    size_t capacity = 1;
+    char *start;
+    start = pos;
 
     if (!pos) {
-        *(value + 1) = '\0';
+        char *value = calloc(1, sizeof(char));
         return value;
     }
 
-    size_t i = 0;
-    size_t k = 0;
     while (true) {
-        if (*(pos + i) == '\r' || *(pos + i) == '\n') {
-            if (!check_next_str(pos + i + 1)) {
-                *(value + k) = '\0';
-                return value;
-            }
-            i++;
-        }
-        if (*(pos + i) == '\r' || *(pos + i) == '\n') {
-            i++;
+        char *end = strchr(pos, '\r');
+        if (!end) {
+            end = strchr(pos, '\n');
         }
 
-        if (k > capacity) {
-            capacity *= 2;
-            value = (char*)realloc(value, capacity * sizeof(char));
-            if (!value) {
-                free(value);
-                return NULL;
-            }
+        pos = end - 1;
+
+        if (*end == '\n' && *(end + 1) == '\r') {
+            end++;
+        }
+        if (*end == '\r' && *(end + 1) == '\n') {
+            end++;
         }
 
-        *(value + k) = *(pos + i);
-        i++;
-        k++;
+        if (!check_str(end + 1)) {
+            break;
+        }
+
+        pos = end + 1;
     }
+
+    size_t length_value = (size_t)(pos - start + 1);
+
+    //  fprintf(stdout, "\n%zu\n", length_value);
+    //  fprintf(stdout, "\nPOS_OUT-----%c-------\n", *pos);
+
+    char *value = (char*)calloc((length_value + 1), sizeof(char));
+
+    size_t k = 0;
+    size_t i = 0;
+    while (k != length_value) {
+        //  fprintf(stdout, "%c", *(start + i));
+        if (*(start + i) == '\n' || *(start + i) == '\r') {
+            //  fprintf(stdout, "%c", *(start + i - 1));
+            //  fprintf(stdout, "FIND\n");
+            i++;
+            length_value--;
+            continue;
+        }
+        *(value + k) = *(start + i);
+        k++;
+        i++;
+        //  fprintf(stdout, "%s\n", value);
+    }
+    *(value + length_value + 1) = '\0';
+    return value;
 }
 
 char *get_boundary_key(char *source) {
-    char *key_boundary = (char*)calloc(400, sizeof(char));;
-
     if (*source == '\"') {
         source++;
     }
@@ -122,8 +134,17 @@ char *get_boundary_key(char *source) {
         if (*(source + i) == '\"' || *(source + i) == '\n' || *(source + i) == '\r') {
             break;
         }
-        *(key_boundary + i) = *(source + i);
         i++;
+    }
+
+    size_t length_value = i + 1;
+
+    char *key_boundary = (char*)calloc(length_value, sizeof(char));;
+
+    size_t k = 0;
+    while (k < length_value - 1) {
+        *(key_boundary + k) = *(source + k);
+        k++;
     }
 
     return key_boundary;
@@ -171,7 +192,7 @@ size_t parser_key_parts(char *source) {
 }
 
 eml_t *parser(char *source) {
-    eml_t *eml = calloc(sizeof(eml_t), 1);
+    eml_t *eml = calloc(1, sizeof(eml_t));
 
     if (!eml) {
         return NULL;
