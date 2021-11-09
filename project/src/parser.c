@@ -48,11 +48,11 @@ size_t check_next_str(char *source) {
     size_t i = 0;
     size_t k = 0;
     while (true) {
-        if (*(source + i) == '@') {
+        if (*(source + i) == '=') {
             return true;
         }
 
-        if (*(source + i) == '=') {
+        if (*(source + i) == '@') {
             return true;
         }
 
@@ -61,7 +61,6 @@ size_t check_next_str(char *source) {
         }
         if (*(source + i) == '\r' || *(source + i) == '\n') {
             k++;
-
             if (k == 2) {
                 return false;
             }
@@ -74,20 +73,20 @@ size_t check_next_str(char *source) {
 char *parser_key_header(char *source, char const *key) {
     char *pos = search_header(source, key);
 
-    char *value;
+    char *value = calloc(1, sizeof(char));
+    size_t capacity = 1;
 
     if (!pos) {
-        value = "";
+        *(value + 1) = '\0';
         return value;
     }
-
-    value = (char*)calloc(90000000, sizeof(char));
 
     size_t i = 0;
     size_t k = 0;
     while (true) {
         if (*(pos + i) == '\r' || *(pos + i) == '\n') {
             if (!check_next_str(pos + i + 1)) {
+                *(value + k) = '\0';
                 return value;
             }
             i++;
@@ -95,6 +94,16 @@ char *parser_key_header(char *source, char const *key) {
         if (*(pos + i) == '\r' || *(pos + i) == '\n') {
             i++;
         }
+
+        if (k > capacity) {
+            capacity *= 2;
+            value = (char*)realloc(value, capacity * sizeof(char));
+            if (!value) {
+                free(value);
+                return NULL;
+            }
+        }
+
         *(value + k) = *(pos + i);
         i++;
         k++;
@@ -128,12 +137,12 @@ size_t parser_key_parts(char *source) {
         return res;
     }
 
-    char* pos = strcasestr(pos_type, MULTIPART);
-    if (!pos) {
+    char* pos_mul = strcasestr(pos_type, MULTIPART);
+    if (!pos_mul) {
         return res;
     }
 
-    pos = strcasestr(pos, BOUNDARY);
+    char* pos = strcasestr(pos_mul, BOUNDARY);
     if (!pos || isalpha(*(pos - 1))) {
         return res;
     }
@@ -146,16 +155,18 @@ size_t parser_key_parts(char *source) {
 
     char *key_boundary = get_boundary_key(pos);
 
-    pos = strcasestr(pos, key_boundary);
+    pos = strstr(pos, key_boundary);
 
     while (pos) {
         char *skip_search = pos + 1;
-        pos = strcasestr(skip_search, key_boundary);
+        pos = strstr(skip_search, key_boundary);
 
         if (pos && isspace(*(pos + strlen(key_boundary)))) {
             res++;
         }
     }
+
+    free(key_boundary);
     return res - 1;
 }
 

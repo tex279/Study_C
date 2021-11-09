@@ -38,5 +38,6 @@ int main(int argc, char const **argv) {
 
     print_eml(eml);
 
+    free_eml(eml);
     return 0;
 }
