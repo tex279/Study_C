@@ -103,8 +103,7 @@ char* parser_key_header(char *source, char const *key) {
 
     size_t k = 0;
     size_t i = 0;
-    while (k != length_value) {
-        //  fprintf(stdout, "%c", *(start + i));
+    while (k < length_value) {
         if (*(start + i) == '\n' || *(start + i) == '\r') {
             i++;
             length_value--;
@@ -131,16 +130,17 @@ char *get_boundary_key(char *source) {
         i++;
     }
 
-    size_t length_value = i + 1;
+    size_t length_value = i;
 
-    char *key_boundary = (char*)calloc(length_value, sizeof(char));;
+    char *key_boundary = (char*)calloc(length_value + 1, sizeof(char));;
 
     size_t k = 0;
-    while (k < length_value - 1) {
+    while (k < length_value) {
         *(key_boundary + k) = *(source + k);
         k++;
     }
 
+    *(key_boundary + length_value + 1) = '\0';
     return key_boundary;
 }
 
