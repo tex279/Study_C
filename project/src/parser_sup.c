@@ -85,7 +85,10 @@ char *get_boundary_key(char *source) {
 
     size_t length_value = i;
 
-    char *key_boundary = calloc(length_value + 1, sizeof(char));;
+    char *key_boundary = calloc(length_value + 1, sizeof(char));
+    if (!key_boundary) {
+        return NULL;
+    }
 
     size_t k = 0;
     while (k < length_value) {
