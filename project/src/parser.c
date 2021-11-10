@@ -54,9 +54,9 @@ char* parser_key_header(char *source, char const *key) {
 
         if (!check_str(end + 1)) {
             break;
+        } else {
+            pos = end + 1;
         }
-
-        pos = end + 1;
     }
 
     char *value = get_value_header(pos, start);
