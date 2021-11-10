@@ -1,23 +1,27 @@
-image: gcc
+on: push
 
-variables:
-  BIN_NAME: main.out
-
-stages:
-  - check_style
-  - build
-  - test_bin
-  - test_mem
-
-check_style:
-  stage: check_style
-  script:
-    - ./linters/run.sh
-
-build:
-  stage: build
-  script:
-    - make
-  artifacts:
-    paths:
-      - ${BIN_NAME}
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    container: leshiy1295/gcc_linters
+    steps:
+      - uses: actions/checkout@v2
+      - run: make check
+  build:
+    runs-on: ubuntu-latest
+    container: leshiy1295/gcc_linters
+    needs: [check]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          path: main.out
+  test:
+    runs-on: ubuntu-latest
+    container: leshiy1295/gcc_linters
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make test
