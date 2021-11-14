@@ -14,10 +14,10 @@
 #define BOUNDARY "boundary="
 
 typedef struct {
-char *source;
-char *target;
-char *date;
-size_t parts;
+    char *source;
+    char *target;
+    char *date;
+    size_t parts;
 } eml_t;
 
 // Support

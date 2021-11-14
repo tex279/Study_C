@@ -26,8 +26,7 @@ char *search_header(char *source, char const *key) {
 
 char* parser_key_header(char *source, char const *key) {
     char *pos = search_header(source, key);
-    char *start;
-    start = pos;
+    char *start = pos;
 
     if (!pos) {
         char *value = calloc(1, sizeof(char));
@@ -60,6 +59,7 @@ char* parser_key_header(char *source, char const *key) {
     }
 
     char *value = get_value_header(pos, start);
+
     return value;
 }
 
@@ -100,6 +100,7 @@ size_t parser_key_parts(char *source) {
     }
 
     free(key_boundary);
+
     return res - 1;
 }
 
