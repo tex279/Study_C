@@ -102,5 +102,6 @@ char *get_boundary_key(char *source) {
     }
 
     *(key_boundary + length_value) = '\0';
+
     return key_boundary;
 }
