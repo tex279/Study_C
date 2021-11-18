@@ -2,8 +2,13 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <string.h>
 
 #include <parser.h>
+
+#define HEADER ':'
+#define KEY_PART '='
+#define EMAIL '@'
 
 void free_eml(eml_t *eml) {
     free(eml->source);
@@ -27,15 +32,15 @@ size_t skip_space(char *pos) {
 size_t check_str(char const *in) {
     size_t i = 0;
     while (true) {
-        if (*(in + i) == ':') {
+        if (*(in + i) == HEADER) {
             return false;
         }
 
-        if (*(in + i) == '=') {
+        if (*(in + i) == KEY_PART) {
             return true;
         }
 
-        if (*(in + i) == '@') {
+        if (*(in + i) == EMAIL) {
             return true;
         }
         if (*(in + i) == '\n' || *(in + i) == '\r') {
