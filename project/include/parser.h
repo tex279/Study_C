@@ -25,7 +25,7 @@ void free_eml(eml_t *eml);
 void print_eml(eml_t *eml);
 size_t skip_space(char *pos);
 size_t check_str(char const *in);
-char *get_value_header(char const *end, char *start);
+char *get_value_header(char *start, char const *end);
 char *get_boundary_key(char *source);
 
 //  Main

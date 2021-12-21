@@ -32,25 +32,31 @@ size_t skip_space(char *pos) {
 size_t check_str(char const *in) {
     size_t i = 0;
     while (true) {
-        if (*(in + i) == HEADER) {
+        if (in[i]  == HEADER) {
             return false;
         }
 
-        if (*(in + i) == KEY_PART) {
+        if (in[i] == KEY_PART) {
             return true;
         }
 
-        if (*(in + i) == EMAIL) {
+        if (in[i] == EMAIL) {
             return true;
         }
-        if (*(in + i) == '\n' || *(in + i) == '\r') {
+
+        if (in[i] == '\n' || in[i] == '\r') {
             return false;
         }
+
+        if (i == strlen(in)) {
+            return false;
+        }
+
         i++;
     }
 }
 
-char *get_value_header(char const *end, char *start) {
+char *get_value_header(char *start, char const *end) {
     size_t length_value = (size_t)(end - start);
 
     char *value = calloc((length_value + 1), sizeof(char));

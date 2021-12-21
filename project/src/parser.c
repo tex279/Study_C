@@ -12,28 +12,24 @@ char *search_header(char *source, char const *key) {
         return NULL;
     }
 
-    if (ptr_header == source) {
-        return ptr_header + skip_space(ptr_header + strlen(key)) + strlen(key);
-    }
+    size_t length_key = strlen(key);
 
-    while (*(ptr_header - 1) != '\n') {
-        ptr_header++;
-        ptr_header = strcasestr(ptr_header, key);
+    while (true) {
+        if (ptr_header == source || *(ptr_header - 1) == '\n') {
+            return ptr_header + length_key + skip_space(ptr_header + length_key);
+        } else {
+            ptr_header++;
+            ptr_header = strcasestr(ptr_header, key);
+        }
     }
-
-    return ptr_header + skip_space(ptr_header + strlen(key)) + strlen(key);
 }
 
-char* parser_key_header(char *source, char const *key) {
+char *parser_key_header(char *source, char const *key) {
     char *pos = search_header(source, key);
     char *start = pos;
 
     if (!pos) {
-        char *value = calloc(1, sizeof(char));
-        if (!value) {
-            return NULL;
-        }
-        return value;
+        return strdup("");
     }
 
     while (true) {
@@ -42,12 +38,13 @@ char* parser_key_header(char *source, char const *key) {
             end = strchr(pos, '\n');
         }
 
+        if (!end) {
+            return NULL;
+        }
+
         pos = end;
 
-        if (*end == '\n' && *(end + 1) == '\r') {
-            end++;
-        }
-        if (*end == '\r' && *(end + 1) == '\n') {
+        while (*end == '\n' || *end == '\r') {
             end++;
         }
 
@@ -58,7 +55,7 @@ char* parser_key_header(char *source, char const *key) {
         }
     }
 
-    char *value = get_value_header(pos, start);
+    char *value = get_value_header(start, pos);
 
     return value;
 }
@@ -71,12 +68,12 @@ size_t parser_key_parts(char *source) {
         return res;
     }
 
-    char* pos_mul = strcasestr(pos_type, MULTIPART);
+    char *pos_mul = strcasestr(pos_type, MULTIPART);
     if (!pos_mul) {
         return res;
     }
 
-    char* pos = strcasestr(pos_mul, BOUNDARY);
+    char *pos = strcasestr(pos_mul, BOUNDARY);
     if (!pos || isalpha(*(pos - 1))) {
         return res;
     }
