@@ -86,12 +86,14 @@ size_t parser_key_parts(char *source) {
 
     char *key_boundary = get_boundary_key(pos);
 
+    size_t length_boundary = strlen(key_boundary);
+
     pos = strstr(pos, key_boundary);
 
     while (pos) {
         pos++;
         pos = strstr(pos, key_boundary);
-        if (pos && isspace(*(pos + strlen(key_boundary)))) {
+        if (pos && isspace(*(pos + length_boundary))) {
             res++;
         }
     }
