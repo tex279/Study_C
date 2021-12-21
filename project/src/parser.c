@@ -8,7 +8,7 @@
 
 #include <parser.h>
 
-char *search_header(char *source, char const *key) {
+char *search_begin_header(char *source, char const *key) {
     char *ptr_header = strcasestr(source, key);
     if (!ptr_header) {
         return NULL;
@@ -56,7 +56,7 @@ char *search_end_header(char *start) {
 }
 
 char *parser_key_header(char *source, char const *key) {
-    char *pos = search_header(source, key);
+    char *pos = search_begin_header(source, key);
     char *start = pos;
 
     if (!pos) {
@@ -73,7 +73,7 @@ char *parser_key_header(char *source, char const *key) {
 size_t parser_key_parts(char *source) {
     size_t res = 1;
 
-    char *pos_type = search_header(source, TYPE);
+    char *pos_type = search_begin_header(source, TYPE);
     if (!pos_type) {
         return res;
     }

@@ -31,6 +31,8 @@ size_t skip_space(char *pos) {
 
 size_t check_str(char const *in) {
     size_t i = 0;
+
+    size_t length_str = strlen(in);
     while (true) {
         if (in[i]  == HEADER) {
             return false;
@@ -48,7 +50,7 @@ size_t check_str(char const *in) {
             return false;
         }
 
-        if (i == strlen(in)) {
+        if (i == length_str) {
             return false;
         }
 

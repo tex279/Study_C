@@ -25,12 +25,12 @@ void free_eml(eml_t *eml);
 void print_eml(eml_t *eml);
 size_t skip_space(char *pos);
 size_t check_str(char const *in);
-char *search_end_header(char *start);
 char *get_value_header(char *start, char const *end);
 char *get_boundary_key(char *source);
 
 //  Main
-char *search_header(char *source, char const *key);
+char *search_begin_header(char *source, char const *key);
+char *search_end_header(char *start);
 char *parser_key_header(char *source, char const *key);
 size_t parser_key_parts(char *source);
 eml_t *parser(char *source);
