@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 
-#define MAX_LENGTH_COMPARE 100
+#define MAX_LENGTH_COMPARE 250
 
 #define FROM "From:"
 #define TO "To:"

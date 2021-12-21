@@ -78,47 +78,30 @@ size_t parser_key_parts(char *source) {
         return res;
     }
 
-    /*char *end_header = search_end_header(pos_type);
+    char value[MAX_LENGTH_COMPARE];
 
-    char *value = calloc(pos_type - end_header + 1, sizeof(char));
-    if (!value) {
-        return res;
-    }
+    snprintf(value, sizeof(value), "%s", pos_type);
 
-    snprintf(value, pos_type - end_header + 1, "%s", pos_type);
-    fprintf(stdout, "%s\n", value);*/
-
-    char *pos_mul = strcasestr(pos_type, MULTIPART);
+    char *pos_mul = strcasestr(value, MULTIPART);
     if (!pos_mul) {
-        //free(value);
         return res;
     }
 
     char *pos = strcasestr(pos_mul, BOUNDARY);
     if (!pos || isalpha(*(pos - 1))) {
-        //free(value);
-        return res;
-    }
-
-    if ((pos - pos_type) > MAX_LENGTH_COMPARE) {
         return res;
     }
 
     pos += strlen(BOUNDARY);
 
     char *key_boundary = get_boundary_key(pos);
-    //fprintf(stdout, "%s\n", key_boundary);
 
-    //free(value);
-
-    size_t length_boundary = strlen(key_boundary);
-
-    pos = strstr(pos_type, key_boundary);
+    pos = strstr(source, key_boundary);
 
     while (pos) {
         pos++;
         pos = strstr(pos, key_boundary);
-        if (pos && isspace(*(pos + length_boundary))) {
+        if (pos && isspace(pos[strlen(key_boundary)])) {
             res++;
         }
     }
