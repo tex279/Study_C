@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <ctype.h>
 
+#include <stdio.h>
+
 #include <parser.h>
 
 char *search_header(char *source, char const *key) {
@@ -70,20 +72,23 @@ size_t parser_key_parts(char *source) {
 
     char *value = parser_key_header(source, TYPE);
 
-
     char *pos_mul = strcasestr(value, MULTIPART);
     if (!pos_mul) {
+        free(value);
         return res;
     }
 
     char *pos = strcasestr(pos_mul, BOUNDARY);
     if (!pos || isalpha(*(pos - 1))) {
+        free(value);
         return res;
     }
 
     pos += strlen(BOUNDARY);
 
     char *key_boundary = get_boundary_key(pos);
+
+    free(value);
 
     size_t length_boundary = strlen(key_boundary);
 
