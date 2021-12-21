@@ -70,7 +70,7 @@ size_t parser_key_parts(char *source) {
         return res;
     }
 
-    char *value = parser_key_header(source, TYPE);
+    char *value = parser_key_header(pos_type - strlen(TYPE) - 1, TYPE);
 
     char *pos_mul = strcasestr(value, MULTIPART);
     if (!pos_mul) {

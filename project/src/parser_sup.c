@@ -76,6 +76,7 @@ char *get_value_header(char *start, char const *end) {
         k++;
         i++;
     }
+
     *(value + length_value) = '\0';
 
     return value;
@@ -86,9 +87,10 @@ char *get_boundary_key(char *source) {
         source++;
     }
 
+
     size_t i = 0;
     while (true) {
-        if (*(source + i) == '\"' || isspace(*(source + i))) {
+        if (source[i] == '\"' || isspace(source[i])) {
             break;
         }
         i++;
@@ -101,13 +103,16 @@ char *get_boundary_key(char *source) {
         return NULL;
     }
 
-    size_t k = 0;
-    while (k < length_value) {
-        *(key_boundary + k) = *(source + k);
-        k++;
-    }
+    memcpy(key_boundary, source, length_value);
 
-    *(key_boundary + length_value) = '\0';
+    *(key_boundary + length_value + 1) = '\0';
+
+    //  fprintf(stdout, "%s %ld %ld last sim:%c\n",
+    //  key_boundary,
+    //  strlen(key_boundary),
+    //  length_value,
+    //  key_boundary[length_value]);
+
 
     return key_boundary;
 }
