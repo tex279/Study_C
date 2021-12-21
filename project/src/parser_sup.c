@@ -105,14 +105,7 @@ char *get_boundary_key(char *source) {
 
     memcpy(key_boundary, source, length_value);
 
-    *(key_boundary + length_value + 1) = '\0';
-
-    //  fprintf(stdout, "%s %ld %ld last sim:%c\n",
-    //  key_boundary,
-    //  strlen(key_boundary),
-    //  length_value,
-    //  key_boundary[length_value]);
-
+    *(key_boundary + length_value) = '\0';
 
     return key_boundary;
 }

@@ -86,7 +86,7 @@ size_t parser_key_parts(char *source) {
 
     pos += strlen(BOUNDARY);
 
-    char *key_boundary = get_boundary_key(pos);
+    char *key_boundary = get_boundary_key(pos);;
 
     free(value);
 
