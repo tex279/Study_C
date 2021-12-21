@@ -26,13 +26,8 @@ char *search_header(char *source, char const *key) {
     }
 }
 
-char *parser_key_header(char *source, char const *key) {
-    char *pos = search_header(source, key);
-    char *start = pos;
-
-    if (!pos) {
-        return strdup("");
-    }
+char *search_end_header(char *start) {
+    char *pos = start;
 
     while (true) {
         char *end = strchr(pos, '\r');
@@ -57,6 +52,19 @@ char *parser_key_header(char *source, char const *key) {
         }
     }
 
+    return pos;
+}
+
+char *parser_key_header(char *source, char const *key) {
+    char *pos = search_header(source, key);
+    char *start = pos;
+
+    if (!pos) {
+        return strdup("");
+    }
+
+    pos = search_end_header(start);
+
     char *value = get_value_header(start, pos);
 
     return value;
@@ -70,25 +78,38 @@ size_t parser_key_parts(char *source) {
         return res;
     }
 
-    char *value = parser_key_header(pos_type - strlen(TYPE) - 1, TYPE);
+    /*char *end_header = search_end_header(pos_type);
 
-    char *pos_mul = strcasestr(value, MULTIPART);
+    char *value = calloc(pos_type - end_header + 1, sizeof(char));
+    if (!value) {
+        return res;
+    }
+
+    snprintf(value, pos_type - end_header + 1, "%s", pos_type);
+    fprintf(stdout, "%s\n", value);*/
+
+    char *pos_mul = strcasestr(pos_type, MULTIPART);
     if (!pos_mul) {
-        free(value);
+        //free(value);
         return res;
     }
 
     char *pos = strcasestr(pos_mul, BOUNDARY);
     if (!pos || isalpha(*(pos - 1))) {
-        free(value);
+        //free(value);
+        return res;
+    }
+
+    if ((pos - pos_type) > MAX_LENGTH_COMPARE) {
         return res;
     }
 
     pos += strlen(BOUNDARY);
 
-    char *key_boundary = get_boundary_key(pos);;
+    char *key_boundary = get_boundary_key(pos);
+    //fprintf(stdout, "%s\n", key_boundary);
 
-    free(value);
+    //free(value);
 
     size_t length_boundary = strlen(key_boundary);
 
