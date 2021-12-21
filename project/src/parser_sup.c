@@ -41,11 +41,7 @@ size_t check_str(char *in) {
         }
 
         if (in[i] == '\n' || in[i] == '\r') {
-            char *new_in = in + (i + 1);
-
-            if (!check_str(new_in)) {
-                return true;
-            }
+            return true;
         }
 
         if (i == length_str) {
