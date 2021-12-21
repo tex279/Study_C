@@ -103,9 +103,7 @@ char *get_boundary_key(char *source) {
         return NULL;
     }
 
-    memcpy(key_boundary, source, length_value);
-
-    *(key_boundary + length_value) = '\0';
+    snprintf(key_boundary, length_value + 1, "%s", source);
 
     return key_boundary;
 }
