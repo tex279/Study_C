@@ -68,7 +68,10 @@ size_t parser_key_parts(char *source) {
         return res;
     }
 
-    char *pos_mul = strcasestr(pos_type, MULTIPART);
+    char *value = parser_key_header(source, TYPE);
+
+
+    char *pos_mul = strcasestr(value, MULTIPART);
     if (!pos_mul) {
         return res;
     }
@@ -78,17 +81,13 @@ size_t parser_key_parts(char *source) {
         return res;
     }
 
-    if ((pos - pos_type) > MAX_LENGTH_COMPARE) {
-        return res;
-    }
-
     pos += strlen(BOUNDARY);
 
     char *key_boundary = get_boundary_key(pos);
 
     size_t length_boundary = strlen(key_boundary);
 
-    pos = strstr(pos, key_boundary);
+    pos = strstr(pos_type, key_boundary);
 
     while (pos) {
         pos++;
