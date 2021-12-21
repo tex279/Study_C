@@ -7,8 +7,6 @@
 #include <parser.h>
 
 #define HEADER ':'
-#define KEY_PART '='
-#define EMAIL '@'
 
 void free_eml(eml_t *eml) {
     free(eml->source);
@@ -29,8 +27,12 @@ size_t skip_space(char *pos) {
     return i;
 }
 
-size_t check_str(char const *in) {
-    size_t i = 0;
+size_t check_str(char *in) {
+    if (in[0] == '\n' || in[0] == '\r') {
+        return false;
+    }
+
+    size_t i = 1;
 
     size_t length_str = strlen(in);
     while (true) {
@@ -38,16 +40,12 @@ size_t check_str(char const *in) {
             return false;
         }
 
-        if (in[i] == KEY_PART) {
-            return true;
-        }
-
-        if (in[i] == EMAIL) {
-            return true;
-        }
-
         if (in[i] == '\n' || in[i] == '\r') {
-            return false;
+            char *new_in = in + (i + 1);
+
+            if (!check_str(new_in)) {
+                return true;
+            }
         }
 
         if (i == length_str) {
@@ -58,8 +56,8 @@ size_t check_str(char const *in) {
     }
 }
 
-char *get_value_header(char *start, char const *end) {
-    size_t length_value = (size_t)(end - start);
+char *get_value_header(char const *source, char const *end) {
+    size_t length_value = end - source;
 
     char *value = calloc((length_value + 1), sizeof(char));
     if (!value) {
@@ -69,17 +67,17 @@ char *get_value_header(char *start, char const *end) {
     size_t k = 0;
     size_t i = 0;
     while (k < length_value) {
-        if (*(start + i) == '\n' || *(start + i) == '\r') {
+        if (source[i] == '\n' ||source[i] == '\r') {
             i++;
             length_value--;
             continue;
         }
-        *(value + k) = *(start + i);
+        value[k] = source[i];
         k++;
         i++;
     }
 
-    *(value + length_value) = '\0';
+    value[length_value] = '\0';
 
     return value;
 }
@@ -89,9 +87,14 @@ char *get_boundary_key(char *source) {
         source++;
     }
 
+    size_t length_source = strlen(source);
 
     size_t i = 0;
     while (true) {
+        if (i == length_source) {
+            return NULL;
+        }
+
         if (source[i] == '\"' || isspace(source[i])) {
             break;
         }

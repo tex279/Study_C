@@ -20,14 +20,14 @@ char *search_begin_header(char *source, char const *key) {
         if (ptr_header == source || *(ptr_header - 1) == '\n') {
             return ptr_header + length_key + skip_space(ptr_header + length_key);
         } else {
-            ptr_header++;
+            ptr_header += length_key;
             ptr_header = strcasestr(ptr_header, key);
         }
     }
 }
 
-char *search_end_header(char *start) {
-    char *pos = start;
+char *search_end_header(char *source) {
+    char *pos = source;
 
     while (true) {
         char *end = strchr(pos, '\r');
@@ -41,9 +41,14 @@ char *search_end_header(char *start) {
 
         pos = end;
 
-        while (*end == '\n' || *end == '\r') {
+        if (*end == '\n' && *(end + 1) == '\r') {
             end++;
         }
+
+        if (*end == '\r' && *(end + 1) == '\n') {
+            end++;
+        }
+
 
         if (!check_str(end + 1)) {
             break;
@@ -96,12 +101,14 @@ size_t parser_key_parts(char *source) {
 
     char *key_boundary = get_boundary_key(pos);
 
-    pos = strstr(source, key_boundary);
+    size_t length_key_part = strlen(key_boundary);
+
+    pos = strstr(pos_type, key_boundary);
 
     while (pos) {
-        pos++;
+        pos += length_key_part;
         pos = strstr(pos, key_boundary);
-        if (pos && isspace(pos[strlen(key_boundary)])) {
+        if (pos && isspace(pos[length_key_part])) {
             res++;
         }
     }
