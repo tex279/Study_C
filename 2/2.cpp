@@ -50,13 +50,13 @@ int Cup::limits() {
     size_t m;
     std::cin >> n >> m;
 
-    if ((LOW_LEVEL_HEIGHT >= n) || (n >= HIGH_LEVEL_HEIGHT)) {
+    if ((LOW_LEVEL_HEIGHT > n) || (n > HIGH_LEVEL_HEIGHT)) {
         std::cerr << "Wrong input: height_n must be in interval " <<
         LOW_LEVEL_HEIGHT << "-" << HIGH_LEVEL_HEIGHT << std::endl;
         return ERROR_INPUT;
     }
 
-    if ((LOW_LEVEL_WIDTH >= m) || (m >= HIGH_LEVEL_WIDTH)) {
+    if ((LOW_LEVEL_WIDTH > m) || (m > HIGH_LEVEL_WIDTH)) {
         std::cerr << "Wrong input: width_m must be in interval " <<
         LOW_LEVEL_WIDTH << "-" << HIGH_LEVEL_WIDTH << std::endl;
         return ERROR_INPUT;
@@ -87,7 +87,8 @@ int Cup::get_count_ingredients() {
     size_t k;
     std::cin >> k;
 
-    if (!(k <= (height_n - 1)) && !(k <= HIGH_LEVEL_WIDTH)) {
+    size_t min = std::min(height_n - 1, (size_t)HIGH_LEVEL_WIDTH);
+    if (k > min) {
         std::cerr << "Wrong input: count ingredients must be in interval " <<
         (height_n - 1) << "-" << HIGH_LEVEL_INGREDIENT << std::endl;
         return ERROR_INPUT;
