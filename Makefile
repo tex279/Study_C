@@ -3,7 +3,7 @@
 all: clear build launch
 
 build:
-	g++ --std=gnu++17 2/2.cpp -o task
+	g++ --std=gnu++17 5/5.cpp -o task
 
 launch:
 	./task
