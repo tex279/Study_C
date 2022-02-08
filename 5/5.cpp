@@ -221,7 +221,7 @@ void SystemVersion::get_res_count() {
         }
     }
 
-    //print(net);
+    print(net);
 
     del_net(net);
 
