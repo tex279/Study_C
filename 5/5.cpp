@@ -38,38 +38,32 @@ public:
 
     void get_res_count();
 
+    bool* set_block(bool net[][][]);
+
     SystemVersion();
     ~SystemVersion() = default;
 };
 
 int SystemVersion::input_max_version() {
-    size_t A_max;
-    size_t B_max;
-    size_t C_max;
-    std::cin >> A_max >> B_max >> C_max;
+    std::cin >> max_version_A >> max_version_B >> max_version_C;
 
-    if (MIN_VER > A_max || A_max > MAX_VER) {
+    if (MIN_VER > max_version_A || max_version_A > MAX_VER) {
         std::cerr << "Wrong input: max_ver must be in interval " <<
         MIN_VER << "-" << MAX_VER << std::endl;
         return ERROR_INPUT;
     }
 
-    if (MIN_VER > B_max || B_max > MAX_VER) {
+    if (MIN_VER > max_version_B || max_version_B > MAX_VER) {
         std::cerr << "Wrong input: max_ver must be in interval " <<
                   MIN_VER << "-" << MAX_VER << std::endl;
         return ERROR_INPUT;
     }
 
-    if (MIN_VER > C_max || C_max > MAX_VER) {
+    if (MIN_VER > max_version_C || max_version_C > MAX_VER) {
         std::cerr << "Wrong input: max_ver must be in interval " <<
                   MIN_VER << "-" << MAX_VER << std::endl;
         return ERROR_INPUT;
     }
-
-    max_version_A = A_max;
-    max_version_B = B_max;
-    max_version_C = C_max;
-
 
     return SUCCESS;
 }
@@ -99,8 +93,36 @@ SystemVersion::SystemVersion() {
     input_rules();
 }
 
-void SystemVersion::get_res_count() {
+bool* set_block(bool net[][][], size_t i, size_t j, size_t k) {
+    for (size_t ii = i; ii < i; ii++) {
+        for (size_t jj = j; jj < j; jj++) {
+            for (size_t kk = k; kk < k; kk++) {
+                net[i][j][j] = true;
+            }
+        }
+    }
+}
 
+void SystemVersion::get_res_count() {
+    size_t res_max_combination = max_version_A * max_version_B * max_version_C;
+
+    bool net_block[max_version_A][max_version_B][max_version_C];
+    for (size_t i = 0; i < count_rules; i++) {
+        if (rules[i].module == C) {
+            if (rules[i].needed_module == B) {
+                block_combination = (max_version_C - rules[i].version + 1) * rules[i].needed_module * max_version_A;
+
+                set_block(net_block, max_version_A, )
+            }
+
+            if (rules[i].needed_module == A) {
+                block_combination = (max_version_C - rules[i].version + 1) * (rules[i].needed_version - 1) * max_version_B;
+                res_max_combination -= block_combination;
+            }
+        }
+    }
+
+    std::cout << res_max_combination << std::endl;
 }
 
 
@@ -111,3 +133,15 @@ int main() {
 
     return SUCCESS;
 }
+
+
+
+
+
+
+/*
+ *
+ for (size_t i = 0; i < count_rules; i++) {
+
+    }
+    */
