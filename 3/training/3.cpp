@@ -17,8 +17,8 @@ class Tower {
     size_t count_plates;
     size_t count_volunteers;
 
-    std::vector <unsigned long long int> plates;
-    std::vector <unsigned long long int> volunteers;
+    std::vector <unsigned long int> plates;
+    std::vector <unsigned long int> volunteers;
 public:
     int input_count();
     int input_parameters();
@@ -30,33 +30,28 @@ public:
 };
 
 int Tower::input_count() {
-    size_t n;
-    size_t m;
-    std::cin >> n >> m;
+    std::cin >> count_plates >> count_volunteers;
 
-    if ((LOW_COUNT > n) || (n > HIGH_COUNT)) {
+    if ((LOW_COUNT > count_plates) || (count_plates > HIGH_COUNT)) {
         std::cerr << "Wrong input: count must be in interval " <<
                   LOW_COUNT << "-" << HIGH_COUNT << std::endl;
         return ERROR_INPUT;
     }
 
-    if ((LOW_COUNT > m) || (m > HIGH_COUNT)) {
+    if ((LOW_COUNT > count_volunteers) || (count_volunteers > HIGH_COUNT)) {
         std::cerr << "Wrong input: count must be in interval " <<
                   LOW_COUNT << "-" << HIGH_COUNT << std::endl;
         return ERROR_INPUT;
     }
-
-    count_plates = n;
-    count_volunteers = m;
 
     return SUCCESS;
 }
 
 int Tower::input_parameters() {
-    unsigned long long int buf;
-    for (size_t i = 0; i < count_plates; i++) {
+    unsigned long int buf;
+    for (size_t i = 0; i < count_plates; ++i) {
         std::cin >> buf;
-        if ((LOW_WIDTH > buf) || (buf > HIGH_COUNT)) {
+        if ((LOW_WIDTH > buf) || (buf > HIGH_WIDTH)) {
             std::cerr << "Wrong input: width must be in interval " <<
                       LOW_WIDTH << "-" << HIGH_WIDTH << std::endl;
             return ERROR_INPUT;
@@ -64,9 +59,9 @@ int Tower::input_parameters() {
         plates.push_back(buf);
     }
 
-    for (size_t j = 0; j < count_volunteers; j++) {
+    for (size_t j = 0; j < count_volunteers; ++j) {
         std::cin >> buf;
-        if ((LOW_WIDTH > buf) || (buf > HIGH_COUNT)) {
+        if ((LOW_WIDTH > buf) || (buf > HIGH_WIDTH)) {
             std::cerr << "Wrong input: width must be in interval " <<
                       LOW_WIDTH << "-" << HIGH_WIDTH << std::endl;
             return ERROR_INPUT;
@@ -87,13 +82,13 @@ Tower::Tower() {
 }
 
 void Tower::get_res_count() {
-    std::vector <unsigned long long int> free_width;
+    std::vector <unsigned long int> free_width;
 
     free_width.push_back(plates[0]);
 
-    long long int max = plates[0];
-    long long int buf;
-    for (size_t i = 0; i < count_plates; i++) {
+    unsigned long int max = plates[0];
+    unsigned long int buf;
+    for (size_t i = 1; i < count_plates; ++i) {
         if (plates[i] > max) {
             buf = max;
             max = plates[i];
@@ -111,10 +106,10 @@ void Tower::get_res_count() {
         if (volunteers[j] <= free_width[i]) {
             count++;
 
-            i++;
-            j++;
+            ++i;
+            ++j;
         } else {
-            i++;
+            ++i;
         }
 
         if (j == volunteers.size() || i == free_width.size()) {
