@@ -79,7 +79,6 @@ int Net::input_size() {
 int Net::input_nodes() {
     Node_t node;
 
-    std::cout << std::endl;
     for (size_t i = 0; i < count_node; i++) {
         std::cin >> node.x >> node.y;
 
@@ -175,10 +174,6 @@ void Net::set_black(size_t** net, size_t start, size_t end, size_t const const_i
 void Net::filling(size_t** net) {
     size_t direction = 0;
 
-    for (size_t i = 0; i < nodes.size(); i++) {
-        std::cout << nodes[i].x << " " << nodes[i].y << std::endl;
-    }
-
     for (size_t i = 0; i < nodes.size() - 1; i++) {
         if (nodes[i].x == nodes[i + 1].x) {
             direction = 2;
@@ -257,62 +252,85 @@ size_t Net::check_full(size_t **net, size_t i, size_t j) {
 }
 
 size_t Net::check_1_4(size_t **net, size_t i, size_t j) {
-    if (net[i + 1][j] == 0) {
-        if (net[i - 1][j] == 1 || (net[i - 2][j] == 0 && net[i - 1][j] == 4)) {
-            net[i][j] = 4;
-            return 4;
+    if (net[i + 1][j] == 0 && net[i][j + 1] == 0 && net[i + 1][j + 1] == 0) {
+        net[i][j] = 4;
+        return 4;
+    }
+
+    if (net[i - 1][j] == 0 && net[i][j + 1] == 0 && net[i - 1][j + 1] == 0) {
+        net[i][j] = 4;
+        return 4;
+    }
+
+    if (net[i + 1][j] == 0 && net[i][j - 1] == 0 && net[i + 1][j - 1] == 0) {
+        net[i][j] = 4;
+        return 4;
+    }
+
+    if (net[i - 1][j] == 0 && net[i][j - 1] == 0 && net[i - 1][j - 1] == 0) {
+        net[i][j] = 4;
+        return 4;
+    }
+
+    return 0;
+}
+
+size_t Net::check_3_4(size_t **net, size_t i, size_t j) {
+    if (net[i + 1][j] != 0 && net[i][j + 1] != 0 && net[i + 1][j + 1] != 0) {
+        if (net[i - 1][j - 1]== 0) {
+            net[i][j] = 5;
+            return 5;
         }
     }
 
-    if (net[i - 1][j] == 0) {
-        if (net[i + 1][j] == 1 || (net[i + 1][j] == 4 && net[i + 2][j] == 0)) {
-            net[i][j] = 4;
-            return 4;
+    if (net[i - 1][j] != 0 && net[i][j + 1] != 0 && net[i - 1][j + 1] != 0) {
+        if (net[i + 1][j - 1] == 0) {
+            net[i][j] = 5;
+            return 5;
         }
     }
 
-    if (net[i][j + 1] == 0) {
-        if (net[i][j - 1] == 1 || (net[i][j - 1] == 4 && net[i][j - 2] == 0)) {
-            net[i][j] = 4;
-            return 4;
+    if (net[i + 1][j] != 0 && net[i][j - 1] != 0 && net[i + 1][j - 1] != 0) {
+        if (net[i - 1][j + 1] == 0) {
+            net[i][j] = 5;
+            return 5;
         }
     }
 
-    if (net[i][j - 1] == 0) {
-        if (net[i][j + 1] == 1 || (net[i][j + 1] == 4 && net[i][j + 2] == 0)) {
-            net[i][j] = 4;
-            return 4;
+    if (net[i - 1][j] != 0 && net[i][j - 1] != 0 && net[i - 1][j - 1] != 0) {
+        if (net[i + 1][j + 1] == 0) {
+            net[i][j] = 5;
+            return 5;
         }
     }
-
 
     return 0;
 }
 
 size_t Net::check_half(size_t **net, size_t i, size_t j) {
     if (net[i][j + 1] == 0) {
-        if (net[i][j - 1] == 0 || (net[i][j - 1] == 1 || net[i][j - 2] == 0)) {
+        if (net[i][j - 1] != 0) {
             net[i][j] = 3;
             return 3;
         }
     }
 
     if (net[i][j - 1] == 0) {
-        if (net[i][j + 1] == 0 || (net[i][j + 1] == 1 || net[i][j + 2] == 0)) {
+        if (net[i][j + 1] != 0) {
             net[i][j] = 3;
             return 3;
         }
     }
 
     if (net[i + 1][j] == 0) {
-        if (net[i - 1][j] == 0 || (net[i - 1][j] == 1 || net[i - 2][j] == 0)) {
+        if (net[i - 1][j] != 0) {
             net[i][j] = 3;
             return 3;
         }
     }
 
     if (net[i - 1][j] == 0) {
-        if (net[i + 1][j] == 0 || (net[i + 1][j] == 1 || net[i + 2][j] == 0)) {
+        if (net[i + 1][j] != 0) {
             net[i][j] = 3;
             return 3;
         }
@@ -359,7 +377,8 @@ void Net::get_res_count() {
     }
 
 
-    /*for (size_t i = 1; i < y - 1; i++) {
+
+    for (size_t i = 1; i < y - 1; i++) {
         for (size_t j = 1; j < x - 1; j++) {
             if (net[i][j] == 1) {
                 if (check_half(net, i, j)) {
@@ -368,9 +387,8 @@ void Net::get_res_count() {
             }
         }
     }
-    */
 
-    /*for (size_t i = 1; i < y - 1; i++) {
+    for (size_t i = 1; i < y - 1; i++) {
         for (size_t j = 1; j < x - 1; j++) {
             if (net[i][j] == 1) {
                 if (check_3_4(net, i, j)) {
@@ -378,12 +396,9 @@ void Net::get_res_count() {
                 }
             }
         }
-    }*/
+    }
 
-
-
-
-    print(net);
+    //print(net);
 
     std::cout << full << " " << half << " " << block_1_4 << " " << block_3_4 << std::endl;
 
