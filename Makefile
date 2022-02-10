@@ -3,7 +3,7 @@
 all: clear build launch
 
 build:
-	g++ --std=gnu++17 4/4.cpp -o task
+	g++ --std=gnu++17 4/training/4.cpp -o task
 
 launch:
 	./task
