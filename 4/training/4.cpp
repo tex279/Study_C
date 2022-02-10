@@ -11,7 +11,7 @@
 #define MIN_COUNT_NODE 1
 
 #define ERROR_INPUT -1
-#define SUCCESS 1
+#define SUCCESS 0
 
 typedef struct node {
     size_t x;

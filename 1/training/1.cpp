@@ -1,18 +1,18 @@
 #include <stdio.h>
 #include <iostream>
 
-#define SUCCESS 1
+#define SUCCESS 0
 #define LENGTH 3
 
-void change_array(int array[], size_t up_index, size_t static_index) {
+void change_array(long long int array[], size_t up_index, size_t static_index) {
     array[up_index] -= array[static_index];
 }
 
-void r_change_array(int array[], size_t up_index, size_t static_index) {
+void r_change_array(long long int array[], size_t up_index, size_t static_index) {
     array[up_index] += array[static_index];
 }
 
-void print_arr(int array[]) {
+void print_arr(long long int array[]) {
     for (size_t i = 0; i < LENGTH; i++) {
         if (i == LENGTH - 1) {
             std::cout << array[i] << std::endl;
@@ -33,7 +33,7 @@ void print_response(bool array[]) {
     }
 }
 
-void sort(int array[]) {
+void sort(long long int array[]) {
     for (size_t j = 0; j < LENGTH - 1; j++) {
         for (size_t i = 0; i < LENGTH - j - 1; i++) {
             if (array[i] > array[i + 1]) {
@@ -43,8 +43,8 @@ void sort(int array[]) {
     }
 }
 
-int* copy_array(int array[]) {
-    int* a = new int[LENGTH];
+long long int* copy_array(long long int array[]) {
+    long long int* a = new long long int[LENGTH];
 
     for (size_t i = 0; i < LENGTH; i++) {
         a[i] = array[i];
@@ -53,10 +53,10 @@ int* copy_array(int array[]) {
     return a;
 }
 
-void check_combinations(int array[]) {
+void check_combinations(long long int array[]) {
     bool response[LENGTH];
 
-    int *sorted = copy_array(array);
+    long long int *sorted = copy_array(array);
     sort(sorted);
 
     for (size_t k = 0; k < LENGTH; k++) {
@@ -74,7 +74,7 @@ void check_combinations(int array[]) {
                 //std::cout << "ИЗМЕНИЛ BASE " << i + 1 << " НА " << j + 1 << std::endl;
                 //print_arr(array);
 
-                int *sorted = copy_array(array);
+                long long int *sorted = copy_array(array);
                 sort(sorted);
                 //std::cout << "ОТСОРТИРОВАЛ BASE " << i + 1 << " ПРИ " << j + 1 << std::endl;
                 //print_arr(sorted);
@@ -95,9 +95,9 @@ void check_combinations(int array[]) {
 }
 
 int main() {
-    int array[LENGTH];
+    long long int array[LENGTH];
 
-    int data;
+    long long int data;
 
     for (size_t i = 0; i < LENGTH; i++) {
         std::cin >> data;

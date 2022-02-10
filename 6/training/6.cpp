@@ -10,10 +10,8 @@
 #define MIN_TIME 1
 #define MAX_TIME 1000
 
-
-
 #define ERROR_INPUT -1
-#define SUCCESS 1
+#define SUCCESS 0
 
 class CheckCommit {
     size_t short_t;

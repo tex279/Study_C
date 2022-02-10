@@ -15,7 +15,7 @@
 #define C 3
 
 #define ERROR_INPUT -1
-#define SUCCESS 1
+#define SUCCESS 0
 
 typedef struct Rule {
     size_t module;

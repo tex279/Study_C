@@ -11,7 +11,7 @@
 
 
 #define ERROR_INPUT -1
-#define SUCCESS 1
+#define SUCCESS 0
 
 class Tower {
     size_t count_plates;

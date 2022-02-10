@@ -15,7 +15,7 @@
 #define HIGH_LEVEL_SYMBOL 127
 
 #define ERROR_INPUT -1
-#define SUCCESS 1
+#define SUCCESS 0
 
 class Cup {
     size_t height_n;
