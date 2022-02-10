@@ -3,7 +3,7 @@
 all: clear build launch
 
 build:
-	g++ --std=gnu++20 1/training/1.cpp -o task
+	g++ --std=gnu++20 2/training/2.cpp -o task
 
 launch:
 	./task

@@ -52,13 +52,13 @@ int Cup::limits() {
 
     if ((LOW_LEVEL_HEIGHT > n) || (n > HIGH_LEVEL_HEIGHT)) {
         std::cerr << "Wrong input: height_n must be in interval " <<
-        LOW_LEVEL_HEIGHT << "-" << HIGH_LEVEL_HEIGHT << std::endl;
+                  LOW_LEVEL_HEIGHT << "-" << HIGH_LEVEL_HEIGHT << std::endl;
         return ERROR_INPUT;
     }
 
     if ((LOW_LEVEL_WIDTH > m) || (m > HIGH_LEVEL_WIDTH)) {
         std::cerr << "Wrong input: width_m must be in interval " <<
-        LOW_LEVEL_WIDTH << "-" << HIGH_LEVEL_WIDTH << std::endl;
+                  LOW_LEVEL_WIDTH << "-" << HIGH_LEVEL_WIDTH << std::endl;
         return ERROR_INPUT;
     }
 
@@ -90,7 +90,7 @@ int Cup::get_count_ingredients() {
     size_t min = std::min(height_n - 1, (size_t)HIGH_LEVEL_WIDTH);
     if (k > min) {
         std::cerr << "Wrong input: count ingredients must be in interval " <<
-        (height_n - 1) << "-" << HIGH_LEVEL_INGREDIENT << std::endl;
+                  (height_n - 1) << "-" << HIGH_LEVEL_INGREDIENT << std::endl;
         return ERROR_INPUT;
     }
 
@@ -128,28 +128,71 @@ void Cup::filling() {
     size_t left_pos;
     size_t length_filling;
     for (size_t i = (height_n - 1); i != 0; i--) {
-        size_t l_check_f_s = form_cup[i].find("./");
+        size_t l_check_f_s = form_cup[i].find("/");
+        if (l_check_f_s == 0) {
+            left_pos = l_check_f_s + 1;
+        }
+
+        l_check_f_s = form_cup[i].find("./");
         if (l_check_f_s != std::string::npos)
             left_pos = l_check_f_s + 2;
 
-        size_t l_check_v_b = form_cup[i].find(".|");
+
+
+
+        size_t l_check_v_b = form_cup[i].find("|");
+        if (l_check_v_b == 0) {
+            left_pos = l_check_v_b + 1;
+        }
+
+        l_check_v_b = form_cup[i].find(".|");
         if (l_check_v_b != std::string::npos)
             left_pos = l_check_v_b + 2;
 
-        size_t l_check_b_s = form_cup[i].find(".\\");
+
+
+
+        size_t l_check_b_s = form_cup[i].find("\\");
+        if (l_check_b_s == 0) {
+            left_pos = l_check_b_s + 1;
+        }
+
+        l_check_b_s = form_cup[i].find(".\\");
         if (l_check_b_s != std::string::npos)
             left_pos = l_check_b_s + 2;
 
 
-        size_t r_check_f_s = form_cup[i].rfind("/.");
+
+
+
+        size_t r_check_f_s = form_cup[i].rfind("/");
+        if (r_check_f_s == form_cup[i].length() - 1) {
+            right_pos = r_check_f_s;
+        }
+
+        r_check_f_s = form_cup[i].rfind("/.");
         if (r_check_f_s != std::string::npos)
             right_pos = r_check_f_s;
 
-        size_t r_check_v_b = form_cup[i].rfind("|.");
+
+
+        size_t r_check_v_b = form_cup[i].rfind("|");
+        if (r_check_v_b == form_cup[i].length() - 1) {
+            right_pos = r_check_v_b;
+        }
+
+        r_check_v_b = form_cup[i].rfind("|.");
         if (r_check_v_b != std::string::npos)
             right_pos = r_check_v_b;
 
-        size_t r_check_b_s = form_cup[i].rfind("\\.");
+
+
+        size_t r_check_b_s = form_cup[i].rfind("\\");
+        if (r_check_b_s == form_cup[i].length() - 1) {
+            right_pos = r_check_b_s;
+        }
+
+        r_check_b_s = form_cup[i].rfind("\\.");
         if (r_check_b_s != std::string::npos)
             right_pos = r_check_b_s;
 

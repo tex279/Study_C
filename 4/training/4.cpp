@@ -376,8 +376,6 @@ void Net::get_res_count() {
         }
     }
 
-
-
     for (size_t i = 1; i < y - 1; i++) {
         for (size_t j = 1; j < x - 1; j++) {
             if (net[i][j] == 1) {
