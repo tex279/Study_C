@@ -18,20 +18,20 @@
 #define SUCCESS 0
 
 typedef struct Rule {
-    size_t module;
-    size_t version;
+    unsigned int module;
+    unsigned int version;
 
-    size_t needed_module;
-    size_t needed_version;
+    unsigned int needed_module;
+    unsigned int needed_version;
 } Rule_t;
 
 class SystemVersion {
 public:
-    size_t max_version_A;
-    size_t max_version_B;
-    size_t max_version_C;
+    unsigned int max_version_A;
+    unsigned int max_version_B;
+    unsigned int max_version_C;
 
-    size_t count_rules;
+    unsigned int count_rules;
 
     std::vector <Rule_t> rules;
 
@@ -84,7 +84,7 @@ int SystemVersion::input_rules() {
 
     Rule_t rule_in;
 
-    for (size_t i = 0; i < count_rules; i++) {
+    for (size_t i = 0; i < count_rules; ++i) {
         std::cin >> rule_in.module >> rule_in.version >> rule_in.needed_module >> rule_in.needed_version;
 
         rules.push_back(rule_in);
@@ -101,10 +101,10 @@ SystemVersion::SystemVersion() {
 
 bool*** SystemVersion::create_net() {
     bool*** net = new bool ** [max_version_A];
-    for (size_t i = 0; i < max_version_A; i++) {
+    for (size_t i = 0; i < max_version_A; ++i) {
         net[i] = new bool * [max_version_B];
 
-        for (size_t j = 0; j < max_version_B; j++) {
+        for (size_t j = 0; j < max_version_B; ++j) {
             net[i][j] = new bool [max_version_C];
         }
     }
@@ -113,8 +113,8 @@ bool*** SystemVersion::create_net() {
 }
 
 int SystemVersion::del_net(bool*** net) {
-    for (size_t i = 0; i < max_version_A; i++) {
-        for (size_t j = 0; j < max_version_B; j++) {
+    for (size_t i = 0; i < max_version_A; ++i) {
+        for (size_t j = 0; j < max_version_B; ++j) {
             delete [] net[i][j];
         }
         delete[] net[i];
@@ -127,9 +127,9 @@ int SystemVersion::del_net(bool*** net) {
 
 
 void set_block(bool*** net, size_t i, size_t max_i, size_t j, size_t max_j, size_t k, size_t max_k) {
-    for (size_t ii = i - 1; ii < max_i; ii++) {
-        for (size_t jj = j - 1; jj < max_j; jj++) {
-            for (size_t kk = k - 1; kk < max_k; kk++) {
+    for (size_t ii = i - 1; ii < max_i; ++ii) {
+        for (size_t jj = j - 1; jj < max_j; ++jj) {
+            for (size_t kk = k - 1; kk < max_k; ++kk) {
                 net[ii][jj][kk] = true;
             }
         }
@@ -139,10 +139,10 @@ void set_block(bool*** net, size_t i, size_t max_i, size_t j, size_t max_j, size
 void SystemVersion::print(bool*** net) {
     std::cout << "\n";
     std::cout << "B-вниз C-право\n";
-    for (size_t i = 0; i < max_version_A; i++) {
+    for (size_t i = 0; i < max_version_A; ++i) {
         std::cout << "Новый слой - А\n";
-        for (size_t j = 0; j < max_version_B; j++) {
-            for (size_t k = 0; k < max_version_C; k++) {
+        for (size_t j = 0; j < max_version_B; ++j) {
+            for (size_t k = 0; k < max_version_C; ++k) {
                 std::cout << net[i][j][k] << " ";
             }
             std::cout << "\n";
@@ -158,72 +158,78 @@ void SystemVersion::print(bool*** net) {
 void SystemVersion::get_res_count() {
     size_t res_max_combination = max_version_A * max_version_B * max_version_C;
 
-    bool*** net = create_net();
+    //bool*** net = create_net();
 
-    for (size_t i = 0; i < count_rules; i++) {
+    for (size_t i = 0; i < count_rules; ++i) {
         if (rules[i].module == C) {
             if (rules[i].needed_module == B) {
-                set_block(net,
+                res_max_combination -= (max_version_A) * (rules[i].needed_version - 1) * (max_version_C - rules[i].version + 1);
+                /*set_block(net,
                           1, max_version_A,
                           1, rules[i].needed_version - 1,
-                          rules[i].version, max_version_C);
+                          rules[i].version, max_version_C);*/
             }
 
             if (rules[i].needed_module == A) {
-                set_block(net,
+                res_max_combination -= (rules[i].needed_version - 1) * (max_version_B) * (max_version_C - rules[i].version + 1);
+                /*set_block(net,
                           1, rules[i].needed_version - 1,
                           1, max_version_B,
-                          rules[i].version, max_version_C);
+                          rules[i].version, max_version_C);*/
             }
         }
 
         if (rules[i].module == A) {
             if (rules[i].needed_module == B) {
-                set_block(net,
+                res_max_combination -= (max_version_A - rules[i].version + 1) * (rules[i].needed_version - 1) * (max_version_C);
+                /*set_block(net,
                           rules[i].version, max_version_A,
                           1, rules[i].needed_version - 1,
-                          1, max_version_C);
+                          1, max_version_C);*/
             }
 
             if (rules[i].needed_module == C) {
-                set_block(net,
+                res_max_combination -= (max_version_A - rules[i].version + 1) * (max_version_B) * (rules[i].needed_version - 1);
+                /*set_block(net,
                           rules[i].version, max_version_A,
                           1, max_version_B,
-                          1, rules[i].needed_version - 1);
+                          1, rules[i].needed_version - 1);*/
             }
         }
 
         if (rules[i].module == B) {
             if (rules[i].needed_module == C) {
-                set_block(net,
+                res_max_combination -= (max_version_A) * (max_version_B - rules[i].version + 1) * (rules[i].needed_version - 1);
+                /*set_block(net,
                           1, max_version_A,
                           rules[i].version, max_version_B,
-                          1, rules[i].needed_version - 1);
+                          1, rules[i].needed_version - 1);*/
 
             }
 
             if (rules[i].needed_module == A) {
-                set_block(net,
+                res_max_combination -= (rules[i].needed_version - 1) * (max_version_B - rules[i].version + 1) * (max_version_C);
+                /*set_block(net,
                           1, rules[i].needed_version - 1,
                           rules[i].version, max_version_B,
-                          1, max_version_C);
+                          1, max_version_C);*/
             }
         }
     }
 
-    for (size_t i = 0; i < max_version_A; i++) {
-        for (size_t j = 0; j < max_version_B; j++) {
-            for (size_t k = 0; k < max_version_C; k++) {
+    /*for (size_t i = 0; i < max_version_A; ++i) {
+        for (size_t j = 0; j < max_version_B; ++j) {
+            for (size_t k = 0; k < max_version_C; ++k) {
                 if (net[i][j][k] == true) {
                     res_max_combination--;
                 }
             }
         }
-    }
+    }*/
 
-    print(net);
+    //print(net);
 
-    del_net(net);
+    //del_net(net);
 
     std::cout << res_max_combination << std::endl;
 }
