@@ -2,8 +2,10 @@
 
 all: clear build launch
 
+TARGET = 3
+
 build:
-	g++ --std=gnu++20 interview_contest/1/1.cpp -o task
+	g++ --std=gnu++20 interview_contest/$(TARGET)/$(TARGET).cpp -o task
 
 launch:
 	./task

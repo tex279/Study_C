@@ -20,7 +20,7 @@ int main(void) {
     std::cin >> jewelry;
 
     size_t jewelry_l = jewelry.length();
-    if (jewelry_l > MAX_LENGTH_STR || jewelry_l < MIN_LENGTH_STR) {
+    if (MIN_LENGTH_STR > jewelry_l || jewelry_l > MAX_LENGTH_STR) {
         FATAL_LIMITS(MIN_LENGTH_STR, MAX_LENGTH_STR, "string length");
     }
 
@@ -29,7 +29,7 @@ int main(void) {
     std::cin >> stone;
 
     size_t stone_l = stone.length();
-    if (stone_l > MAX_LENGTH_STR || stone_l < MIN_LENGTH_STR) {
+    if (MIN_LENGTH_STR > stone_l || stone_l > MAX_LENGTH_STR) {
         FATAL_LIMITS(MIN_LENGTH_STR, MAX_LENGTH_STR, "string length");
     }
 
