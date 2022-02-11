@@ -45,7 +45,6 @@ int main(void) {
 
     std::cout << res << std::endl;
 
-
     return SUCCESS;
 }
 

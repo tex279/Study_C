@@ -2,7 +2,7 @@
 
 all: clear build launch
 
-TARGET = 3
+TARGET = 5
 
 build:
 	g++ --std=gnu++20 interview_contest/$(TARGET)/$(TARGET).cpp -o task
