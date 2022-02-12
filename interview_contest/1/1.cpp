@@ -35,12 +35,8 @@ int main(void) {
 
     size_t res = 0;
 
-    for (size_t i = 0; i < stone_l; i++) {
-        for (size_t j = 0; j < jewelry_l; j++) {
-            if (stone[i] == jewelry[j]) {
-                res++;
-            }
-        }
+    for (const char ch : stone) {
+        res += jewelry.find(ch) != std::string::npos;
     }
 
     std::cout << res << std::endl;
