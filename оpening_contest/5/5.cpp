@@ -17,6 +17,7 @@
 #define ERROR_INPUT -1
 #define SUCCESS 0
 
+//  Нужен сет
 typedef struct Rule {
     unsigned int module;
     unsigned int version;

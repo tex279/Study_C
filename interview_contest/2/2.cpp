@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 
 #define MAX_LENGTH 10000
 #define MIN_LENGTH 0
@@ -34,9 +35,7 @@ int main(void) {
         }
 
         if (buf == 0 || i == count - 1) {
-            if (res < tmp) {
-                res = tmp;
-            }
+            res = std::max(res, tmp);
 
             tmp = 0;
         }

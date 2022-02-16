@@ -1,4 +1,5 @@
 #include <iostream>
+#include <unordered_set>
 #include <string>
 
 #define MAX_LENGTH 100000
@@ -31,11 +32,18 @@ int main(void) {
         FATAL_LIMITS(MIN_LENGTH, MAX_LENGTH, "string 2 length");
     }
 
-    std::sort(first.begin(), first.end());
+    std::unordered_set<char> fir;
+    std::unordered_set<char> sec;
 
-    std::sort(second.begin(), second.end());
+    for (char ch : first) {
+        fir.insert(ch);
+    }
 
-    if (first == second) {
+    for (char ch : second) {
+        sec.insert(ch);
+    }
+
+    if (fir == sec) {
         std::cout << 1 << std::endl;
     } else {
         std::cout << 0 << std::endl;
