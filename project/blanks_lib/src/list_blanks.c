@@ -24,24 +24,26 @@ list_blanks_t *create_list(size_t number, char *storage, char *responsible) {
     return tmp_list;
 }
 
-void insert(list_blanks_t *target, size_t number) {
+node_blank_t *insert(list_blanks_t *target, size_t number) {
     if (target->first->number >= number) {
         target->first = push_front(target->first, number);
-        return;
+        return target->first;
     }
 
     if (target->last->number <= number) {
         target->last = push_back(target->last, number);
-        return;
+        return target->last;
     }
 
     node_blank_t *iterator = target->first->next;
 
     while (iterator != target->last) {
         if (number <= iterator->number) {
-            insert_node(iterator, number);
+            return insert_node(iterator, number);
         }
     }
+
+    return NULL;
 }
 
 void print_list(list_blanks_t *list_b) {

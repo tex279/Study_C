@@ -5,7 +5,7 @@
 #include "blank.h"
 #include "utils.h"
 
-void insert_node(node_blank_t *target, size_t number) {
+node_blank_t *insert_node(node_blank_t *target, size_t number) {
     node_blank_t *tmp = calloc(1, sizeof(node_blank_t));
     ASSERT(tmp, "failed get memory");
 
@@ -16,6 +16,8 @@ void insert_node(node_blank_t *target, size_t number) {
 
     target->prev->next = tmp;
     target->prev = tmp;
+
+    return tmp;
 }
 
 node_blank_t *push_front(node_blank_t *first, size_t number) {
