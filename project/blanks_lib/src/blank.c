@@ -48,19 +48,19 @@ node_blank_t *push_back(node_blank_t *last, size_t number) {
     return tmp;
 }
 
-node_blank_t *print_numbers_chain(node_blank_t *first) {
+node_blank_t *print_numbers_chain(FILE *stream, node_blank_t *first) {
     node_blank_t *iterator = first;
 
     while (iterator->next) {
         if (iterator->next->number > (iterator->number + 1)) {
             break;
         }
-        fprintf(stdout, "%zu ", iterator->number);
+        fprintf(stream, "%zu ", iterator->number);
 
         iterator = iterator->next;
     }
 
-    fprintf(stdout, "%zu\n", iterator->number);
+    fprintf(stream, "%zu\n", iterator->number);
 
     return iterator;
 }

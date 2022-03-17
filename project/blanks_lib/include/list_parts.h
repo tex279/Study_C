@@ -20,7 +20,7 @@ node_list_parts_t *input(char const *source, size_t *count_error);
 node_list_parts_t *find_combination(node_list_parts_t *first, const char *storage, const char *responsible);
 
 //  Output functional
-void output_parts(node_list_parts_t* first, size_t *count_error);
+void output_parts(char const *target, node_list_parts_t* first, size_t *count_error);
 
 //  Freeing Memory
 void free_list_parts(node_list_parts_t* first);

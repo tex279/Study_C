@@ -105,17 +105,24 @@ node_list_parts_t *input(char const *source, size_t *count_error) {
     return first;
 }
 
-void output_parts(node_list_parts_t *first, size_t *count_error) {
+void output_parts(char const *target, node_list_parts_t *first, size_t *count_error) {
+    FILE *stream_in = stdout;
+
+    if (target) {
+        stream_in = fopen(target, "w+");
+        ASSERT(target, "failed create file for write");
+    }
+
     node_list_parts_t *iterator = first;
 
     while (iterator) {
-        print_list(iterator->list_b);
+        print_list(stream_in, iterator->list_b);
 
         iterator = iterator->next;
     }
 
     if (*count_error) {
-        fprintf(stdout, "%zu\n", *count_error);
+        fprintf(stream_in, "%zu\n", *count_error);
     }
 }
 

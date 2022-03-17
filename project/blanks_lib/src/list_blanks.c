@@ -46,15 +46,15 @@ node_blank_t *insert(list_blanks_t *target, size_t number) {
     return NULL;
 }
 
-void print_list(list_blanks_t *list_b) {
-    fprintf(stdout, "%s %s\n", list_b->storage, list_b->responsible);
+void print_list(FILE *stream, list_blanks_t *list_b) {
+    fprintf(stream, "%s %s\n", list_b->storage, list_b->responsible);
 
-    node_blank_t *end_chain = print_numbers_chain(list_b->first);
+    node_blank_t *end_chain = print_numbers_chain(stream, list_b->first);
 
     while (end_chain->next) {
-        fprintf(stdout, "%s %s\n", list_b->storage, list_b->responsible);
+        fprintf(stream, "%s %s\n", list_b->storage, list_b->responsible);
 
-        end_chain = print_numbers_chain(end_chain->next);
+        end_chain = print_numbers_chain(stream, end_chain->next);
     }
 }
 

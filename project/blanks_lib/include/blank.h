@@ -1,5 +1,6 @@
 #pragma once //  NOLINT
 
+#include <stdio.h>
 #include <stddef.h>
 
 #include <stdbool.h>
@@ -17,4 +18,4 @@ node_blank_t *push_front(node_blank_t *first, size_t number);
 node_blank_t *push_back(node_blank_t *last, size_t number);
 
 //  Output functional
-node_blank_t *print_numbers_chain(node_blank_t *first);
+node_blank_t *print_numbers_chain(FILE *stream, node_blank_t *first);
