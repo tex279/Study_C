@@ -39,38 +39,3 @@ jobs:
           path: valgrind.log
 
 
-          int res = 0;
-
-                  char buf_number_str[LENGTH_NUMBER + 1] = {};
-                  char format_string_number[LENGTH_NUMBER + 1] = {};
-                  snprintf(format_string_number, LENGTH_NUMBER + 1, "%%%ds", LENGTH_NUMBER);
-                  res = sscanf(global, format_string_number, buf_number_str);
-                  if (res != 1) {
-                      (*count_error)++;
-                      continue;
-                  }
-
-                  char buf_storage[LENGTH_STORAGE + 1] = {};
-                  char format_string_storage[LENGTH_STORAGE + 1] = {};
-                  snprintf(format_string_storage, LENGTH_STORAGE + 1, "%%%ds", LENGTH_STORAGE);
-                  res = sscanf(global, format_string_storage, buf_storage);
-                  if (res != 1) {
-                      (*count_error)++;
-                      continue;
-                  }
-
-                  char buf_responsible[LENGTH_RESPONSIBLE + 1] = {};
-                  char format_string_responsible[LENGTH_RESPONSIBLE + 1] = {};
-                  snprintf(format_string_responsible, LENGTH_RESPONSIBLE + 1, "%%%ds", LENGTH_RESPONSIBLE);
-                  res = sscanf(global, format_string_responsible, buf_responsible);
-                  if (res != 1) {
-                      (*count_error)++;
-                      continue;
-                  }
-
-                  char *end;
-                  size_t buf_number = strtoul(buf_number_str, &end, 0);
-                  if (strlen(end)) {
-                      (*count_error)++;
-                      continue;
-                  }

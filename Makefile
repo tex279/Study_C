@@ -12,12 +12,12 @@ HDRS = \
 SRCS = \
        project/src/*.c
 
-.PHONY: all check build test memtest rebuild clean
+.PHONY: all check build test memtest rebuild clean build_cmake
 
 all: clean check build test memtest
 
 check:
-	./run_linters.sh
+	./linters/run_linters.sh
 
 build: $(TARGET)
 
@@ -29,8 +29,11 @@ memtest: $(TARGET)
 
 rebuild: clean build
 
+build_cmake:
+	./build.sh
+
 $(TARGET): $(SRCS)
 	$(CC)  $(KEYS) $(addprefix -I,$(HDRS)) -o $(TARGET) $(CFLAGS) $(SRCS)
 
 clean:
-	rm -f $(TARGET) ${VALGRIND_LOG}
+	rm -rf build
