@@ -2,18 +2,21 @@
 
 extern "C" {
     #include "../include/list_parts.h"
+    #include "../include/list_blanks.h"
+    #include "../include/blank.h"
 }
 
 TEST(TEST_BLANKS, create_list) {
-    list_blanks *first = NULL;
+    char stor[] = {"stor"};
+    char res[] = {"ZINA"};
 
-    EXPECT_TRUE(first == NULL);
+    list_blanks_t *list = create_list(10, stor, res);
 
-    node_blank_t *tmp = push_front(first, 10);
+    EXPECT_TRUE(list != NULL);
 
-    EXPECT_TRUE(tmp != NULL);
+    EXPECT_TRUE(list->first->number == 10);
+    EXPECT_TRUE(list->last->number == 10);
 
-    EXPECT_EQ(tmp->number, 10);
-
-    free(tmp);
+    EXPECT_EQ(list->storage, stor);
+    EXPECT_EQ(list->responsible, res);
 }
