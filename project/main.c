@@ -2,13 +2,13 @@
 #include <stdlib.h>
 
 #include "list_parts.h"
-#include "utils.h"
 
 #define SUCCESS 0
 
 int main(int argc, char const **argv) {
     if (argc != 2) {
-        FATAL("incorrect input");
+        fprintf(stderr, "incorrect input");
+        return -1;
     }
 
     char const *path_to_blk = argv[1];

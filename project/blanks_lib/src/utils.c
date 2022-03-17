@@ -23,9 +23,9 @@ char *create_str(char *source) {
 char *scan_data(char *source, size_t size_str_data) {
     char *out = NULL;
 
-    char buf[MAX_LENGTH_BUF + 1] = {};
+    char buf[MAX_LENGTH_BUF + 1];
 
-    char format_string[LENGTH_STRING_FORMAT + 1] = {};
+    char format_string[LENGTH_STRING_FORMAT + 1];
 
     snprintf(format_string, LENGTH_STRING_FORMAT + 1, "%%%zus", size_str_data);
 
