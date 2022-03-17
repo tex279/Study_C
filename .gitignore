@@ -4,3 +4,4 @@
 .vscode/
 /coverage-report/
 valgrind.log
+test.log
