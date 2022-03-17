@@ -1,6 +1,6 @@
-.PHONY: all build rebuild check test memtest clean memtest_TEST
+.PHONY: all build rebuild check test memtest clean coverage_tests
 
-all: clean check build test memtest
+all: clean check build test coverage_tests memtest
 
 TARGET_TEST = ./build/test.out
 TARGET_MAIN = ./build/main
@@ -17,13 +17,10 @@ build:
 rebuild: clean build
 
 test:
-	./run_build.sh
-	./run_tests.sh
+	./build/test.out
+
+coverage_tests:
+	./run_coverage.sh
 
 memtest:
-	./run_build.sh
-	./run_memtest.sh
-
-memtest_TEST:
-	./run_build.sh
 	./memtest.sh $(TARGET_TEST)

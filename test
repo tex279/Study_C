@@ -3,13 +3,13 @@ on: push
 jobs:
   check:
     runs-on: ubuntu-latest
-    container: leshiy1295/gcc_linters_valgrind
+    container: andeo1812/gcc_check_gtest
     steps:
       - uses: actions/checkout@v2
       - run: make check
   build:
     runs-on: ubuntu-latest
-    container: leshiy1295/gcc_linters_valgrind
+    container: andeo1812/gcc_check_gtest
     needs: [check]
     steps:
       - uses: actions/checkout@v2
@@ -20,15 +20,22 @@ jobs:
           path: main.out
   test:
     runs-on: ubuntu-latest
-    container: leshiy1295/gcc_linters_valgrind
+    container: andeo1812/gcc_check_gtest
     needs: [build]
     steps:
       - uses: actions/checkout@v2
       - run: make test
+  coverage_tests:
+      runs-on: ubuntu-latest
+      container: andeo1812/gcc_check_gtest
+      needs: [test]
+      steps:
+        - uses: actions/checkout@v2
+        - run: make coverage_tests;
   memtest:
     runs-on: ubuntu-latest
-    container: leshiy1295/gcc_linters_valgrind
-    needs: [test]
+    container: andeo1812/gcc_check_gtest
+    needs: [coverage_tests]
     steps:
       - uses: actions/checkout@v2
       - run: make memtest
@@ -37,6 +44,3 @@ jobs:
         if: failure()
         with:
           path: valgrind.log
-
-
-KEYS = -Wextra -Werror -g -std=gnu99 -Wall
