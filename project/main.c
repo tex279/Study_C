@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "list_parts.h"
+#include "../include/list_parts.h"
 
 #define SUCCESS 0
 

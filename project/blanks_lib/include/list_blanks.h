@@ -1,6 +1,6 @@
 #pragma once //  NOLINT
 
-#include "blank.h"
+#include "../include/blank.h"
 
 typedef struct list_blanks {
     node_blank_t *first;

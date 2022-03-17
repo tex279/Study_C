@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 extern "C" {
-    #include "list_parts.h"
+    #include "../include/list_parts.h"
 }
 
 TEST(TEST_BLANKS, create_list) {

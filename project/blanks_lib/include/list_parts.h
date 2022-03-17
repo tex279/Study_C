@@ -1,7 +1,7 @@
 #pragma once //  NOLINT
 
-#include "blank.h"
-#include "list_blanks.h"
+#include "../include/blank.h"
+#include "../include/list_blanks.h"
 
 #define ERR_OPEN -1
 
