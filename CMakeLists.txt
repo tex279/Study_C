@@ -1,32 +1,21 @@
-cmake_minimum_required(VERSION 3.20)
-project(HW-1)
+cmake_minimum_required(VERSION 3.0.0)
+project(blanks)
 
-set(CMAKE_C_STANDARD 99)
+OPTION(WITH_MEMCHECK "Run with memcheck" OFF)
 
-set(CMAKE_CXX_FLAGS "-g -O0 -Wall -Wextra -Werror -Wpedantic -fprofile-arcs -ftest-coverage")
+INCLUDE_DIRECTORIES(project/include/)
 
-set(CMAKE_C_FLAGS "-g -O0 -Wextra -Werror -g -std=gnu99 -Wall
-	-Wcast-align -Wcast-qual -Wconversion -Wduplicated-branches -Wduplicated-cond
-	-Wfloat-equal -Wlogical-op -Wredundant-decls -Wsign-conversion")
+add_subdirectory(project)
 
-set(CMAKE_EXE_LINKER_FLAGS "-fprofile-arcs -ftest-coverage")
+message("BLANKS_INCLUDE_DIRS = ${BLANKS_INCLUDE_DIRS}")
+message("BLANKS_LIBRARIES = ${BLANKS_LIBRARIES}")
 
-add_library(lib STATIC
-        project/src/blank.c
-        project/src/list_blanks.c
-        project/src/list_parts.c
-        project/src/main.c
-        project/src/utils.c)
+add_executable(${PROJECT_NAME} project/src/main.c)
 
-target_include_directories(lib PUBLIC include)
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -coverage -lgcov")
 
-add_executable(main.out src/main.c)
-target_link_libraries(main.out lib)
+target_include_directories(${PROJECT_NAME} PUBLIC ${BLANKS_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${BLANKS_LIBRARIES})
 
-enable_testing()
 
-find_package(GTest REQUIRED)
-find_package(Threads REQUIRED)
-
-add_executable(test.out tests/gtest.cpp)
-target_link_libraries(test.out lib ${GTEST_LIBRARIES} Threads::Threads)
+ENABLE_TESTING()

@@ -7,8 +7,9 @@
 #define SUCCESS 0
 
 int main(int argc, char const **argv) {
-    if (argc != 2)
+    if (argc != 2) {
         FATAL("incorrect input");
+    }
 
     char const *path_to_blk = argv[1];
 
