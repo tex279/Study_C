@@ -14,8 +14,9 @@ build:
 rebuild: clean build
 
 test:
+	./run_build.sh
 	./run_tests.sh
 
 memtest:
-	./run_build.sh -DWITH_MEMCHECK=ON
-	./run_tests.sh --memcheck
+	./run_build.sh
+	./run_memtest.sh

@@ -5,7 +5,15 @@ extern "C" {
 }
 
 TEST(TEST_BLANKS, create_list) {
-    node_blank_t *first = NULL;
+    list_blanks *first = NULL;
 
     EXPECT_TRUE(first == NULL);
+
+    node_blank_t *tmp = push_front(first, 10);
+
+    EXPECT_TRUE(tmp != NULL);
+
+    EXPECT_EQ(tmp->number, 10);
+
+    free(tmp);
 }
