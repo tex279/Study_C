@@ -3,7 +3,7 @@
 all: clean check build test memtest
 
 clean:
-	rm -rf build || rm -rf coverage_report
+	rm -rf build && rm -rf coverage-report
 
 check:
 	./run_linters.sh
