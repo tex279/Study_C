@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
 project(Blanks)
 
+OPTION(WITH_MEMCHECK "Run with memcheck" OFF)
+
 set(CMAKE_C_STANDARD 99)
 
 set(CMAKE_C_FLAGS "-g -O0 -Wall -Wextra -Werror -Wpedantic -fprofile-arcs -ftest-coverage")
@@ -28,4 +30,4 @@ set(CMAKE_CXX_FLAGS "-g -O0 -Wall -Wextra -Werror -Wpedantic -fprofile-arcs -fte
 set(CMAKE_EXE_LINKER_FLAGS "-fprofile-arcs -ftest-coverage")
 
 add_executable(test.out project/gtest/src/test_blanks.cpp)
-target_link_libraries(test.out lib GTest::Main Threads::Threads)
+target_link_libraries(test.out lib ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
