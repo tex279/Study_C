@@ -64,7 +64,7 @@ TEST(TEST_PARTS, parts_functional) {
     free_list_parts(first);
 }
 
-TEST(INPUT, input_data) {
+/*TEST(INPUT, input_data) {
     char path[] = {"../project/gtest/data/ok/in.txt"};
     size_t count_error = 0;
 
@@ -73,4 +73,4 @@ TEST(INPUT, input_data) {
     EXPECT_TRUE(first != NULL);
 
     free_list_parts(first);
-}
+}*/

@@ -17,10 +17,10 @@ build:
 rebuild: clean build
 
 test:
-	./build/test.out
+	./run_test.sh
 
 coverage_tests:
 	./run_coverage.sh
 
 memtest:
-	./memtest.sh $(TARGET_TEST)
+	./run_memtest.sh $(TARGET_TEST)
