@@ -8,7 +8,7 @@ extern "C" {
 }
 
 TEST(TEST_BLANKS, create_list) {
-    node_t *first = NULL;
+    node_blank_t *first = NULL;
 
     EXPECT_TRUE(first == NULL);
 
