@@ -10,7 +10,7 @@
 #define FILE 3
 
 int main(int argc, char const **argv) {
-    if (argc > 3) {
+    if (argc > 4) {
         fprintf(stderr, "incorrect input");
         return -1;
     }
