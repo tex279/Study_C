@@ -1,6 +1,0 @@
-/home/andeo/GitHub/Study_C_CPP/build/CMakeFiles/lib.dir
-/home/andeo/GitHub/Study_C_CPP/build/CMakeFiles/main.dir
-/home/andeo/GitHub/Study_C_CPP/build/CMakeFiles/test.out.dir
-/home/andeo/GitHub/Study_C_CPP/build/CMakeFiles/test.dir
-/home/andeo/GitHub/Study_C_CPP/build/CMakeFiles/edit_cache.dir
-/home/andeo/GitHub/Study_C_CPP/build/CMakeFiles/rebuild_cache.dir

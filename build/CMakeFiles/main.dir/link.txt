@@ -1,1 +1,0 @@
-/usr/bin/cc -g -O0 -Wall -Wextra -Werror -Wpedantic -fprofile-arcs -ftest-coverage -Wlogical-op -Wredundant-decls -Wsign-conversion -Wcast-align -Wcast-qual -Wconversion -Wduplicated-branches -Wduplicated-cond -Wfloat-equal  -fprofile-arcs -ftest-coverage CMakeFiles/main.dir/project/main.c.o -o main  liblib.a 

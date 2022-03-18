@@ -1,1 +1,0 @@
-/usr/bin/c++ -g -O0 -Wall -Wextra -Werror -Wpedantic -fprofile-arcs -ftest-coverage -fPIC -fprofile-arcs -ftest-coverage CMakeFiles/test.out.dir/project/gtest/src/test_blanks.cpp.o -o test.out  liblib.a /usr/lib/libgtest_main.so.1.11.0 /usr/lib/libgtest.so.1.11.0 
