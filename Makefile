@@ -25,6 +25,6 @@ coverage_tests:
 
 memtest:
 	./run_build.sh
-	./run_memtest.sh
+	./run_memtest.sh ./test.out
 
 
