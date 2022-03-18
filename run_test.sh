@@ -2,4 +2,3 @@
 
 cd build
 ./test.out
-cd ..

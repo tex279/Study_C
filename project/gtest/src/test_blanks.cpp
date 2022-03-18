@@ -64,7 +64,7 @@ TEST(TEST_PARTS, parts_functional) {
     free_list_parts(first);
 }
 
-TEST(INPUT, input_data) {
+/*TEST(INPUT, input_data) {
     char path_input[] = {"../project/gtest/data/ok/in.txt"};
     char out_etalon[] = {"../project/gtest/data/ok/out.txt"};
     char path_output[] = {"../build/tmp.txt"};
@@ -81,8 +81,8 @@ TEST(INPUT, input_data) {
     FILE *in_etalon = fopen(out_etalon, "r");
     FILE *out = fopen(path_output, "r");
 
-    EXPECT_EQ(in_etalon, out);
+    //  EXPECT_EQ(in_etalon, out);
 
     fclose(in_etalon);
     fclose(out);
-}
+}*/
