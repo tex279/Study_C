@@ -124,6 +124,10 @@ void output_parts(char const *target, node_list_parts_t *first, size_t *count_er
     if (*count_error) {
         fprintf(stream_in, "%zu\n", *count_error);
     }
+
+    if (target) {
+        ASSERT(!fclose(stream_in), "failed close file");
+    }
 }
 
 void free_list_parts(node_list_parts_t *first) {
