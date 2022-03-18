@@ -16,10 +16,13 @@ build:
 rebuild: clean build
 
 test:
+	./run_build.sh
 	./run_test.sh
 
 coverage_tests:
+	./run_build.sh
 	./run_coverage.sh
 
 memtest:
+	./run_build.sh
 	./run_memtest.sh
