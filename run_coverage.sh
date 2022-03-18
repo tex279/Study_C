@@ -12,17 +12,17 @@ cat "${LOG_TEST}"
 
 VAR=$(cat "${LOG_TEST}")
 
-SUB1="lines......: 8"
-SUB2="functions..: 9"
+SUB1="lines......: "
+SUB2="functions..: "
 
-if [[ "$VAR" == *"$SUB1"* ]]; then
+if [[ "$VAR" == *"$SUB1"["$@"][[:digit:]].[[:digit:]]%* ]]; then
   echo "LINES_SUCCESS"
 else
   echo "LINES_FAILED"
   exit 1
 fi
 
-if [[ "$VAR" == *"$SUB2"* ]]; then
+if [[ "$VAR" == *"$SUB2"["$@"][[:digit:]].[[:digit:]]%* ]]; then
   echo "FUNCTION_SUCCESS"
 else
   echo "FUNCTION_FAILED"
