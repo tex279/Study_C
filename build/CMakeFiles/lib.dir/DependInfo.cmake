@@ -1,19 +1,17 @@
+
+# Consider dependencies only in project.
+set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
+
 # The set of languages for which implicit dependencies are needed:
 set(CMAKE_DEPENDS_LANGUAGES
-  "C"
   )
-# The set of files for implicit dependencies of each language:
-set(CMAKE_DEPENDS_CHECK_C
-  "/Hw/project/blanks_lib/src/blank.c" "/Hw/build/CMakeFiles/lib.dir/project/blanks_lib/src/blank.c.o"
-  "/Hw/project/blanks_lib/src/list_blanks.c" "/Hw/build/CMakeFiles/lib.dir/project/blanks_lib/src/list_blanks.c.o"
-  "/Hw/project/blanks_lib/src/list_parts.c" "/Hw/build/CMakeFiles/lib.dir/project/blanks_lib/src/list_parts.c.o"
-  "/Hw/project/blanks_lib/src/utils.c" "/Hw/build/CMakeFiles/lib.dir/project/blanks_lib/src/utils.c.o"
-  )
-set(CMAKE_C_COMPILER_ID "GNU")
 
-# The include file search paths:
-set(CMAKE_C_TARGET_INCLUDE_PATH
-  "../project/blanks_lib/include"
+# The set of dependency files which are needed:
+set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/andeo/GitHub/Study_C_CPP/project/blanks_lib/src/blank.c" "CMakeFiles/lib.dir/project/blanks_lib/src/blank.c.o" "gcc" "CMakeFiles/lib.dir/project/blanks_lib/src/blank.c.o.d"
+  "/home/andeo/GitHub/Study_C_CPP/project/blanks_lib/src/list_blanks.c" "CMakeFiles/lib.dir/project/blanks_lib/src/list_blanks.c.o" "gcc" "CMakeFiles/lib.dir/project/blanks_lib/src/list_blanks.c.o.d"
+  "/home/andeo/GitHub/Study_C_CPP/project/blanks_lib/src/list_parts.c" "CMakeFiles/lib.dir/project/blanks_lib/src/list_parts.c.o" "gcc" "CMakeFiles/lib.dir/project/blanks_lib/src/list_parts.c.o.d"
+  "/home/andeo/GitHub/Study_C_CPP/project/blanks_lib/src/utils.c" "CMakeFiles/lib.dir/project/blanks_lib/src/utils.c.o" "gcc" "CMakeFiles/lib.dir/project/blanks_lib/src/utils.c.o.d"
   )
 
 # Targets to which this target links.
