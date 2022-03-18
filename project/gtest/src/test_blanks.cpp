@@ -64,13 +64,25 @@ TEST(TEST_PARTS, parts_functional) {
     free_list_parts(first);
 }
 
-/*TEST(INPUT, input_data) {
-    char path[] = {"../project/gtest/data/ok/in.txt"};
+TEST(INPUT, input_data) {
+    char path_input[] = {"../project/gtest/data/ok/in.txt"};
+    char out_etalon[] = {"../project/gtest/data/ok/out.txt"};
+    char path_output[] = {"../build/tmp.txt"};
     size_t count_error = 0;
 
-    node_list_parts_t* first = input(path, &count_error);
+    node_list_parts_t* first = input(path_input, &count_error);
 
     EXPECT_TRUE(first != NULL);
 
+    output_parts(path_output, first, &count_error);
+
     free_list_parts(first);
-}*/
+
+    FILE *in_etalon = fopen(out_etalon, "r");
+    FILE *out = fopen(path_output, "r");
+
+    EXPECT_EQ(in_etalon, out);
+
+    fclose(in_etalon);
+    fclose(out);
+}
