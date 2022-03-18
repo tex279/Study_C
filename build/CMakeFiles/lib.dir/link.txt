@@ -1,0 +1,2 @@
+/usr/bin/ar qc liblib.a CMakeFiles/lib.dir/project/blanks_lib/src/blank.c.o CMakeFiles/lib.dir/project/blanks_lib/src/list_blanks.c.o CMakeFiles/lib.dir/project/blanks_lib/src/list_parts.c.o CMakeFiles/lib.dir/project/blanks_lib/src/utils.c.o
+/usr/bin/ranlib liblib.a

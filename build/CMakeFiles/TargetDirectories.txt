@@ -1,0 +1,6 @@
+/Hw/build/CMakeFiles/rebuild_cache.dir
+/Hw/build/CMakeFiles/edit_cache.dir
+/Hw/build/CMakeFiles/test.dir
+/Hw/build/CMakeFiles/test.out.dir
+/Hw/build/CMakeFiles/main.dir
+/Hw/build/CMakeFiles/lib.dir
