@@ -2,7 +2,7 @@
 
 all: clean check build test coverage_tests memtest
 
-TARGET_TEST = ./test.out
+TARGET_TEST = ./build/test.out
 
 clean:
 	rm -rf build && rm -rf coverage-report
@@ -22,4 +22,4 @@ coverage_tests:
 	./run_coverage.sh
 
 memtest:
-	./run_memtest.sh $(TARGET_TEST)
+	./run_memtest.sh

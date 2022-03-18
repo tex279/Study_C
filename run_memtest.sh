@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-VALGRIND_LOG="../valgrind.log"
+VALGRIND_LOG="valgrind.log"
 NO_LOST_PATTERN="All heap blocks were freed -- no leaks are possible"
 NO_ERROR_PATTERN="ERROR SUMMARY: 0 errors"
 
-cd build
 valgrind --tool=memcheck --leak-check=summary --show-leak-kinds=all --leak-check=full --track-origins=yes --log-file=${VALGRIND_LOG} "$@"  exit 1
 NO_LOST=$(grep "${NO_LOST_PATTERN}" "${VALGRIND_LOG}")
 NO_ERROR=$(grep "${NO_ERROR_PATTERN}" "${VALGRIND_LOG}")
