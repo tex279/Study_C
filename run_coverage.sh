@@ -10,9 +10,7 @@ lcov -t "test.out" -o coverage.info -c -d CMakeFiles/lib.dir/
 
 cat "${LOG_TEST}"
 
-tail -n 2  ${LOG_TEST} > tmp.txt
-
-VAR=$(cat tmp.txt)
+VAR=$(cat "${LOG_TEST}")
 
 SUB1="lines......: 8"
 SUB2="functions..: 9"
