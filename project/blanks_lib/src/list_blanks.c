@@ -55,16 +55,18 @@ node_blank_t *insert(list_blanks_t *target, const size_t number) {
 
     node_blank_t *iterator = target->first->next;
 
-    while (iterator != target->last) {
-        if (number <= iterator->number) {
+    while (iterator != NULL) {
+        if (number < iterator->number) {
             return insert_node(iterator, number);
         }
+
+        iterator = iterator->next;
     }
 
     return NULL;
 }
 
-void print_list(FILE *stream, const list_blanks_t *list_b) {
+int print_list(FILE *stream, const list_blanks_t *list_b) {
     fprintf(stream, "%s %s\n", list_b->storage, list_b->responsible);
 
     node_blank_t *end_chain = print_numbers_chain(stream, list_b->first);
@@ -74,9 +76,11 @@ void print_list(FILE *stream, const list_blanks_t *list_b) {
 
         end_chain = print_numbers_chain(stream, end_chain->next);
     }
+
+    return SUCCESS;
 }
 
-void free_list_blank(list_blanks_t *list_b) {
+int free_list_blank(list_blanks_t *list_b) {
     while (list_b->first != NULL) {
         node_blank_t* tmp = list_b->first;
 
@@ -89,4 +93,6 @@ void free_list_blank(list_blanks_t *list_b) {
     free(list_b->responsible);
 
     free(list_b);
+
+    return SUCCESS;
 }

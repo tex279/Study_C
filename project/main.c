@@ -19,7 +19,6 @@ void work(char const *path_to_input_blk, char const *path_to_output_blk) {
     node_list_parts_t *first;
     input(path_to_input_blk, &count_error, &first);
 
-
     output_parts(path_to_output_blk, first, &count_error);
 
     free_list_parts(first);

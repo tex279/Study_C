@@ -1,9 +1,6 @@
 #pragma once //  NOLINT
 
 #include <stdio.h>
-#include <stddef.h>
-
-#include <stdbool.h>
 
 typedef struct node_blank {
     size_t number;

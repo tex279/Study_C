@@ -31,7 +31,7 @@ TEST(TEST_BLANKS, list_functional) {
     EXPECT_TRUE(list->first->number == 4);
     EXPECT_TRUE(list->last->number == 16);
 
-    free_list_blank(list);
+    EXPECT_TRUE(free_list_blank(list) == SUCCESS);
 }
 
 TEST(TEST_PARTS, parts_functional) {
@@ -49,10 +49,9 @@ TEST(TEST_PARTS, parts_functional) {
 
     EXPECT_TRUE(find_combination(first, stor_2, res_2) == NULL);
 
-    node_list_parts_t *tmp = find_combination(first, stor_1, res_2);
-    EXPECT_TRUE(tmp != NULL);
+    EXPECT_TRUE(find_combination(first, stor_1, res_2) != NULL);
 
-    free_list_parts(first);
+    EXPECT_TRUE(free_list_parts(first) == SUCCESS);
 }
 
 TEST(INPUT, input_data_file_file) {
@@ -63,13 +62,13 @@ TEST(INPUT, input_data_file_file) {
     size_t count_error = 0;
 
     node_list_parts_t* first;
-    EXPECT_TRUE(input(path_input, &count_error, &first) == 1);
+    EXPECT_TRUE(input(path_input, &count_error, &first) == SUCCESS);
 
     EXPECT_TRUE(first != NULL);
 
-    output_parts(path_output, first, &count_error);
+    EXPECT_TRUE(output_parts(path_output, first, &count_error) == SUCCESS);;
 
-    free_list_parts(first);
+    EXPECT_TRUE(free_list_parts(first) == SUCCESS);
 }
 
 TEST(INPUT, input_data_std_file) {
@@ -82,9 +81,9 @@ TEST(INPUT, input_data_std_file) {
 
     EXPECT_TRUE(first != NULL);
 
-    output_parts(NULL, first, &count_error);
+    EXPECT_TRUE(output_parts(NULL, first, &count_error) == SUCCESS);
 
-    free_list_parts(first);
+    EXPECT_TRUE(free_list_parts(first) == SUCCESS);
 }
 
 TEST(INPUT, input_data_incorrect) {
@@ -99,7 +98,7 @@ TEST(INPUT, input_data_incorrect) {
 
     EXPECT_TRUE(first != NULL);
 
-    output_parts(path_output, first, &count_error);
+    EXPECT_TRUE(output_parts(path_output, first, &count_error) == SUCCESS);
 
-    free_list_parts(first);
+    EXPECT_TRUE(free_list_parts(first) == SUCCESS);
 }

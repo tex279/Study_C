@@ -115,6 +115,10 @@ int input(char const *source, size_t *count_error, node_list_parts_t **first1) {
             }
         } else {
             node_list_parts_t *tmp_part = create_part(numb, buf_storage, buf_responsible);
+            if (!tmp_part) {
+                free_list_parts(first);
+                return ERR_ALOC;
+            }
 
             last->next = tmp_part;
 
@@ -126,10 +130,10 @@ int input(char const *source, size_t *count_error, node_list_parts_t **first1) {
 
     ASSERT(!fclose(target), "failed close file");
 
-    return 1;
+    return SUCCESS;
 }
 
-void output_parts(char const *target, node_list_parts_t *first, size_t *count_error) {
+int output_parts(char const *target, node_list_parts_t *first, size_t *count_error) {
     FILE *stream_in = stdout;
 
     if (target) {
@@ -154,9 +158,11 @@ void output_parts(char const *target, node_list_parts_t *first, size_t *count_er
     if (target) {
         ASSERT(!fclose(stream_in), "failed close file");
     }
+
+    return SUCCESS;
 }
 
-void free_list_parts(node_list_parts_t *first) {
+int free_list_parts(node_list_parts_t *first) {
     while (first) {
         free_list_blank(first->list_b);
 
@@ -168,4 +174,6 @@ void free_list_parts(node_list_parts_t *first) {
     }
 
     free(first);
+
+    return SUCCESS;
 }
