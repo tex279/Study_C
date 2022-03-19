@@ -11,7 +11,10 @@ char *create_str(const char *source) {
     size_t len = strlen(source);
 
     char *tmp = calloc(len + 1, sizeof(char));
-    ASSERT(tmp, "failed get memory");
+    if (!tmp) {
+        fprintf(stderr, "memory allocation error\n");
+        return NULL;
+    }
 
     tmp = strncpy(tmp, source, len);
 
