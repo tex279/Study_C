@@ -5,7 +5,7 @@
 
 #define SUCCESS 0
 #define ERR_INPUT -1
-#define ERR_WRONG_FLG -2
+#define ERR_WRONG_TYPE_WORK -2
 
 #define IN_STD_OUT_STD 1
 #define IN_FILE_OUT_STD 2
@@ -38,32 +38,23 @@ int main(int argc, char const **argv) {
     switch (type_work) {
         case IN_STD_OUT_STD: {
             work(NULL, NULL);
-
             break;
         }
         case IN_FILE_OUT_STD: {
-            char const *path_to_input_blk = argv[2];
-            work(path_to_input_blk, NULL);
-
+            work(argv[2], NULL);
             break;
         }
         case IN_STD_OUT_FILE: {
-            char const *path_to_output_blk = argv[2];
-
-            work(NULL, path_to_output_blk);
-
+            work(NULL, argv[2]);
             break;
         }
         case IN_FILE_OUT_FILE: {
-            char const *path_to_input_blk = argv[2];
-            char const *path_to_output_blk = argv[3];
-
-            work(path_to_input_blk, path_to_output_blk);
-
+            work(argv[2], argv[3]);
             break;
         }
         default: {
-            return ERR_WRONG_FLG;
+            fprintf(stderr, "incorrect input type work: not such type");
+            return ERR_WRONG_TYPE_WORK;
         }
     }
 
