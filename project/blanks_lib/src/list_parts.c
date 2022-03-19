@@ -109,7 +109,10 @@ int input(char const *source, size_t *count_error, node_list_parts_t **first1) {
 
         node_list_parts_t *cur_part = find_combination(first, buf_storage, buf_responsible);
         if (cur_part) {
-            insert(cur_part->list_b, numb);
+            if (!insert(cur_part->list_b, numb)) {
+                free_list_parts(first);
+                return ERR_ALOC;
+            }
         } else {
             node_list_parts_t *tmp_part = create_part(numb, buf_storage, buf_responsible);
 
