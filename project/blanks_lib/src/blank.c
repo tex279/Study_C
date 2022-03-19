@@ -7,7 +7,10 @@
 
 node_blank_t *insert_node(node_blank_t *target, const size_t number) {
     node_blank_t *tmp = calloc(1, sizeof(node_blank_t));
-    ASSERT(tmp, "failed get memory");
+    if (!tmp) {
+        fprintf(stderr, "memory allocation error\n");
+        return NULL;
+    }
 
     tmp->number = number;
 

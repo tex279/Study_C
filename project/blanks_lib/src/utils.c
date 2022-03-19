@@ -22,21 +22,3 @@ char *create_str(const char *source) {
 
     return tmp;
 }
-
-char *scan_data(const char *source, const size_t size_str_data) {
-    char *out = NULL;
-
-    char buf[MAX_LENGTH_BUF + 1];
-
-    char format_string[LENGTH_STRING_FORMAT + 1];
-
-    snprintf(format_string, LENGTH_STRING_FORMAT + 1, "%%%zus", size_str_data);
-
-    if (sscanf(source, format_string, buf) == -1) {
-        return NULL;
-    }
-
-    out = create_str(buf);
-
-    return out;
-}

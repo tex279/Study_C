@@ -7,13 +7,32 @@
 
 list_blanks_t *create_list(const size_t number, char *storage, char *responsible) {
     list_blanks_t *tmp_list = calloc(1, sizeof(list_blanks_t));
-    ASSERT(tmp_list, "failed get memory");
+    /*if (!tmp_list) {
+        fprintf(stderr, "memory allocation error\n");
+        return NULL;
+    }*/
 
-    tmp_list->storage = storage;
-    tmp_list->responsible = responsible;
+    tmp_list->storage = create_str(storage);
+    /*if (!tmp_list->storage) {
+        free(tmp_list);
+        return NULL;
+    }*/
+
+    tmp_list->responsible = create_str(responsible);
+    /*if (!tmp_list->responsible) {
+        free(tmp_list->storage);
+        free(tmp_list);
+        return NULL;
+    }*/
 
     node_blank_t *tmp_blank = calloc(1, sizeof(node_blank_t));
-    ASSERT(tmp_blank, "failed get memory");
+    /*if (!tmp_blank) {
+        free(tmp_list->storage);
+        free(tmp_list->responsible);
+        free(tmp_list);
+        fprintf(stderr, "memory allocation error\n");
+        return NULL;
+    }*/
 
     tmp_blank->number = number;
 

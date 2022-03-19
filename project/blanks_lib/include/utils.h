@@ -18,5 +18,3 @@
 } while (0)
 
 char *create_str(const char *source);
-
-char *scan_data(const char *source, const size_t size_str_data);

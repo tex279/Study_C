@@ -9,6 +9,8 @@
 #define LENGTH_STORAGE 80
 #define LENGTH_RESPONSIBLE 80
 
+#define LENGTH_STRING_FORMAT 10
+
 node_list_parts_t *find_combination(node_list_parts_t *first, const char *storage, const char *responsible) {
     node_list_parts_t *tmp = first;
 
@@ -57,45 +59,51 @@ node_list_parts_t *input(char const *source, size_t *count_error) {
 
     while (!feof(target)) {
         fgets(global, sizeof(global), target);
-        if (strlen(global) == 1) {
+        if (strlen(global) == 0) {
             break;
         }
 
-        char *number = scan_data(global, LENGTH_NUMBER);
-        if (!number) {
-            (*count_error)++;
-            continue;
+        size_t numb = 0;
+        char buf_number[LENGTH_NUMBER + 1];
+        char format_string_number[LENGTH_STRING_FORMAT + 1];
+        snprintf(format_string_number, LENGTH_STRING_FORMAT + 1, "%%%ds", LENGTH_NUMBER);
+        if (sscanf(global, format_string_number, buf_number) == 1) {
+            char *end;
+            numb = strtoul(buf_number, &end, 0);
+            if (strlen(end)) {
+                (*count_error)++;
+                continue;
+            }
         }
-        size_t indent  = strlen(number);
+        size_t indent = strlen(buf_number);
 
-        char *end;
-        size_t numb = strtoul(number, &end, 0);
-        if (strlen(end)) {
-            free(number);
-            (*count_error)++;
-            continue;
-        }
-        free(number);
 
-        char *storage = scan_data(&global[indent], LENGTH_STORAGE);
-        if (!storage) {
+        char *storage = NULL;
+        char buf_storage[LENGTH_STORAGE + 1];
+        char format_string_storage[LENGTH_STRING_FORMAT + 1];
+        snprintf(format_string_storage, LENGTH_STRING_FORMAT + 1, "%%%ds", LENGTH_STORAGE);
+        if (sscanf(&global[indent], format_string_storage, buf_storage) != 1) {
             (*count_error)++;
             continue;
         }
-        indent += strlen(storage) + 1;
+        indent += strlen(buf_storage) + 1;
 
-        char *responsible = scan_data(&global[indent], LENGTH_RESPONSIBLE);
-        if (!responsible) {
-            free(storage);
+
+        char *responsible = NULL;
+        char buf_responsible[LENGTH_RESPONSIBLE + 1];
+        char format_string_responsible[LENGTH_STRING_FORMAT + 1];
+        snprintf(format_string_responsible, LENGTH_STRING_FORMAT + 1, "%%%ds", LENGTH_RESPONSIBLE);
+        if (sscanf(&global[indent], format_string_responsible, buf_responsible) != 1) {
             (*count_error)++;
             continue;
         }
+
 
         if (!first) {
-            first = create_part(numb, storage, responsible);
+            first = create_part(numb, buf_storage, buf_responsible);
             last = first;
         } else {
-            node_list_parts_t *cur_part = find_combination(first, storage, responsible);
+            node_list_parts_t *cur_part = find_combination(first, buf_storage, buf_responsible);
 
             if (cur_part) {
                 free(storage);
@@ -103,7 +111,7 @@ node_list_parts_t *input(char const *source, size_t *count_error) {
 
                 insert(cur_part->list_b, numb);
             } else {
-                node_list_parts_t *tmp_part = create_part(numb, storage, responsible);
+                node_list_parts_t *tmp_part = create_part(numb, buf_storage, buf_responsible);
                 last->next = tmp_part;
 
                 last = tmp_part;
