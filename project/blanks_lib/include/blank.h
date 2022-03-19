@@ -13,9 +13,9 @@ typedef struct node_blank {
 } node_blank_t;
 
 //  Add functional
-node_blank_t *insert_node(node_blank_t *target, size_t number);
-node_blank_t *push_front(node_blank_t *first, size_t number);
-node_blank_t *push_back(node_blank_t *last, size_t number);
+node_blank_t *insert_node(node_blank_t *target, const size_t number);
+node_blank_t *push_front(node_blank_t *first, const size_t number);
+node_blank_t *push_back(node_blank_t *last, const size_t number);
 
 //  Output functional
 node_blank_t *print_numbers_chain(FILE *stream, node_blank_t *first);

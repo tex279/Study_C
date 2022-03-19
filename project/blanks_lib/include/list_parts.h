@@ -11,7 +11,7 @@ typedef struct node_list_parts {
     struct node_list_parts *next;
 } node_list_parts_t;
 
-node_list_parts_t *create_part(size_t number, char storage[], char responsible[]);
+node_list_parts_t *create_part(const size_t number, char *storage, char *responsible);
 
 //  Data entry, structure filling
 node_list_parts_t *input(char const *source, size_t *count_error);

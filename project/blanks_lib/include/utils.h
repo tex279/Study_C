@@ -4,10 +4,11 @@
 #include <stdio.h>
 
 #define FATAL(message) do {                 \
-    if (errno)                              \
+    if (errno) {                            \
         perror(message);                    \
-    else                                    \
+    } else {                                \
         fprintf(stderr, "%s\n", message);   \
+    }                                       \
     exit(1);                                \
 } while (0)
 
@@ -16,6 +17,6 @@
         FATAL(message);                     \
 } while (0)
 
-char *create_str(char *source);
+char *create_str(const char *source);
 
-char *scan_data(char *source, size_t size_str_data);
+char *scan_data(const char *source, const size_t size_str_data);

@@ -15,16 +15,24 @@ VAR=$(cat "${LOG_TEST}")
 SUB1="lines......: "
 SUB2="functions..: "
 
-if [[ "$VAR" == *"$SUB1"["$@"][[:digit:]].[[:digit:]]%* ]]; then
-  echo "LINES_SUCCESS"
+if [[ "$VAR" == *"$SUB1"["1"][0-9][0-9].[0-9]%* ]]; then
+  echo "  LINES_SUCCESS"
 else
-  echo "LINES_FAILED"
-  exit 1
+  if [[ "$VAR" == *"$SUB1"["$@"][0-9].[0-9]%* ]]; then
+    echo "  LINES_SUCCESS"
+  else
+    echo "L INES_FAILED"
+    exit 1
+  fi
 fi
 
-if [[ "$VAR" == *"$SUB2"["$@"][[:digit:]].[[:digit:]]%* ]]; then
-  echo "FUNCTION_SUCCESS"
+if [[ "$VAR" == *"$SUB2"["1"][0-9][0-9].[0-9]%* ]]; then
+  echo "  FUNCTION_SUCCESS"
 else
-  echo "FUNCTION_FAILED"
-  exit 1
+  if [[ "$VAR" == *"$SUB2"["$@"][0-9].[0-9]%* ]]; then
+    echo "  FUNCTION_SUCCESS"
+  else
+    echo "  LINES_FAILED"
+    exit 1
+  fi
 fi

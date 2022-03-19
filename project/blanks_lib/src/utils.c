@@ -7,7 +7,7 @@
 
 #define LENGTH_STRING_FORMAT 10
 
-char *create_str(char *source) {
+char *create_str(const char *source) {
     size_t len = strlen(source);
 
     char *tmp = calloc(len + 1, sizeof(char));
@@ -20,7 +20,7 @@ char *create_str(char *source) {
     return tmp;
 }
 
-char *scan_data(char *source, size_t size_str_data) {
+char *scan_data(const char *source, const size_t size_str_data) {
     char *out = NULL;
 
     char buf[MAX_LENGTH_BUF + 1];

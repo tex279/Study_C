@@ -24,7 +24,7 @@ node_list_parts_t *find_combination(node_list_parts_t *first, const char *storag
     return NULL;
 }
 
-node_list_parts_t *create_part(size_t number, char *storage, char *responsible) {
+node_list_parts_t *create_part(const size_t number, char *storage, char *responsible) {
     node_list_parts_t *tmp_part = calloc(1, sizeof(node_list_parts_t));
     ASSERT(tmp_part, "failed get memory");
 
@@ -36,8 +36,12 @@ node_list_parts_t *create_part(size_t number, char *storage, char *responsible) 
 }
 
 node_list_parts_t *input(char const *source, size_t *count_error) {
-    FILE *target = fopen(source, "r");
-    ASSERT(target, "failed open file for read");
+    FILE *target = stdin;
+
+    if (source) {
+        target = fopen(source, "r");
+        ASSERT(target, "failed open file for read");
+    }
 
     node_list_parts_t *first = NULL;
     node_list_parts_t *last = NULL;
@@ -111,6 +115,8 @@ void output_parts(char const *target, node_list_parts_t *first, size_t *count_er
     if (target) {
         stream_in = fopen(target, "w+");
         ASSERT(target, "failed create file for write");
+    } else {
+        fprintf(stream_in, "\nResult:\n");
     }
 
     node_list_parts_t *iterator = first;

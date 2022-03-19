@@ -5,12 +5,11 @@
 #include "list_blanks.h"
 #include "utils.h"
 
-list_blanks_t *create_list(size_t number, char *storage, char *responsible) {
+list_blanks_t *create_list(const size_t number, char *storage, char *responsible) {
     list_blanks_t *tmp_list = calloc(1, sizeof(list_blanks_t));
     ASSERT(tmp_list, "failed get memory");
 
     tmp_list->storage = storage;
-
     tmp_list->responsible = responsible;
 
     node_blank_t *tmp_blank = calloc(1, sizeof(node_blank_t));
@@ -24,7 +23,7 @@ list_blanks_t *create_list(size_t number, char *storage, char *responsible) {
     return tmp_list;
 }
 
-node_blank_t *insert(list_blanks_t *target, size_t number) {
+node_blank_t *insert(list_blanks_t *target, const size_t number) {
     if (target->first->number >= number) {
         target->first = push_front(target->first, number);
         return target->first;
@@ -46,7 +45,7 @@ node_blank_t *insert(list_blanks_t *target, size_t number) {
     return NULL;
 }
 
-void print_list(FILE *stream, list_blanks_t *list_b) {
+void print_list(FILE *stream, const list_blanks_t *list_b) {
     fprintf(stream, "%s %s\n", list_b->storage, list_b->responsible);
 
     node_blank_t *end_chain = print_numbers_chain(stream, list_b->first);
