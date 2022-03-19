@@ -55,18 +55,34 @@ TEST(TEST_PARTS, parts_functional) {
     free_list_parts(first);
 }
 
-TEST(INPUT, input_data_ok) {
+TEST(INPUT, input_data_file_file) {
     char path_input[] = {"../project/gtest/data/ok/in.txt"};
     //  char path_etalon[] = {"../project/gtest/data/ok/out.txt"};
     char path_output[] = {"../build/tmp.txt"};
 
     size_t count_error = 0;
 
-    node_list_parts_t* first = input(path_input, &count_error);
+    node_list_parts_t* first;
+    EXPECT_TRUE(input(path_input, &count_error, &first) == 1);
 
     EXPECT_TRUE(first != NULL);
 
     output_parts(path_output, first, &count_error);
+
+    free_list_parts(first);
+}
+
+TEST(INPUT, input_data_std_file) {
+    char path_input[] = {"../project/gtest/data/ok/in.txt"};
+//  char path_etalon[] = {"../project/gtest/data/ok/out.txt"};
+    size_t count_error = 0;
+
+    node_list_parts_t* first;
+    EXPECT_TRUE(input(path_input, &count_error, &first) == 1);
+
+    EXPECT_TRUE(first != NULL);
+
+    output_parts(NULL, first, &count_error);
 
     free_list_parts(first);
 }
@@ -77,7 +93,9 @@ TEST(INPUT, input_data_incorrect) {
     char path_output[] = {"../build/tmp.txt"};
     size_t count_error = 0;
 
-    node_list_parts_t* first = input(path_input, &count_error);
+    node_list_parts_t* first;
+
+    EXPECT_TRUE(input(path_input, &count_error, &first) == 1);
 
     EXPECT_TRUE(first != NULL);
 

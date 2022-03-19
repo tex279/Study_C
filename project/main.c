@@ -16,8 +16,11 @@
 void work(char const *path_to_input_blk, char const *path_to_output_blk) {
     size_t count_error = 0;
 
-    node_list_parts_t *first = input(path_to_input_blk, &count_error);
-
+    node_list_parts_t *first;
+    int check_res_input = input(path_to_input_blk, &count_error, &first);
+    if (check_res_input != SUCCESS) {
+        free_list_parts(first);
+    }
 
     output_parts(path_to_output_blk, first, &count_error);
 

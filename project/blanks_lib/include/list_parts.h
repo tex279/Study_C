@@ -14,7 +14,7 @@ typedef struct node_list_parts {
 node_list_parts_t *create_part(const size_t number, char *storage, char *responsible);
 
 //  Data entry, structure filling
-node_list_parts_t *input(char const *source, size_t *count_error);
+int input(char const *source, size_t *count_error, node_list_parts_t **first1);
 
 //  Search combination storage and responsible in struct
 node_list_parts_t *find_combination(node_list_parts_t *first, const char *storage, const char *responsible);

@@ -44,7 +44,7 @@ node_list_parts_t *create_part(const size_t number, char *storage, char *respons
     return tmp_part;
 }
 
-node_list_parts_t *input(char const *source, size_t *count_error) {
+int input(char const *source, size_t *count_error, node_list_parts_t **first1) {
     FILE *target = stdin;
 
     if (source) {
@@ -98,27 +98,32 @@ node_list_parts_t *input(char const *source, size_t *count_error) {
 
         if (!first) {
             node_list_parts_t *check_create = create_part(numb, buf_storage, buf_responsible);
-            first = check_create;
-            last = first;
-        } else {
-            node_list_parts_t *cur_part = find_combination(first, buf_storage, buf_responsible);
-
-            if (cur_part) {
-                insert(cur_part->list_b, numb);
-
-            } else {
-                node_list_parts_t *tmp_part = create_part(numb, buf_storage, buf_responsible);
-
-                last->next = tmp_part;
-
-                last = tmp_part;
+            if (!check_create) {
+                return ERR_ALOC;
             }
+
+            first = check_create;
+            last = check_create;
+            continue;
+        }
+
+        node_list_parts_t *cur_part = find_combination(first, buf_storage, buf_responsible);
+        if (cur_part) {
+            insert(cur_part->list_b, numb);
+        } else {
+            node_list_parts_t *tmp_part = create_part(numb, buf_storage, buf_responsible);
+
+            last->next = tmp_part;
+
+            last = tmp_part;
         }
     }
 
+    *first1 = first;
+
     ASSERT(!fclose(target), "failed close file");
 
-    return first;
+    return 1;
 }
 
 void output_parts(char const *target, node_list_parts_t *first, size_t *count_error) {
