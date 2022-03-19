@@ -78,7 +78,6 @@ node_list_parts_t *input(char const *source, size_t *count_error) {
         size_t indent = strlen(buf_number);
 
 
-        char *storage = NULL;
         char buf_storage[LENGTH_STORAGE + 1];
         char format_string_storage[LENGTH_STRING_FORMAT + 1];
         snprintf(format_string_storage, LENGTH_STRING_FORMAT + 1, "%%%ds", LENGTH_STORAGE);
@@ -88,8 +87,6 @@ node_list_parts_t *input(char const *source, size_t *count_error) {
         }
         indent += strlen(buf_storage) + 1;
 
-
-        char *responsible = NULL;
         char buf_responsible[LENGTH_RESPONSIBLE + 1];
         char format_string_responsible[LENGTH_STRING_FORMAT + 1];
         snprintf(format_string_responsible, LENGTH_STRING_FORMAT + 1, "%%%ds", LENGTH_RESPONSIBLE);
@@ -100,18 +97,18 @@ node_list_parts_t *input(char const *source, size_t *count_error) {
 
 
         if (!first) {
-            first = create_part(numb, buf_storage, buf_responsible);
+            node_list_parts_t *check_create = create_part(numb, buf_storage, buf_responsible);
+            first = check_create;
             last = first;
         } else {
             node_list_parts_t *cur_part = find_combination(first, buf_storage, buf_responsible);
 
             if (cur_part) {
-                free(storage);
-                free(responsible);
-
                 insert(cur_part->list_b, numb);
+
             } else {
                 node_list_parts_t *tmp_part = create_part(numb, buf_storage, buf_responsible);
+
                 last->next = tmp_part;
 
                 last = tmp_part;

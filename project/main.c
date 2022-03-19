@@ -3,7 +3,6 @@
 
 #include "../include/list_parts.h"
 
-#define SUCCESS 0
 #define ERR_INPUT -1
 #define ERR_WRONG_TYPE_WORK -2
 
@@ -12,10 +11,13 @@
 #define IN_STD_OUT_FILE 3
 #define IN_FILE_OUT_FILE 4
 
+#define SUCCESS 1
+
 void work(char const *path_to_input_blk, char const *path_to_output_blk) {
     size_t count_error = 0;
 
-    node_list_parts_t* first = input(path_to_input_blk, &count_error);
+    node_list_parts_t *first = input(path_to_input_blk, &count_error);
+
 
     output_parts(path_to_output_blk, first, &count_error);
 
