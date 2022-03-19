@@ -26,9 +26,16 @@ node_list_parts_t *find_combination(node_list_parts_t *first, const char *storag
 
 node_list_parts_t *create_part(const size_t number, char *storage, char *responsible) {
     node_list_parts_t *tmp_part = calloc(1, sizeof(node_list_parts_t));
-    ASSERT(tmp_part, "failed get memory");
+    if (!tmp_part) {
+        fprintf(stderr, "memory allocation error\n");
+        return NULL;
+    }
 
     tmp_part->list_b = create_list(number, storage, responsible);
+    if (!tmp_part->list_b) {
+        free(tmp_part);
+        return NULL;
+    }
 
     tmp_part->next = NULL;
 
@@ -91,10 +98,10 @@ node_list_parts_t *input(char const *source, size_t *count_error) {
             node_list_parts_t *cur_part = find_combination(first, storage, responsible);
 
             if (cur_part) {
-                insert(cur_part->list_b, numb);
-
                 free(storage);
                 free(responsible);
+
+                insert(cur_part->list_b, numb);
             } else {
                 node_list_parts_t *tmp_part = create_part(numb, storage, responsible);
                 last->next = tmp_part;
