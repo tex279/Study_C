@@ -38,7 +38,6 @@ int main(int argc, const char** argv) {
             printf("%zu\n", timer_from(data));
             break;
         }
-
         case TST_FOO_IMPL: {
             if (argc == COUNT_ARG_POW) {
                 int pow =  strtol(argv[3], &end_convert, 0);
