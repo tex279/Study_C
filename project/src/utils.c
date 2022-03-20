@@ -2,7 +2,7 @@
 
 #include "utils.h"
 
-#define INCORRECT_INPUT -1;
+#define INCORRECT_INPUT -1
 
 size_t timer_from(int from) {
     size_t counter = 0;
