@@ -1,61 +1,69 @@
-#include <utils.h>
-#include <check_num.h>
-#include <my_rec.h>
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
 
-#define ERR_ARGS_COUNT (-1)
-#define ERR_WRONG_FLG (-2)
+#include "utils.h"
+#include "check_num.h"
+#include "my_rec.h"
 
-#define TST_FOO_FIX     1
-#define TST_FOO_IMPL    2
-#define TST_MOD_IMPL    3
-#define TST_FOO_REC     4
+#define ERR_ARGS_COUNT      -1
+#define ERR_WRONG_FLG       -2
+#define ERR_CONVERT_STR     -3
 
-#define DATA_FOR_CUSTOM_POW 4
+#define TST_FOO_FIX         1
+#define TST_FOO_IMPL        2
+#define TST_MOD_IMPL        3
+#define TST_FOO_REC         4
+
+#define COUNT_ARG_POW       4
 
 int main(int argc, const char** argv) {
     if (argc < 3) {
         return ERR_ARGS_COUNT;
     }
 
-    char* end = NULL;
-    int test_case = strtol(argv[1], &end, 0);
-    const char* data;
-    data = argv[2];
+    char* end_convert = NULL;
+    int test_case = strtol(argv[1], &end_convert, 0);
+    if (*end_convert != '\0') {
+        return ERR_CONVERT_STR;
+    }
+
+    int data = strtol(argv[2], &end_convert, 0);
+    if (*end_convert != '\0') {
+        return ERR_CONVERT_STR;
+    }
 
     switch (test_case) {
         case TST_FOO_FIX: {
-            int to = strtol(data, &end, 0);
-            size_t ticks_count = timer_from(to);
-            printf("%zu\n", ticks_count);
+            printf("%zu\n", timer_from(data));
             break;
         }
+
         case TST_FOO_IMPL: {
-            if (argc == DATA_FOR_CUSTOM_POW) {
-                 int base = strtol(data, &end, 0);
-                 int pow =  strtol(argv[3], &end, 0);
-                 int res = custom_pow(base, pow);
-                 printf("%i\n", res);
-            } else {
-                return ERR_ARGS_COUNT;
+            if (argc == COUNT_ARG_POW) {
+                int pow =  strtol(argv[3], &end_convert, 0);
+                if (*end_convert != '\0') {
+                    return ERR_CONVERT_STR;
+                }
+
+                printf("%i\n", custom_pow(data, pow));
+                break;
             }
-            break;
+
+            return ERR_ARGS_COUNT;
         }
         case TST_MOD_IMPL: {
-             int num = strtol(data, &end, 0);
-             printf("%d\n", check_prime_num(num));
+             printf("%d\n", check_prime_num(data));
              break;
         }
         case TST_FOO_REC: {
-            int num = strtol(data, &end, 0);
-            int pos = 1;
-            direct_rec_foo(num, pos);
+            row_num(data);
             break;
         }
         default: {
             return ERR_WRONG_FLG;
         }
     }
+
+    return EXIT_SUCCESS;
 }

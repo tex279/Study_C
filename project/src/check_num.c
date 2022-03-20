@@ -1,16 +1,19 @@
-#include <check_num.h>
-#include <stdio.h>
-#include <math.h>
+#include "check_num.h"
+
+#define TRUE    1
+#define FALSE   0
 
 int check_prime_num(int num) {
     if (num <= 1) {
-        return 0;
+        return FALSE;
     }
-    for (int i = 2; i < round(num/2)-1; i++) {
+
+    for (int i = 2; i * i < num; i++) {
         if (num % i == 0) {
-            return 0;
+            return FALSE;
         }
     }
-    return 1;
+
+    return TRUE;
 }
 
