@@ -32,8 +32,8 @@ int main(int argc, char const **argv) {
 
     char* end = NULL;
     long type_work = strtol(argv[1], &end, 0);
-    if (!end) {
-        fprintf(stderr, "incorrect input type work");
+    if (*end != '\0') {
+        fprintf(stdout, "incorrect input type work");
         return ERR_INPUT;
     }
 
