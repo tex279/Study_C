@@ -13,10 +13,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e3e115cb-a385-47dc-b42f-a1675aefe056" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gtest/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/gtest/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gtest/src/test_blanks.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/gtest/src/test_blanks.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gtest/src/test_multi_threaded_model.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gtest/data/incorrect_input/in.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gtest/data/incorrect_input/out.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gtest/data/ok/in.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gtest/data/ok/out.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gtest/src/test_blanks.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/gtest/src/test_imperative_model.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/blanks_lib/include/blank.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/blanks_lib/include/list_blanks.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/blanks_lib/include/list_parts.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/blanks_lib/include/utils.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/blanks_lib/src/blank.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/blanks_lib/src/list_blanks.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/blanks_lib/src/list_parts.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/blanks_lib/src/utils.c" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,11 +55,6 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/.github/workflows/ci.yml" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Makefile" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/.gitignore" root0="FORCE_HIGHLIGHTING" />
-  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -73,7 +79,7 @@
     <property name="cf.first.check.clang-format" value="false" />
     <property name="cidr.known.project.marker" value="true" />
     <property name="cmake.loaded.for.project" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/project/gtest" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/gtest/src" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="project.scopes" />
   </component>
@@ -139,7 +145,7 @@
       <workItem from="1647684037930" duration="33135000" />
       <workItem from="1647785086642" duration="5302000" />
       <workItem from="1648553208614" duration="7459000" />
-      <workItem from="1648564240040" duration="356000" />
+      <workItem from="1648564240040" duration="1126000" />
     </task>
     <servers />
   </component>
