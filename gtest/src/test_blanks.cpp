@@ -52,7 +52,7 @@ TEST(TEST_PARTS, parts_functional) {
 }
 
 TEST(INPUT, input_data_file_file) {
-    char path_input[] = {"project/gtest/data/ok/in.txt"};
+    char path_input[] = {"gtest/data/ok/in.txt"};
     char path_output[] = {"build/tmp.txt"};
 
     size_t count_error = 0;
@@ -68,7 +68,7 @@ TEST(INPUT, input_data_file_file) {
 }
 
 TEST(INPUT, input_data_std_file) {
-    char path_input[] = {"project/gtest/data/ok/in.txt"};
+    char path_input[] = {"gtest/data/ok/in.txt"};
 
     size_t count_error = 0;
 
@@ -83,7 +83,7 @@ TEST(INPUT, input_data_std_file) {
 }
 
 TEST(INPUT, input_data_incorrect) {
-    char path_input[] = {"project/gtest/data/incorrect_input/in.txt"};
+    char path_input[] = {"gtest/data/incorrect_input/in.txt"};
     char path_output[] = {"build/tmp.txt"};
 
     size_t count_error = 0;

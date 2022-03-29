@@ -13,15 +13,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e3e115cb-a385-47dc-b42f-a1675aefe056" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/project/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/gtest/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/gtest/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/gtest/data/incorrect_input/in.txt" beforeDir="false" afterPath="$PROJECT_DIR$/gtest/data/incorrect_input/in.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/gtest/data/incorrect_input/out.txt" beforeDir="false" afterPath="$PROJECT_DIR$/gtest/data/incorrect_input/out.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/gtest/data/ok/in.txt" beforeDir="false" afterPath="$PROJECT_DIR$/gtest/data/ok/in.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/gtest/data/ok/out.txt" beforeDir="false" afterPath="$PROJECT_DIR$/gtest/data/ok/out.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project/gtest/src/test_blanks.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/gtest/src/test_blanks.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gtest/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/gtest/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gtest/src/test_blanks.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/gtest/src/test_blanks.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -144,6 +139,7 @@
       <workItem from="1647684037930" duration="33135000" />
       <workItem from="1647785086642" duration="5302000" />
       <workItem from="1648553208614" duration="7459000" />
+      <workItem from="1648564240040" duration="356000" />
     </task>
     <servers />
   </component>
