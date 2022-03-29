@@ -15,21 +15,21 @@ check:
 	./run_linters.sh
 
 build:
-	./run_build.sh -DVALGRIND_MEMCHECK=OFF
+	./run_build.sh
 
 rebuild: clean build
 
 test:
-	./run_build.sh -DVALGRIND_MEMCHECK=OFF
+	./run_build.sh
 	./build/gtest/${TARGET_TEST}
 
 coverage_tests:
-	./run_build.sh -DVALGRIND_MEMCHECK=OFF
+	./run_build.sh
 	./build/gtest/${TARGET_TEST}
 	./run_coverage.sh $(TARGET_COVERAGE)
 
 memtest:
-	./run_build.sh -DVALGRIND_MEMCHECK=ON
+	./run_build.sh
 	./run_memtest.sh ./build/gtest/${TARGET_TEST}
 
 
