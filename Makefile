@@ -2,6 +2,8 @@
 
 all: clean check build test coverage_tests memtest
 
+BUILD_DIRECTORY = build
+
 TARGET_TEST = ./test.out
 
 TARGET_COVERAGE = [789]
@@ -13,20 +15,21 @@ check:
 	./run_linters.sh
 
 build:
-	./run_build.sh
+	./run_build.sh -DVALGRIND_MEMCHECK=OFF
 
 rebuild: clean build
 
 test:
-	./run_build.sh
-	./run_test.sh
+	./run_build.sh -DVALGRIND_MEMCHECK=OFF
+	./build/${TARGET_TEST}
 
 coverage_tests:
-	./run_build.sh
+	./run_build.sh -DVALGRIND_MEMCHECK=OFF
+	./build/${TARGET_TEST}
 	./run_coverage.sh $(TARGET_COVERAGE)
 
 memtest:
-	./run_build.sh
-	./run_memtest.sh $(TARGET_TEST)
+	./run_build.sh -DVALGRIND_MEMCHECK=ON
+	./run_memtest.sh ./build/${TARGET_TEST}
 
 
