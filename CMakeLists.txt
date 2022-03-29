@@ -20,3 +20,4 @@ add_executable(${PROJECT_NAME} project/main.c)
 target_include_directories(${PROJECT_NAME} PUBLIC ${BLANKS_LIB_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${BLANKS_LIB_LIBRARIES})
 
+add_subdirectory(gtest)

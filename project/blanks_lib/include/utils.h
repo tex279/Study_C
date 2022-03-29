@@ -1,5 +1,7 @@
 #pragma once //  NOLINT
 
+#include <stddef.h>
+
 #define ERR_ALOC -2
 
 #define SUCCESS 1
