@@ -1,0 +1,46 @@
+on: push
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    container: andeo1812/gcc_check_gtest
+    steps:
+      - uses: actions/checkout@v2
+      - run: make check
+  build:
+    runs-on: ubuntu-latest
+    container: andeo1812/gcc_check_gtest
+    needs: [check]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          path: build/main
+  test:
+    runs-on: ubuntu-latest
+    container: andeo1812/gcc_check_gtest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make test
+  coverage_tests:
+    runs-on: ubuntu-latest
+    container: andeo1812/gcc_check_gtest
+    needs: [test]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make coverage_tests;
+  memtest:
+    runs-on: ubuntu-latest
+    container: andeo1812/gcc_check_gtest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make memtest
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          path: valgrind.log
