@@ -3,7 +3,6 @@ project(Blanks)
 
 option(DEBUG "no release" ON)
 option(RELEASE "in production" OFF)
-OPTION(WITH_MEMCHECK "Run with memcheck" OFF)
 
 add_subdirectory(project)
 
