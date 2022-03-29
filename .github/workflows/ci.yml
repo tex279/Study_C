@@ -18,10 +18,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: build/main
-      - name: Upload artifacts
-          uses: actions/upload-artifact@v2
-          with:
-            path: build/test.out
   test:
     runs-on: ubuntu-latest
     container: andeo1812/gcc_check_gtest
