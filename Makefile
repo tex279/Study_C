@@ -9,7 +9,7 @@ TARGET_TEST = ./test.out
 TARGET_COVERAGE = [789]
 
 clean:
-	rm -rf build && rm -rf coverage-report
+	rm -rf build coverage-report valgrind.log test.log
 
 check:
 	./run_linters.sh

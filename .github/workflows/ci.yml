@@ -17,7 +17,11 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          path: main.out
+          path: build/main
+      - name: Upload artifacts
+          uses: actions/upload-artifact@v2
+          with:
+            path: build/test.out
   test:
     runs-on: ubuntu-latest
     container: andeo1812/gcc_check_gtest
@@ -35,7 +39,7 @@ jobs:
   memtest:
     runs-on: ubuntu-latest
     container: andeo1812/gcc_check_gtest
-    needs: [coverage_tests]
+    needs: [build]
     steps:
       - uses: actions/checkout@v2
       - run: make memtest
