@@ -1,8 +1,5 @@
 #pragma once //  NOLINT
 
-#include <errno.h>
-#include <stdio.h>
-
 #define ERR_ALOC -2
 
 #define SUCCESS 1

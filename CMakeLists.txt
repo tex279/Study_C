@@ -1,30 +1,22 @@
 cmake_minimum_required(VERSION 3.18.4)
 project(Blanks)
 
-OPTION(WITH_MEMCHECK "Run with memcheck" OFF)
+option(DEBUG "no release" ON)
+option(RELEASE "in production" OFF)
+option(VALGRIND_MEMCHECK "Run with memcheck" OFF)
 
-set(CMAKE_C_STANDARD 99)
-set(CMAKE_C_FLAGS "-g -O0 -Wall -Wextra -Werror -Wpedantic -fprofile-arcs -ftest-coverage -Wlogical-op -Wredundant-decls -Wsign-conversion -Wcast-align -Wcast-qual -Wconversion -Wduplicated-branches -Wduplicated-cond -Wfloat-equal ")
+add_subdirectory(project)
 
-set(SOURCES project/blanks_lib/src/blank.c
-        project/blanks_lib/src/list_blanks.c
-        project/blanks_lib/src/list_parts.c
-        project/blanks_lib/src/utils.c)
+message("BLANKS_LIB_INCLUDE_DIRS = ${BLANKS_LIB_INCLUDE_DIRS}")
+message("BLANKS_LIB_LIBRARIES = ${BLANKS_LIB_LIBRARIES}")
 
-add_library(lib ${SOURCES})
-target_include_directories(lib PUBLIC project/blanks_lib/include)
+if (DEBUG)
+    set(CMAKE_C_FLAGS "-g -O0 -Wall -Wextra -Werror -Wpedantic -fprofile-arcs -ftest-coverage")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -coverage -lgcov")
+endif(DEBUG)
 
-add_executable(main project/main.c)
-target_link_libraries(main lib)
+add_executable(${PROJECT_NAME} project/main.c)
 
-enable_testing()
+target_include_directories(${PROJECT_NAME} PUBLIC ${BLANKS_LIB_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${BLANKS_LIB_LIBRARIES})
 
-find_package(GTest REQUIRED)
-find_package(Threads REQUIRED)
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "-g -O0 -Wall -Wextra -Werror -Wpedantic -fprofile-arcs -ftest-coverage -fPIC")
-set(CMAKE_EXE_LINKER_FLAGS "-fprofile-arcs -ftest-coverage")
-
-add_executable(test.out project/gtest/src/test_blanks.cpp)
-target_link_libraries(test.out lib ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})

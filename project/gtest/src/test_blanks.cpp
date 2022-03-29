@@ -1,13 +1,10 @@
 #include <gtest/gtest.h>
 
 extern "C" {
-    #include "../include/list_parts.h"
-    #include "../include/list_blanks.h"
-    #include "../include/blank.h"
-    #include "../include/utils.h"
-    #include <sys/mman.h>
-    #include <sys/stat.h>
-    #include <fcntl.h>
+    #include "list_parts.h"
+    #include "list_blanks.h"
+    #include "blank.h"
+    #include "utils.h"
 }
 
 TEST(TEST_BLANKS, list_functional) {

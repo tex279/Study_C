@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-#include "../include/blank.h"
+#include "blank.h"
 
 typedef struct list_blanks {
     node_blank_t *first;

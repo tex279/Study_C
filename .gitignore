@@ -1,7 +1,6 @@
 /build/
 /cmake-build-*
-/.idea
-.vscode/
 /coverage-report/
 valgrind.log
 test.log
+coverage.info
