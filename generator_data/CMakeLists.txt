@@ -3,9 +3,7 @@ project(generator)
 
 add_definitions("-g -O0 -std=c99 -Wall -Wextra -Werror -Wpedantic")
 
-file(GLOB SOURCES src/*.c
-        src/fields/*.c)
-
+file(GLOB SOURCES src/*.c)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 

@@ -25,13 +25,13 @@ char *create_str(const char *source) {
 }
 
 char *create_format(const size_t size_str, const size_t size_format) {
-    char *format = calloc(size_format + 1, sizeof(char));
+    char *format = calloc(size_format, sizeof(char));
     if (!format) {
         fprintf(stderr, "memory allocation error\n");
         return NULL;
     }
 
-    snprintf(format, size_format + 1, "%%%zus", size_str);
+    snprintf(format, size_format, "%%%zus", size_str - 1);
 
     return format;
 }

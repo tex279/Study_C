@@ -1,9 +1,25 @@
 #pragma once //  NOLINT
 
-#define SUCCESS 1
+#define SUCCESS 0
 
-const char **get_value(const char **source, const size_t target);
+typedef struct {
+    char **set_female_name;
+    char **set_male_name;
+    char **set_surname;
+    char **set_female_surname;
+    char **set_male_surname;
+    char **set_position;
+} database_t;
+
+char *create_str(const char *source);
+
+char *create_format(const size_t size_str, const size_t size_format);
+
+char **get_set(const char *source);
+
+void free_set(char **set);
+
+
+char *get_rand_value(char **source, const size_t min, const size_t max);
 
 size_t get_rand_number(const size_t min, const size_t max);
-
-bool get_variant();
