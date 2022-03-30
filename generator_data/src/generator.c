@@ -30,35 +30,35 @@ int generate(const char *path_output, const size_t sample_size, database_t *db) 
         size_t age = get_rand_number(MIN_AGE, MAX_AGE);
 
         if (gender) {
-            fprintf(stdout,"%s ", get_rand_value(db->set_female_name, 0, sizeof(db->set_female_name)));
+            fprintf(target,"%s ", get_rand_value(db->set_female_name, 0, sizeof(db->set_female_name)));
         } else {
-            fprintf(stdout,"%s ", get_rand_value(db->set_male_name, 0, sizeof(db->set_male_name)));
+            fprintf(target,"%s ", get_rand_value(db->set_male_name, 0, sizeof(db->set_male_name)));
         }
 
         if (type_surname) {
-            fprintf(stdout,"%s ", get_rand_value(db->set_surname, 0, sizeof(db->set_surname)));
+            fprintf(target,"%s ", get_rand_value(db->set_surname, 0, sizeof(db->set_surname)));
         } else {
             if (gender) {
-                fprintf(stdout,"%s ", get_rand_value(db->set_female_surname, 0, sizeof(db->set_female_surname)));
+                fprintf(target,"%s ", get_rand_value(db->set_female_surname, 0, sizeof(db->set_female_surname)));
             } else {
-                fprintf(stdout,"%s ", get_rand_value(db->set_male_surname, 0, sizeof(db->set_male_surname)));
+                fprintf(target,"%s ", get_rand_value(db->set_male_surname, 0, sizeof(db->set_male_surname)));
             }
 
         }
 
         if (gender) {
-            fprintf(stdout,"%s ", "female");
+            fprintf(target,"%s ", "female");
         } else {
-            fprintf(stdout,"%s ", "male");
+            fprintf(target,"%s ", "male");
         }
 
-        fprintf(stdout,"%zu ", age);
+        fprintf(target,"%zu ", age);
 
-        fprintf(stdout,"%zu ", get_rand_number(0, MAX_SALARY));
+        fprintf(target,"%zu ", get_rand_number(0, MAX_SALARY));
 
-        fprintf(stdout,"%s ", get_rand_value(db->set_position, 0, sizeof(db->set_position)));
+        fprintf(target,"%s ", get_rand_value(db->set_position, 0, sizeof(db->set_position)));
 
-        fprintf(stdout,"%zu\n",  get_rand_number(MIN_AGE, age));
+        fprintf(target,"%zu\n",  get_rand_number(MIN_AGE, age));
     }
 
 

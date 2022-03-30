@@ -33,6 +33,6 @@ memtest:
 	./run_memtest.sh ./build/gtest/${TARGET_TEST}
 
 launch:
-	./build/generator_data/generator 5 tmp.txt generator_data/sets/female_name.txt generator_data/sets/male_name.txt generator_data/sets/surname.txt generator_data/sets/female_surname.txt generator_data/sets/male_surname.txt generator_data/sets/position.txt
+	./build/generator_data/generator 10000 tmp.txt generator_data/sets/female_name.txt generator_data/sets/male_name.txt generator_data/sets/surname.txt generator_data/sets/female_surname.txt generator_data/sets/male_surname.txt generator_data/sets/position.txt
 
 

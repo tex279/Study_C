@@ -25,8 +25,6 @@ int main(int argc, const char **argv) {
         return ERR_INPUT;
     }
 
-    const char *path_output = argv[2];
-
     database_t db;
 
     db.set_female_name = get_set(argv[3]);
@@ -35,6 +33,8 @@ int main(int argc, const char **argv) {
     db.set_female_surname = get_set(argv[6]);
     db.set_male_surname = get_set(argv[7]);
     db.set_position = get_set(argv[8]);
+
+    const char *path_output = argv[2];
 
     int res = generate(path_output, sample_size, &db);
     if (res < 0) {
