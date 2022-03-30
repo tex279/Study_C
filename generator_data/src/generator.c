@@ -1,7 +1,5 @@
 #include <stdlib.h>
-#include <string.h>
 #include <stdio.h>
-#include <time.h>
 #include <stdbool.h>
 #include <stddef.h>
 
@@ -17,6 +15,15 @@
 #define ERR_OPEN_FILE -1
 #define ERR_CLOSE_FILE -2
 
+size_t get_rand_number(const size_t min, const size_t max) {
+    return (min + rand() % (max - min + 1));
+}
+
+char *get_rand_value(char **source, const size_t min, const size_t max) {
+    return source[get_rand_number(min, max)];
+}
+
+
 int generate(const char *path_output, const size_t sample_size, database_t *db) {
     FILE *target = fopen(path_output, "w+");
     if (!target) {
@@ -29,12 +36,14 @@ int generate(const char *path_output, const size_t sample_size, database_t *db) 
         bool type_surname = (bool)get_rand_number(0, 1);
         size_t age = get_rand_number(MIN_AGE, MAX_AGE);
 
+        //  name
         if (gender) {
             fprintf(target,"%s ", get_rand_value(db->set_female_name, 0, sizeof(db->set_female_name)));
         } else {
             fprintf(target,"%s ", get_rand_value(db->set_male_name, 0, sizeof(db->set_male_name)));
         }
 
+        //  surname
         if (type_surname) {
             fprintf(target,"%s ", get_rand_value(db->set_surname, 0, sizeof(db->set_surname)));
         } else {
@@ -46,26 +55,30 @@ int generate(const char *path_output, const size_t sample_size, database_t *db) 
 
         }
 
+        //  gender
         if (gender) {
             fprintf(target,"%s ", "female");
         } else {
             fprintf(target,"%s ", "male");
         }
 
+        //  age
         fprintf(target,"%zu ", age);
 
+        //  salary
         fprintf(target,"%zu ", get_rand_number(0, MAX_SALARY));
 
+        //  position(job)
         fprintf(target,"%s ", get_rand_value(db->set_position, 0, sizeof(db->set_position)));
 
+        //  experience
         fprintf(target,"%zu\n",  get_rand_number(MIN_AGE, age));
     }
-
 
     if (fclose(target)) {
         fprintf(stderr, "failed close file");
         return ERR_CLOSE_FILE;
     }
 
-    return 1;
+    return SUCCESS;
 }

@@ -2,14 +2,11 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "utils.h"
+
 #define BUF_SIZE 64
 
 #define LENGTH_STRING_FORMAT 10
-
-#define ERR_OPEN_FILE -1
-#define ERR_CREATE_FILE -2
-#define ERR_WRITE_FILE -3
-#define ERR_CLOSE_FILE -4
 
 char *create_str(const char *source) {
     size_t len = strlen(source);
@@ -81,6 +78,76 @@ char **get_set(const char *source) {
     return set;
 }
 
+database_t *create_db() {
+    database_t *db = calloc(1, sizeof(database_t));
+    if (!db) {
+        fprintf(stderr, "memory allocation error\n");
+        return NULL;
+    }
+
+    return db;
+}
+
+database_t *load_data(const char **argv, size_t pos) {
+    database_t *db = create_db();
+    if (!db) {
+        return NULL;
+    }
+
+    db->set_female_name = get_set(argv[++pos]);
+    if (!db->set_female_name) {
+        free(db);
+        return NULL;
+    }
+
+    db->set_male_name = get_set(argv[++pos]);
+    if (!db->set_male_name) {
+        free(db);
+        free_set(db->set_female_name);
+        return NULL;
+    }
+
+    db->set_surname = get_set(argv[++pos]);
+    if (!db->set_surname) {
+        free(db);
+        free_set(db->set_female_name);
+        free_set(db->set_male_name);
+        return NULL;
+    }
+
+    db->set_female_surname = get_set(argv[++pos]);
+    if (!db->set_female_surname) {
+        free(db);
+        free_set(db->set_female_name);
+        free_set(db->set_male_name);
+        free_set(db->set_surname);
+        return NULL;
+    }
+
+    db->set_male_surname = get_set(argv[++pos]);
+    if (!db->set_male_surname) {
+        free(db);
+        free_set(db->set_female_name);
+        free_set(db->set_male_name);
+        free_set(db->set_surname);
+        free_set(db->set_male_surname);
+        return NULL;
+    }
+
+    db->set_position = get_set(argv[++pos]);
+    if (!db->set_position) {
+        free(db);
+        free_set(db->set_female_name);
+        free_set(db->set_male_name);
+        free_set(db->set_surname);
+        free_set(db->set_male_surname);
+        free_set(db->set_position);
+        return NULL;
+    }
+
+    return db;
+}
+
 void free_set(char **set) {
     for (size_t i = 0; i < sizeof(set) + 1; ++i) {
         free(set[i]);
@@ -89,10 +156,13 @@ void free_set(char **set) {
     free(set);
 }
 
-size_t get_rand_number(const size_t min, const size_t max) {
-    return (min + rand() % (max - min + 1));
-}
+void free_database(database_t *db) {
+    free_set(db->set_female_name);
+    free_set(db->set_male_name);
+    free_set(db->set_surname);
+    free_set(db->set_female_surname);
+    free_set(db->set_male_surname);
+    free_set(db->set_position);
 
-char *get_rand_value(char **source, const size_t min, const size_t max) {
-    return source[get_rand_number(min, max)];
+    free(db);
 }

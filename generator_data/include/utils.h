@@ -18,9 +18,8 @@ char *create_format(const size_t size_str, const size_t size_format);
 
 char **get_set(const char *source);
 
+database_t *load_data(const char **argv, size_t pos);
+
 void free_set(char **set);
 
-//  rand
-char *get_rand_value(char **source, const size_t min, const size_t max);
-
-size_t get_rand_number(const size_t min, const size_t max);
+void free_database(database_t *db);

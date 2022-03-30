@@ -2,15 +2,13 @@
 #include <stdlib.h>
 
 #include "generator.h"
-
 #include "utils.h"
 
-#define NEEDED_COUNT_ARG 3
+#define NEEDED_COUNT_ARG 8
 
 #define ERR_GENERATE -1
 #define ERR_INPUT -2
-
-#define SUCCESS 0
+#define LOAD_DATA -4
 
 int main(int argc, const char **argv) {
     if (argc < NEEDED_COUNT_ARG) {
@@ -25,29 +23,20 @@ int main(int argc, const char **argv) {
         return ERR_INPUT;
     }
 
-    database_t db;
-
-    db.set_female_name = get_set(argv[3]);
-    db.set_male_name = get_set(argv[4]);
-    db.set_surname = get_set(argv[5]);
-    db.set_female_surname = get_set(argv[6]);
-    db.set_male_surname = get_set(argv[7]);
-    db.set_position = get_set(argv[8]);
+    database_t *db = load_data(argv, 2);
+    if (!db) {
+        fprintf(stderr, "error load data");
+        return LOAD_DATA;
+    }
 
     const char *path_output = argv[2];
 
-    int res = generate(path_output, sample_size, &db);
+    int res = generate(path_output, sample_size, db);
     if (res < 0) {
         return ERR_GENERATE;
     }
 
-    free_set(db.set_female_name);
-    free_set(db.set_male_name);
-    free_set(db.set_surname);
-    free_set(db.set_female_surname);
-    free_set(db.set_male_surname);
-    free_set(db.set_position);
-
+    free_database(db);
 
     return SUCCESS;
 }

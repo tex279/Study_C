@@ -8,8 +8,14 @@ TARGET_TEST = ./gtest
 
 TARGET_COVERAGE = [789]
 
+NUMBER_OF_RECORDS  = 10000
+
 clean:
 	rm -rf build coverage-report valgrind.log test.log coverage.info
+
+generate:
+	./build/generator_data/generator ${NUMBER_OF_RECORDS} tmp.txt generator_data/sets/female_name.txt generator_data/sets/male_name.txt generator_data/sets/surname.txt generator_data/sets/female_surname.txt generator_data/sets/male_surname.txt generator_data/sets/position.txt
+
 
 check:
 	./run_linters.sh
@@ -31,8 +37,3 @@ coverage_tests:
 memtest:
 	./run_build.sh -DVALGRIND_MEMCHECK=ON
 	./run_memtest.sh ./build/gtest/${TARGET_TEST}
-
-launch:
-	./build/generator_data/generator 10000 tmp.txt generator_data/sets/female_name.txt generator_data/sets/male_name.txt generator_data/sets/surname.txt generator_data/sets/female_surname.txt generator_data/sets/male_surname.txt generator_data/sets/position.txt
-
-
