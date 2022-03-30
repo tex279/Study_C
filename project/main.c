@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "list_parts.h"
-
 #define ERR_INPUT -1
 #define ERR_WRONG_TYPE_WORK -2
 
