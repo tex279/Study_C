@@ -31,6 +31,8 @@ int generate(const char *path_output, const size_t sample_size, database_t *db) 
         return ERR_OPEN_FILE;
     }
 
+    fprintf(target,"%zu\n", sample_size);
+
     for (size_t i = 0; i < sample_size; ++i) {
         bool gender = (bool)get_rand_number(0, 1);
         bool type_surname = (bool)get_rand_number(0, 1);

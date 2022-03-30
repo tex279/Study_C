@@ -31,7 +31,7 @@
 
 ## Формат ввода:
 
-`name[8] surname[64] gender[8] age[4] salaty[16] position[64] experience[64]`
+`name[32] surname[64] gender[8] age[4] salaty[16] position[64] experience[4]`
 
 Что соответствует содержимому сета бланков [in.txt](project/gtest/data/ok/in.txt):
 ```

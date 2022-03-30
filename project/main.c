@@ -1,62 +1,56 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "load_database.h"
+
+#define NEEDED_COUNT_ARG 2
+
 #define ERR_INPUT -1
 #define ERR_WRONG_TYPE_WORK -2
+#define ERR_LOAD_DATA -3
 
-#define IN_STD_OUT_STD 1
-#define IN_FILE_OUT_STD 2
-#define IN_STD_OUT_FILE 3
-#define IN_FILE_OUT_FILE 4
+#define IMPERATIVE_MODEL 1
+#define MULTI_THREADED_MODEL 2
 
 #define SUCCESS 1
 
-void work(char const *path_to_input_blk, char const *path_to_output_blk) {
-    size_t count_error = 0;
-
-    node_list_parts_t *first;
-    input(path_to_input_blk, &count_error, &first);
-
-    output_parts(path_to_output_blk, first, &count_error);
-
-    free_list_parts(first);
-}
-
-int main(int argc, char const **argv) {
-    if (argc < 2) {
-        fprintf(stderr, "incorrect input");
+int main(int argc, const char **argv) {
+    if (argc < NEEDED_COUNT_ARG) {
+        fprintf(stderr, "incorrect input\n");
         return ERR_INPUT;
     }
 
     char* end = NULL;
     long type_work = strtol(argv[1], &end, 0);
     if (*end != '\0') {
-        fprintf(stdout, "incorrect input type work");
+        fprintf(stdout, "incorrect input type work\n");
         return ERR_INPUT;
     }
 
-    switch (type_work) {
-        case IN_STD_OUT_STD: {
-            work(NULL, NULL);
+    size_t number_records = 0;
+    record_t **set_record = NULL;
+
+    if (input(argv[2], &set_record, &number_records) < 0) {
+        fprintf(stdout, "error load_data\n");
+        return ERR_LOAD_DATA;
+    }
+
+    print_set_record(set_record, number_records);
+
+    free_set_record(set_record, number_records);
+
+    /*switch (type_work) {
+        case IMPERATIVE_MODEL: {
             break;
         }
-        case IN_FILE_OUT_STD: {
-            work(argv[2], NULL);
-            break;
-        }
-        case IN_STD_OUT_FILE: {
-            work(NULL, argv[2]);
-            break;
-        }
-        case IN_FILE_OUT_FILE: {
-            work(argv[2], argv[3]);
+        case MULTI_THREADED_MODEL: {
             break;
         }
         default: {
             fprintf(stderr, "incorrect input type work: not such type");
             return ERR_WRONG_TYPE_WORK;
         }
-    }
+    }*/
 
     return SUCCESS;
 }

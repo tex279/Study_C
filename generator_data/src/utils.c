@@ -39,7 +39,7 @@ char *create_format(const size_t size_str, const size_t size_format) {
 char **get_set(const char *source) {
     FILE *flow_source = fopen(source, "r");
     if (!flow_source) {
-        fprintf(stderr, "error open file for read");
+        fprintf(stderr, "error open file for read\n");
         return NULL;
     }
 
@@ -71,7 +71,7 @@ char **get_set(const char *source) {
     free(format);
 
     if (fclose(flow_source)) {
-        fprintf(stderr, "failed close file");
+        fprintf(stderr, "failed close file\n");
         return NULL;
     }
 

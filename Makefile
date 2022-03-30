@@ -40,3 +40,6 @@ coverage_tests:
 memtest:
 	./run_build.sh
 	./run_memtest.sh ./build/gtest/${TARGET_TEST}
+
+test__:
+	./build/project/HW-2 3 ${PATH_OUTPUT}

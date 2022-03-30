@@ -2,7 +2,7 @@
 
 #include <stddef.h>
 
-#define ERR_ALOC -2
+#define ERR_ALOCC -2
 
 #define SUCCESS 1
 
