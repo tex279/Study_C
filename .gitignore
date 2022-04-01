@@ -6,5 +6,6 @@
 valgrind.log
 test.log
 coverage.info
-tmp.txt
-tmmp.txt
+generated_database.txt
+report.txt
+sorted_database.txt

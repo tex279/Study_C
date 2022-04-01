@@ -14,8 +14,6 @@
 #define IMPERATIVE_MODEL 1
 #define MULTI_THREADED_MODEL 2
 
-#define SUCCESS 1
-
 int main(int argc, const char **argv) {
     if (argc < NEEDED_COUNT_ARG) {
         fprintf(stderr, "incorrect input\n");
@@ -31,6 +29,8 @@ int main(int argc, const char **argv) {
 
     sort_set_record(db->set_records, db->number_records, position_rule_less);
 
+    print_set_record(argv[3], db->set_records, db->number_records);
+
     char* end = NULL;
     long type_work = strtol(argv[1], &end, 0);
     if (*end != '\0') {
@@ -40,7 +40,7 @@ int main(int argc, const char **argv) {
 
     switch (type_work) {
         case IMPERATIVE_MODEL: {
-            if (get_average_salary_report(argv[3], db) < 0) {
+            if (get_average_salary_report(argv[4], db) < 0) {
                 fprintf(stderr, "error get average salary report\n");
                 free_database(db);
                 return ERR_GET_REPORT;
@@ -57,9 +57,7 @@ int main(int argc, const char **argv) {
         }
     }
 
-    print_set_record(argv[4], db->set_records, db->number_records);
-
     free_database(db);
 
-    return SUCCESS;
+    return EXIT_SUCCESS;
 }

@@ -8,6 +8,8 @@
 #define MAX_AGE 100
 #define MIN_AGE 18
 
+#define MIN_EXP 0
+
 #define MAX_SALARY 450000
 
 #define LENGTH_STRING_FORMAT 10
@@ -79,7 +81,7 @@ int generate(const char *path_output, const size_t sample_size, const database_t
         fprintf(target,"%s ", get_rand_value(db->set_position, 0, db->count_position));
 
         //  experience
-        fprintf(target,"%zu\n",  get_rand_number(0, age - MIN_AGE));
+        fprintf(target,"%zu\n",  get_rand_number(MIN_EXP, age - MIN_AGE + MIN_EXP));
     }
 
     if (fclose(target)) {
