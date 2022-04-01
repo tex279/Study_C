@@ -36,7 +36,7 @@ enum length_format {
 #define SUM_LENGTH (L_NAME + L_SURNAME + L_GENDER + L_AGE + L_SALARY + L_POSITION + L_EXPERIENCE)
 
 //  load_data_in_memory
-int load_database(const char *source, record_t ***record, size_t *number_records);
+int load_database(const char *source, record_t ***record, size_t *number_records, size_t *number_positions);
 
 //  format functional
 format_t *create_set_format();

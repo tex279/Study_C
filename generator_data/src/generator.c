@@ -24,7 +24,7 @@ char *get_rand_value(char **source, const size_t min, const size_t max) {
 }
 
 
-int generate(const char *path_output, const size_t sample_size, database_t *db) {
+int generate(const char *path_output, const size_t sample_size, const database_t *db) {
     FILE *target = fopen(path_output, "w+");
     if (!target) {
         fprintf(stderr, "error open file for write");
@@ -32,6 +32,8 @@ int generate(const char *path_output, const size_t sample_size, database_t *db) 
     }
 
     fprintf(target,"%zu\n", sample_size);
+
+    fprintf(target,"%zu\n", db->count_position);
 
     for (size_t i = 0; i < sample_size; ++i) {
         bool gender = (bool)get_rand_number(0, 1);
@@ -74,7 +76,7 @@ int generate(const char *path_output, const size_t sample_size, database_t *db) 
         fprintf(target,"%zu ", get_rand_number(0, MAX_SALARY));
 
         //  position(job)
-        fprintf(target,"%s ", get_rand_value(db->set_position, 0,db->count_position));
+        fprintf(target,"%s ", get_rand_value(db->set_position, 0, db->count_position));
 
         //  experience
         fprintf(target,"%zu\n",  get_rand_number(MIN_AGE, age));

@@ -18,6 +18,8 @@ bool position_rule_less(const record_t *r_left, const record_t *r_right) {
         if ((r_left->position)[i] > (r_right->position)[i]) {
             return true;
         }
+
+        break;
     }
 
     return false;
@@ -34,24 +36,17 @@ void swap_record(record_t *r_left, record_t *r_right) {
 }
 
 void sort_set_record(record_t **record, const size_t number_records, const sort_rule_t rule) {
-    bool no_swap = false;
+    bool sorted = false;
 
-    for (size_t i = 0; i < number_records - 1; ++i) {
-        no_swap = true;
-        for (size_t j = 0; j < number_records - 1; ++j) {
-                if (rule(record[j], record[j + 1])) {
-                    //  fprintf(stdout, "HELLO\n");
-                    swap_record(record[j], record[j + 1]);
+    while (!sorted) {
+        sorted = true;
 
-                    no_swap = false;
-                }
-        }
+        for (size_t i = 0; i < number_records - 1; ++i) {
+            if (rule(record[i], record[i + 1])) {
+                swap_record(record[i], record[i + 1]);
 
-        print_set_record(NULL ,record, number_records);
-        fprintf(stdout, "\n");
-
-        if (no_swap == 1) {
-            break;
+                sorted = false;
+            }
         }
     }
 }

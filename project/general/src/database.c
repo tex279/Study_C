@@ -10,7 +10,7 @@
 #define ERR_CREATE_SET_RECORDS -7
 #define ERR_GET_RECORD -8
 
-int load_database(const char *source, record_t ***record, size_t *number_records) {
+int load_database(const char *source, record_t ***record, size_t *number_records, size_t *number_positions) {
     format_t *set_format = create_set_format();
     if (!set_format) {
         fprintf(stderr, "error create set formats\n");
@@ -25,7 +25,8 @@ int load_database(const char *source, record_t ***record, size_t *number_records
     }
 
     size_t numb_records;
-    if (fscanf(target, "%zu\n", &numb_records) != 1) {
+    size_t numb_positions;
+    if (fscanf(target, "%zu%zu\n", &numb_records, &numb_positions) != 2) {
         fprintf(stdout, "error get number records\n");
 
         free_set_format(set_format);
@@ -70,6 +71,7 @@ int load_database(const char *source, record_t ***record, size_t *number_records
 
     *record = set_record;
     *number_records = numb_records;
+    *number_positions = numb_positions;
 
     free_set_format(set_format);
 

@@ -21,18 +21,16 @@ int main(int argc, const char **argv) {
     }
 
     size_t number_records = 0;
+    size_t number_positions = 0;
+
     record_t **set_record = NULL;
 
-    if (load_database(argv[2], &set_record, &number_records) < 0) {
+    if (load_database(argv[2], &set_record, &number_records, &number_positions) < 0) {
         fprintf(stderr, "error load_data\n");
         return ERR_LOAD_DATA;
     }
 
     sort_set_record(set_record, number_records, position_rule_less);
-
-    print_set_record(argv[3], set_record, number_records);
-
-    free_set_record(set_record, number_records);
 
     /*char* end = NULL;
     long type_work = strtol(argv[1], &end, 0);
@@ -53,6 +51,10 @@ int main(int argc, const char **argv) {
             return ERR_WRONG_TYPE_WORK;
         }
     }*/
+
+    print_set_record(argv[3], set_record, number_records);
+
+    free_set_record(set_record, number_records);
 
     return SUCCESS;
 }
