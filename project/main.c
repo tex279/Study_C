@@ -9,6 +9,7 @@
 #define ERR_INPUT -1
 #define ERR_WRONG_TYPE_WORK -2
 #define ERR_LOAD_DATA -3
+#define ERR_GET_REPORT -4
 
 #define IMPERATIVE_MODEL 1
 #define MULTI_THREADED_MODEL 2
@@ -39,7 +40,12 @@ int main(int argc, const char **argv) {
 
     switch (type_work) {
         case IMPERATIVE_MODEL: {
-            get_average_salary_report(db);
+            if (get_average_salary_report(argv[3], db) < 0) {
+                fprintf(stderr, "error get average salary report\n");
+                free_database(db);
+                return ERR_GET_REPORT;
+            }
+
             break;
         }
         case MULTI_THREADED_MODEL: {
@@ -51,7 +57,7 @@ int main(int argc, const char **argv) {
         }
     }
 
-    print_set_record(NULL, db->set_records, db->number_records);
+    print_set_record(argv[4], db->set_records, db->number_records);
 
     free_database(db);
 

@@ -79,7 +79,7 @@ int generate(const char *path_output, const size_t sample_size, const database_t
         fprintf(target,"%s ", get_rand_value(db->set_position, 0, db->count_position));
 
         //  experience
-        fprintf(target,"%zu\n",  get_rand_number(MIN_AGE, age));
+        fprintf(target,"%zu\n",  get_rand_number(0, age - MIN_AGE));
     }
 
     if (fclose(target)) {

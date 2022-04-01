@@ -213,10 +213,10 @@ int print_set_record(const char *path_output, record_t **source, size_t number_r
 }
 
 void free_set_record(record_t **record, const size_t number_records) {
-    for (size_t i = 0; i < number_records; ++i) {
-        free(record[i]->name);
-        free(record[i]->surname);
-        free(record[i]->position);
+    for (size_t i = 0; i < number_records - 1; ++i) {
+        free((record[i])->name);
+        free((record[i])->surname);
+        free((record[i])->position);
         free(record[i]);
     }
 
