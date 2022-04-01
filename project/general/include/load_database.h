@@ -66,9 +66,6 @@ void swap_record(record_t *r_left, record_t *r_right);
 
 void sort_set_record(record_t **record, const size_t number_records, const sort_rule_t rule);
 
-void quick_sort_base(record_t **record, size_t l, size_t r, const sort_rule_t rule);
-void sort_set_record_q(record_t **record, const size_t number_records, const sort_rule_t rule);
-
 
 typedef struct {
     size_t number_records;
