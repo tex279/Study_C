@@ -9,12 +9,13 @@ if (DEBUG)
 endif(DEBUG)
 
 file(GLOB SOURCES general/src/*.c
+        pattern/imperative_model/src/*.c
         main.c)
 
-file(GLOB INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/general/include)
+file(GLOB INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/general/include ${CMAKE_CURRENT_SOURCE_DIR}/pattern/imperative_model/include)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
-target_include_directories(${PROJECT_NAME} PUBLIC general/include)
+target_include_directories(${PROJECT_NAME} PUBLIC general/include pattern/imperative_model/include)
 
 #set(BLANKS_LIB_LIBRARIES ${PROJECT_NAME} PARENT_SCOPE)
 #set(BLANKS_LIB_INCLUDE_DIRS ${INCLUDE_DIRS} PARENT_SCOPE)

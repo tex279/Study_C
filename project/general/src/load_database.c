@@ -20,16 +20,6 @@ database_t *create_database() {
     return db;
 }
 
-size_t *distribution_positions(const size_t number_positions) {
-    size_t *distribution = calloc(number_positions, sizeof(size_t));
-    if (!distribution) {
-        fprintf(stderr, "memory allocation error\n");
-        return NULL;
-    }
-
-    return distribution;
-}
-
 int load_database(const char *source, database_t *db) {
     format_t *set_format = create_set_format();
     if (!set_format) {

@@ -33,7 +33,7 @@ int generate(const char *path_output, const size_t sample_size, const database_t
 
     fprintf(target,"%zu\n", sample_size);
 
-    fprintf(target,"%zu\n", db->count_position);
+    fprintf(target,"%zu\n", db->count_position + 1);
 
     for (size_t i = 0; i < sample_size; ++i) {
         bool gender = (bool)get_rand_number(0, 1);

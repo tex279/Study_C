@@ -2,6 +2,7 @@
 
 #include <stddef.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 enum length_format {
     L_NAME = 32,
@@ -75,8 +76,6 @@ typedef struct {
 
 //  database functional
 database_t *create_database();
-
-size_t *distribution_positions(const size_t number_positions);
 
 int load_database(const char *source, database_t *db);
 

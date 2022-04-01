@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "load_database.h"
+#include "database_functional.h"
 
 #define NEEDED_COUNT_ARG 2
 
@@ -27,19 +28,18 @@ int main(int argc, const char **argv) {
         return ERR_LOAD_DATA;
     }
 
-    //sort_set_record(db->set_records, db->number_records, position_rule_less);
-
-    sort_set_record_q(db->set_records, db->number_records, position_rule_less);
+    sort_set_record(db->set_records, db->number_records, position_rule_less);
 
     char* end = NULL;
     long type_work = strtol(argv[1], &end, 0);
     if (*end != '\0') {
-        fprintf(stdout, "incorrect input type work\n");
+        fprintf(stderr, "incorrect input type work\n");
         return ERR_INPUT;
     }
 
     switch (type_work) {
         case IMPERATIVE_MODEL: {
+            get_average_salary_report(db);
             break;
         }
         case MULTI_THREADED_MODEL: {
@@ -51,7 +51,7 @@ int main(int argc, const char **argv) {
         }
     }
 
-    print_set_record(argv[3], db->set_records, db->number_records);
+    print_set_record(NULL, db->set_records, db->number_records);
 
     free_database(db);
 

@@ -14,12 +14,23 @@ bool position_rule_less(const record_t *r_left, const record_t *r_right) {
         length_compare = length_l;
     }
 
+
+    fprintf(stdout, "%s\n%s\n", r_left->position, r_right->position);
+    fprintf(stdout, "%zu\n", length_compare);
+
+
     for (size_t i = 0; i < length_compare; ++i) {
         if ((r_left->position)[i] > (r_right->position)[i]) {
             return true;
+        } else {
+            if ((r_left->position)[i] == (r_right->position)[i]) {
+                continue;
+            }
         }
 
-        return false;
+        if ((r_left->position)[i] < (r_right->position)[i]) {
+            return false;
+        }
     }
 
     return false;
@@ -36,6 +47,11 @@ void swap_record(record_t *r_left, record_t *r_right) {
 void sort_set_record(record_t **record, const size_t number_records, const sort_rule_t rule) {
     bool sorted = false;
 
+    fprintf(stdout, "%c %c %c %c\n", (int)'C', (int)'o', (int)'o', (int)'k');
+    fprintf(stdout, "%c %c %c %c\n", (int)'C', (int)'o', (int)'m', (int)'p');
+    fprintf(stdout, "%d %d %d %d\n", (int)'C', (int)'o', (int)'o', (int)'k');
+    fprintf(stdout, "%d %d %d %d\n", (int)'C', (int)'o', (int)'m', (int)'p');
+
     while (!sorted) {
         sorted = true;
 
@@ -46,5 +62,8 @@ void sort_set_record(record_t **record, const size_t number_records, const sort_
                 sorted = false;
             }
         }
+
+        print_set_record(NULL, record, number_records);
+        fprintf(stdout, "\n");
     }
 }
