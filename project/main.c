@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "database.h"
+#include "load_database.h"
 
 #define NEEDED_COUNT_ARG 2
 
@@ -20,19 +20,18 @@ int main(int argc, const char **argv) {
         return ERR_INPUT;
     }
 
-    size_t number_records = 0;
-    size_t number_positions = 0;
+    database_t *db = create_database();
 
-    record_t **set_record = NULL;
-
-    if (load_database(argv[2], &set_record, &number_records, &number_positions) < 0) {
+    if (load_database(argv[2], db) < 0) {
         fprintf(stderr, "error load_data\n");
         return ERR_LOAD_DATA;
     }
 
-    sort_set_record(set_record, number_records, position_rule_less);
+    //sort_set_record(db->set_records, db->number_records, position_rule_less);
 
-    /*char* end = NULL;
+    sort_set_record_q(db->set_records, db->number_records, position_rule_less);
+
+    char* end = NULL;
     long type_work = strtol(argv[1], &end, 0);
     if (*end != '\0') {
         fprintf(stdout, "incorrect input type work\n");
@@ -50,11 +49,11 @@ int main(int argc, const char **argv) {
             fprintf(stderr, "incorrect input type work: not such type");
             return ERR_WRONG_TYPE_WORK;
         }
-    }*/
+    }
 
-    print_set_record(argv[3], set_record, number_records);
+    print_set_record(argv[3], db->set_records, db->number_records);
 
-    free_set_record(set_record, number_records);
+    free_database(db);
 
     return SUCCESS;
 }

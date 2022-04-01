@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "database.h"
+#include "load_database.h"
 #include "utils.h"
 
 #define ERR_GET_FIELD -1
@@ -144,6 +144,16 @@ void assignment_record(record_t *target, const record_t *source) {
     target->name = source->name;
     target->surname = source->surname;
     target->position = source->position;
+    target->gender = source->gender;
+    target->age = source->age;
+    target->salary = source->salary;
+    target->experience = source->experience;
+}
+
+void copy_record(record_t *target, const record_t *source) {
+    target->name = create_str(source->name);
+    target->surname = create_str(source->surname);
+    target->position = create_str(source->position);
     target->gender = source->gender;
     target->age = source->age;
     target->salary = source->salary;

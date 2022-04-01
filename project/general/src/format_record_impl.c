@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "database.h"
+#include "load_database.h"
 #include "utils.h"
 
 #define LENGTH_STRING_FORMAT 10
