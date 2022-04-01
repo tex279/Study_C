@@ -16,7 +16,7 @@
 #define ERR_CLOSE_FILE -2
 
 size_t get_rand_number(const size_t min, const size_t max) {
-    return (min + rand() % (max - min + 1));
+    return (min + (size_t)rand() % (max - min + 1));
 }
 
 char *get_rand_value(char **source, const size_t min, const size_t max) {
@@ -35,24 +35,27 @@ int generate(const char *path_output, const size_t sample_size, database_t *db) 
 
     for (size_t i = 0; i < sample_size; ++i) {
         bool gender = (bool)get_rand_number(0, 1);
+
+        //
         bool type_surname = (bool)get_rand_number(0, 1);
+
         size_t age = get_rand_number(MIN_AGE, MAX_AGE);
 
         //  name
         if (gender) {
-            fprintf(target,"%s ", get_rand_value(db->set_female_name, 0, sizeof(db->set_female_name)));
+            fprintf(target,"%s ", get_rand_value(db->set_female_name, 0, db->count_female_name));
         } else {
-            fprintf(target,"%s ", get_rand_value(db->set_male_name, 0, sizeof(db->set_male_name)));
+            fprintf(target,"%s ", get_rand_value(db->set_male_name, 0, db->count_male_name));
         }
 
         //  surname
         if (type_surname) {
-            fprintf(target,"%s ", get_rand_value(db->set_surname, 0, sizeof(db->set_surname)));
+            fprintf(target,"%s ", get_rand_value(db->set_surname, 0, db->count_surname));
         } else {
             if (gender) {
-                fprintf(target,"%s ", get_rand_value(db->set_female_surname, 0, sizeof(db->set_female_surname)));
+                fprintf(target,"%s ", get_rand_value(db->set_female_surname, 0, db->count_female_surname));
             } else {
-                fprintf(target,"%s ", get_rand_value(db->set_male_surname, 0, sizeof(db->set_male_surname)));
+                fprintf(target,"%s ", get_rand_value(db->set_male_surname, 0, db->count_male_surname));
             }
 
         }
@@ -71,7 +74,7 @@ int generate(const char *path_output, const size_t sample_size, database_t *db) 
         fprintf(target,"%zu ", get_rand_number(0, MAX_SALARY));
 
         //  position(job)
-        fprintf(target,"%s ", get_rand_value(db->set_position, 0, sizeof(db->set_position)));
+        fprintf(target,"%s ", get_rand_value(db->set_position, 0,db->count_position));
 
         //  experience
         fprintf(target,"%zu\n",  get_rand_number(MIN_AGE, age));

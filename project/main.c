@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "load_database.h"
+#include "database.h"
 
 #define NEEDED_COUNT_ARG 2
 
@@ -20,26 +20,28 @@ int main(int argc, const char **argv) {
         return ERR_INPUT;
     }
 
-    char* end = NULL;
+    size_t number_records = 0;
+    record_t **set_record = NULL;
+
+    if (load_database(argv[2], &set_record, &number_records) < 0) {
+        fprintf(stderr, "error load_data\n");
+        return ERR_LOAD_DATA;
+    }
+
+    sort_set_record(set_record, number_records, position_rule_less);
+
+    print_set_record(argv[3], set_record, number_records);
+
+    free_set_record(set_record, number_records);
+
+    /*char* end = NULL;
     long type_work = strtol(argv[1], &end, 0);
     if (*end != '\0') {
         fprintf(stdout, "incorrect input type work\n");
         return ERR_INPUT;
     }
 
-    size_t number_records = 0;
-    record_t **set_record = NULL;
-
-    if (input(argv[2], &set_record, &number_records) < 0) {
-        fprintf(stdout, "error load_data\n");
-        return ERR_LOAD_DATA;
-    }
-
-    print_set_record(set_record, number_records);
-
-    free_set_record(set_record, number_records);
-
-    /*switch (type_work) {
+    switch (type_work) {
         case IMPERATIVE_MODEL: {
             break;
         }

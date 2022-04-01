@@ -8,7 +8,8 @@ TARGET_TEST = ./gtest
 
 TARGET_COVERAGE = [789]
 
-NUMBER_OF_RECORDS  = 10000
+NUMBER_OF_RECORDS  = 100
+
 
 PATH_TO_SETS = generator_data/sets/female_name.txt generator_data/sets/male_name.txt generator_data/sets/surname.txt generator_data/sets/female_surname.txt generator_data/sets/male_surname.txt generator_data/sets/position.txt
 
@@ -40,6 +41,3 @@ coverage_tests:
 memtest:
 	./run_build.sh
 	./run_memtest.sh ./build/gtest/${TARGET_TEST}
-
-test__:
-	./build/project/HW-2 3 ${PATH_OUTPUT}

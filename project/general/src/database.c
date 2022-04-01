@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "load_database.h"
+#include "database.h"
 #include "utils.h"
 
 #define ERR_CREATE_SET_FORMATS -5
@@ -10,12 +10,7 @@
 #define ERR_CREATE_SET_RECORDS -7
 #define ERR_GET_RECORD -8
 
-#define ERR_OPEN_FILE -1
-#define ERR_CREATE_FILE -2
-#define ERR_WRITE_FILE -3
-#define ERR_CLOSE_FILE -4
-
-int input(const char *source, record_t ***record, size_t *number_records) {
+int load_database(const char *source, record_t ***record, size_t *number_records) {
     format_t *set_format = create_set_format();
     if (!set_format) {
         fprintf(stderr, "error create set formats\n");
@@ -29,7 +24,7 @@ int input(const char *source, record_t ***record, size_t *number_records) {
         return ERR_OPEN_FILE;
     }
 
-    const size_t numb_records;
+    size_t numb_records;
     if (fscanf(target, "%zu\n", &numb_records) != 1) {
         fprintf(stdout, "error get number records\n");
 
@@ -57,7 +52,6 @@ int input(const char *source, record_t ***record, size_t *number_records) {
         char global[SUM_LENGTH + 1];
 
         fgets(global, sizeof(global), target);
-
 
         record_t *tmp = NULL;
         if (get_record(global, &tmp, set_format) < 0) {

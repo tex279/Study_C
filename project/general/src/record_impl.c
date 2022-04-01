@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "load_database.h"
+#include "database.h"
 #include "utils.h"
 
 #define ERR_GET_FIELD -1
@@ -150,31 +150,56 @@ void assignment_record(record_t *target, const record_t *source) {
     target->experience = source->experience;
 }
 
-void print_set_record(record_t **source, const size_t number_records) {
-    for (size_t i = 0; i < number_records; ++i) {
-        fprintf(stdout,"%s ", source[i]->name);
+int print_record(FILE* target, const record_t *source) {
+    fprintf(target,"%s ", source->name);
 
-        fprintf(stdout,"%s ", source[i]->surname);
+    fprintf(target,"%s ", source->surname);
 
-        //  gender
-        if (source[i]->gender) {
-            fprintf(stdout,"%s ", "female");
-        } else {
-            fprintf(stdout,"%s ", "male");
-        }
-
-        //  age
-        fprintf(stdout,"%zu ", source[i]->age);
-
-        //  salary
-        fprintf(stdout,"%zu ", source[i]->salary);
-
-        //  position(job)
-        fprintf(stdout,"%s ", source[i]->position);
-
-        //  experience
-        fprintf(stdout,"%zu\n",  source[i]->experience);
+    //  gender
+    if (source->gender) {
+        fprintf(target,"%s ", "female");
+    } else {
+        fprintf(target,"%s ", "male");
     }
+
+    //  age
+    fprintf(target,"%zu ", source->age);
+
+    //  salary
+    fprintf(target,"%zu ", source->salary);
+
+    //  position(job)
+    fprintf(target,"%s ", source->position);
+
+    //  experience
+    fprintf(target,"%zu\n",  source->experience);
+
+    return SUCCESS;
+}
+
+int print_set_record(const char *path_output, record_t **source, size_t number_records) {
+    FILE *target = stdout;
+
+    if (path_output) {
+        target = fopen(path_output, "w+");
+        if (!target) {
+            fprintf(stderr, "error open file for read\n");
+            return ERR_OPEN_FILE;
+        }
+    }
+
+    for (size_t i = 0; i < number_records; ++i) {
+        print_record(target, source[i]);
+    }
+
+    if (path_output) {
+        if (fclose(target)) {
+            fprintf(stderr, "failed close file\n");
+            return ERR_CLOSE_FILE;
+        }
+    }
+
+    return SUCCESS;
 }
 
 void free_set_record(record_t **record, const size_t number_records) {

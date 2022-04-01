@@ -99,6 +99,7 @@ database_t *load_data(const char **argv, size_t pos) {
         free(db);
         return NULL;
     }
+    db->count_female_name = sizeof(db->set_female_name);
 
     db->set_male_name = get_set(argv[++pos]);
     if (!db->set_male_name) {
@@ -106,6 +107,7 @@ database_t *load_data(const char **argv, size_t pos) {
         free_set(db->set_female_name);
         return NULL;
     }
+    db->count_male_name = sizeof(db->set_male_name);
 
     db->set_surname = get_set(argv[++pos]);
     if (!db->set_surname) {
@@ -114,6 +116,7 @@ database_t *load_data(const char **argv, size_t pos) {
         free_set(db->set_male_name);
         return NULL;
     }
+    db->count_surname = sizeof(db->set_surname);
 
     db->set_female_surname = get_set(argv[++pos]);
     if (!db->set_female_surname) {
@@ -123,6 +126,7 @@ database_t *load_data(const char **argv, size_t pos) {
         free_set(db->set_surname);
         return NULL;
     }
+    db->count_female_surname = sizeof(db->set_female_surname);
 
     db->set_male_surname = get_set(argv[++pos]);
     if (!db->set_male_surname) {
@@ -133,6 +137,7 @@ database_t *load_data(const char **argv, size_t pos) {
         free_set(db->set_male_surname);
         return NULL;
     }
+    db->count_male_surname = sizeof(db->set_male_surname);
 
     db->set_position = get_set(argv[++pos]);
     if (!db->set_position) {
@@ -144,6 +149,7 @@ database_t *load_data(const char **argv, size_t pos) {
         free_set(db->set_position);
         return NULL;
     }
+    db->count_position = sizeof(db->set_position);
 
     return db;
 }

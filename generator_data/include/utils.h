@@ -4,11 +4,22 @@
 
 typedef struct {
     char **set_female_name;
+    size_t count_female_name;
+
     char **set_male_name;
+    size_t count_male_name;
+
     char **set_surname;
+    size_t count_surname;
+
     char **set_female_surname;
+    size_t count_female_surname;
+
     char **set_male_surname;
+    size_t count_male_surname;
+
     char **set_position;
+    size_t count_position;
 } database_t;
 
 //  base

@@ -2,6 +2,11 @@
 
 #include <stddef.h>
 
+#define ERR_OPEN_FILE -1
+#define ERR_CREATE_FILE -2
+#define ERR_WRITE_FILE -3
+#define ERR_CLOSE_FILE -4
+
 #define ERR_ALOCC -2
 
 #define SUCCESS 1
