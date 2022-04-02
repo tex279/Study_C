@@ -6,7 +6,7 @@
 #include "matrix.h"
 
 #define MAX_AGE 100
-#define MIN_AGE 18
+#define MIN_AGE 21
 
 size_t **get_distribution(FILE *target, const database_t *db) {
     size_t number_records = db->number_records;

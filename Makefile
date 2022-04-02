@@ -3,7 +3,7 @@
 all: clean check build generate test_general coverage_tests_general memtest_general
 
 TARGET_COVERAGE = [6789]
-NUMBER_OF_RECORDS  = 100
+NUMBER_OF_RECORDS  = 10
 PATH_TO_SETS = generator_data/sets/female_name.txt generator_data/sets/male_name.txt generator_data/sets/surname.txt generator_data/sets/female_surname.txt generator_data/sets/male_surname.txt generator_data/sets/position.txt
 
 PATH_NEW_DATABASE = generated_database.txt
