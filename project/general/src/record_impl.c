@@ -140,7 +140,7 @@ int get_record(const char *source, record_t **out, const format_t *format) {
 }
 
 
-void assignment_record(record_t *target, const record_t *source) {
+int assignment_record(record_t *target, const record_t *source) {
     target->name = source->name;
     target->surname = source->surname;
     target->position = source->position;
@@ -148,9 +148,11 @@ void assignment_record(record_t *target, const record_t *source) {
     target->age = source->age;
     target->salary = source->salary;
     target->experience = source->experience;
+
+    return SUCCESS;
 }
 
-void copy_record(record_t *target, const record_t *source) {
+int copy_record(record_t *target, const record_t *source) {
     target->name = create_str(source->name);
     target->surname = create_str(source->surname);
     target->position = create_str(source->position);
@@ -158,6 +160,8 @@ void copy_record(record_t *target, const record_t *source) {
     target->age = source->age;
     target->salary = source->salary;
     target->experience = source->experience;
+
+    return SUCCESS;
 }
 
 int print_record(FILE* target, const record_t *source) {
@@ -212,7 +216,7 @@ int print_set_record(const char *path_output, record_t **source, size_t number_r
     return SUCCESS;
 }
 
-void free_set_record(record_t **record, const size_t number_records) {
+int free_set_record(record_t **record, const size_t number_records) {
     for (size_t i = 0; i < number_records - 1; ++i) {
         free((record[i])->name);
         free((record[i])->surname);
@@ -221,5 +225,7 @@ void free_set_record(record_t **record, const size_t number_records) {
     }
 
     free(record);
+
+    return SUCCESS;
 }
 

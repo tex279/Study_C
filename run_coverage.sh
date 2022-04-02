@@ -2,7 +2,7 @@
 
 LOG_TEST="test.log"
 
-lcov -t "test.out" -o coverage.info -c -d build/project/CMakeFiles/blanks_lib.dir/blanks_lib/src
+lcov -t "test.out" -o coverage.info -c -d $1
 (genhtml -o report coverage.info --output-directory coverage-report/) > "${LOG_TEST}"
 
 cat "${LOG_TEST}"

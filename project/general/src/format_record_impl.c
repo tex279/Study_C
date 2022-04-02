@@ -92,7 +92,7 @@ format_t *create_set_format() {
     return format;
 }
 
-void free_set_format(format_t *format) {
+int free_set_format(format_t *format) {
     free(format->name);
     free(format->surname);
     free(format->gender);
@@ -102,4 +102,6 @@ void free_set_format(format_t *format) {
     free(format->experience);
 
     free(format);
+
+    return SUCCESS;
 }

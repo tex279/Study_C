@@ -39,7 +39,7 @@ void swap_record(record_t *r_left, record_t *r_right) {
     assignment_record(r_right, &tmp);
 }
 
-void sort_set_record(record_t **record, const size_t number_records, const sort_rule_t rule) {
+int sort_set_record(record_t **record, const size_t number_records, const sort_rule_t rule) {
     bool sorted = false;
 
     while (!sorted) {
@@ -53,4 +53,6 @@ void sort_set_record(record_t **record, const size_t number_records, const sort_
             }
         }
     }
+
+    return SUCCESS;
 }

@@ -86,8 +86,10 @@ int load_database(const char *source, database_t *db) {
     return SUCCESS;
 }
 
-void free_database(database_t *db) {
+int free_database(database_t *db) {
     free_set_record(db->set_records, db->number_records);
 
     free(db);
+
+    return SUCCESS;
 }

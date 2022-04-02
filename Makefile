@@ -4,7 +4,7 @@ all: clean check build test coverage_tests memtest
 
 BUILD_DIRECTORY = build
 
-TARGET_TEST = ./gtest
+TARGET_TEST_GENERAL = ./gtest_general
 
 TARGET_COVERAGE = [789]
 
@@ -17,6 +17,8 @@ PATH_NEW_DATABASE = generated_database.txt
 PATH_OUTPUT_SORTED_DATABASE = sorted_database.txt
 
 PATH_REPORT = report.txt
+
+PATH_GTEST_GENERAL = build/project/CMakeFiles/gtest_general.dir
 
 #1 - imperative mod
 #2 - multi_threaded mod
@@ -39,14 +41,14 @@ rebuild: clean build
 launch_imp:
 	./build/project/HW-2 ${TYPE_WORK} ${PATH_NEW_DATABASE} ${PATH_OUTPUT_SORTED_DATABASE} ${PATH_REPORT}
 
-test:
+test_general:
 	./run_build.sh
-	./build/gtest/${TARGET_TEST}
+	./build/gtest/${TARGET_TEST_GENERAL}
 
-coverage_tests:
+coverage_tests_general:
 	./run_build.sh
-	./build/gtest/${TARGET_TEST}
-	./run_coverage.sh $(TARGET_COVERAGE)
+	./build/gtest/${TARGET_TEST_GENERAL}
+	./run_coverage.sh ${PATH_GTEST_GENERAL} $(TARGET_COVERAGE)
 
 memtest:
 	./run_build.sh

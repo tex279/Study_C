@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+#define SUCCESS 1
+
 enum length_format {
     L_NAME = 32,
     L_SURNAME = 64,
@@ -30,7 +32,7 @@ typedef struct {
 //  format functional
 format_t *create_set_format();
 
-void free_set_format(format_t *format);
+int free_set_format(format_t *format);
 
 
 typedef struct {
@@ -48,15 +50,15 @@ record_t **create_set_record(const size_t number_records);
 
 int get_record(const char *source, record_t **out, const format_t *format);
 
-void assignment_record(record_t *target, const record_t *source);
+int assignment_record(record_t *target, const record_t *source);
 
-void copy_record(record_t *target, const record_t *source);
+int copy_record(record_t *target, const record_t *source);
 
 int print_record(FILE* target, const record_t *source);
 
 int print_set_record(const char *path_output, record_t **source, const size_t number_records);
 
-void free_set_record(record_t **record, const size_t number_records);
+int free_set_record(record_t **record, const size_t number_records);
 
 //  sort record
 typedef bool (*sort_rule_t)(const record_t *r_left, const record_t *r_right);
@@ -65,7 +67,7 @@ bool position_rule_less(const record_t *r_left, const record_t *r_right);
 
 void swap_record(record_t *r_left, record_t *r_right);
 
-void sort_set_record(record_t **record, const size_t number_records, const sort_rule_t rule);
+int sort_set_record(record_t **record, const size_t number_records, const sort_rule_t rule);
 
 
 typedef struct {
@@ -79,4 +81,4 @@ database_t *create_database();
 
 int load_database(const char *source, database_t *db);
 
-void free_database(database_t *db);
+int free_database(database_t *db);

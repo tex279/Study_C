@@ -9,7 +9,7 @@ option(RELEASE "in production" OFF)
 message("IMPERATIVE_MODEL_INCLUDE_DIRS = ${IMPERATIVE_MODEL_INCLUDE_DIRS}")
 message("IMPERATIVE_MODEL_LIB_LIBRARIES = ${IMPERATIVE_MODEL_LIB_LIBRARIES}")
 
-message("GENERAL_INCLUDE_DIRS = ${GENERAL_INCLUDE_DIRS}")
+message("GENERAL_LIB_INCLUDE_DIRS = ${GENERAL_LIB_INCLUDE_DIRS}")
 message("GENERAL_LIB_LIBRARIES = ${GENERAL_LIB_LIBRARIES}")
 
 if (DEBUG)
@@ -26,10 +26,11 @@ file(GLOB SOURCES project/main.c)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
+target_include_directories(${PROJECT_NAME} PUBLIC ${GENERAL_LIB_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${GENERAL_LIB_LIBRARIES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${IMPERATIVE_MODEL_INCLUDE_DIRS})
-target_include_directories(${PROJECT_NAME} PUBLIC ${GENERAL_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} PUBLIC ${GENERAL_LIB_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${IMPERATIVE_MODEL_LIB_LIBRARIES})
 
 add_subdirectory(generator_data)
+add_subdirectory(gtest)
