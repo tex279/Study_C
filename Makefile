@@ -2,7 +2,7 @@
 
 all: clean check build generate test_general coverage_tests_general memtest_general test_imperative coverage_tests_imperative memtest_imperative
 
-NUMBER_OF_RECORDS  = 10
+NUMBER_OF_RECORDS  = 100
 GENERATOR = ./build/generator_data/generator
 SETS_FOR_GEN = generator_data/sets/female_name.txt generator_data/sets/male_name.txt generator_data/sets/surname.txt generator_data/sets/female_surname.txt generator_data/sets/male_surname.txt generator_data/sets/position.txt
 
@@ -18,7 +18,8 @@ TARGET_COVERAGE = [6789]
 GTEST_GENERAL_COVERAGE = build/project/CMakeFiles/GENERAL.dir/general/src
 GTEST_IMPERATIVE_COVERAGE = build/project/CMakeFiles/IMPERATIVE_MODEL.dir/pattern/imperative_model/src
 
-
+TAR = build/gtest/gtest_general
+TAR2 = build/gtest/gtest_imperative
 #1 - imperative mod
 #2 - multi_threaded mod
 TYPE_WORK = 1
@@ -50,7 +51,6 @@ coverage_tests_general:
 	./run_build.sh
 	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 	${TARGET_TEST_GENERAL}
-	${TARGET_TEST_GENERAL}
 	./run_coverage.sh ${GTEST_GENERAL_COVERAGE} ${TARGET_COVERAGE}
 
 memtest_general:
@@ -66,8 +66,9 @@ test_imperative:
 coverage_tests_imperative:
 	./run_build.sh
 	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
+	${TARGET_TEST_GENERAL}
 	${TARGET_TEST_IMPERATIVE}
-	./run_coverage.sh ${TARGET_TEST_GENERAL} ${GTEST_IMPERATIVE_COVERAGE} ${TARGET_COVERAGE}
+	./run_coverage.sh ${GTEST_IMPERATIVE_COVERAGE} ${TARGET_COVERAGE}
 
 memtest_imperative:
 	./run_build.sh
