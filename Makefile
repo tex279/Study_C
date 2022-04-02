@@ -24,7 +24,7 @@ GTEST_IMPERATIVE_COVERAGE = build/project/CMakeFiles/IMPERATIVE_MODEL.dir/patter
 TYPE_WORK = 1
 
 clean:
-	rm -rf build coverage-report valgrind.log test.log coverage.info generated_database.txt
+	rm -rf build coverage-report valgrind.log test.log coverage.info generated_database.txt report.txt sorted_database.txt
 
 check:
 	./run_linters.sh
@@ -43,11 +43,13 @@ generate:
 
 test_general:
 	./run_build.sh
+	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 	${TARGET_TEST_GENERAL}
 
 coverage_tests_general:
 	./run_build.sh
 	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
+	${TARGET_TEST_GENERAL}
 	${TARGET_TEST_GENERAL}
 	./run_coverage.sh ${GTEST_GENERAL_COVERAGE} ${TARGET_COVERAGE}
 
@@ -65,7 +67,7 @@ coverage_tests_imperative:
 	./run_build.sh
 	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 	${TARGET_TEST_IMPERATIVE}
-	./run_coverage.sh ${GTEST_IMPERATIVE_COVERAGE} ${TARGET_COVERAGE}
+	./run_coverage.sh ${TARGET_TEST_GENERAL} ${GTEST_IMPERATIVE_COVERAGE} ${TARGET_COVERAGE}
 
 memtest_imperative:
 	./run_build.sh
