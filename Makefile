@@ -1,17 +1,23 @@
-.PHONY: all build rebuild check test memtest clean coverage_tests
+.PHONY: all build rebuild check test memtest_general clean coverage_tests_general test_imperative coverage_tests_imperative memtest_imperative
 
-all: clean check build generate test_general coverage_tests_general memtest_general
+all: clean check build generate test_general coverage_tests_general memtest_general test_imperative coverage_tests_imperative memtest_imperative
 
-TARGET_COVERAGE = [6789]
 NUMBER_OF_RECORDS  = 10
-PATH_TO_SETS = generator_data/sets/female_name.txt generator_data/sets/male_name.txt generator_data/sets/surname.txt generator_data/sets/female_surname.txt generator_data/sets/male_surname.txt generator_data/sets/position.txt
+GENERATOR = ./build/generator_data/generator
+SETS_FOR_GEN = generator_data/sets/female_name.txt generator_data/sets/male_name.txt generator_data/sets/surname.txt generator_data/sets/female_surname.txt generator_data/sets/male_surname.txt generator_data/sets/position.txt
 
-PATH_NEW_DATABASE = generated_database.txt
-PATH_OUTPUT_SORTED_DATABASE = sorted_database.txt
-PATH_REPORT = report.txt
+NEW_DATABASE = generated_database.txt
+SORTED_DATABASE = sorted_database.txt
+REPORT = report.txt
 
 TARGET_TEST_GENERAL = ./build/gtest/gtest_general
-PATH_GTEST_GENERAL = build/project/CMakeFiles/GENERAL.dir/general/src
+TARGET_TEST_IMPERATIVE = ./build/gtest/gtest_imperative
+
+
+TARGET_COVERAGE = [6789]
+GTEST_GENERAL_COVERAGE = build/project/CMakeFiles/GENERAL.dir/general/src
+GTEST_IMPERATIVE_COVERAGE = build/project/CMakeFiles/IMPERATIVE_MODEL.dir/pattern/imperative_model/src
+
 
 #1 - imperative mod
 #2 - multi_threaded mod
@@ -21,7 +27,7 @@ clean:
 	rm -rf build coverage-report valgrind.log test.log coverage.info generated_database.txt
 
 generate:
-	./build/generator_data/generator ${NUMBER_OF_RECORDS} ${PATH_NEW_DATABASE} ${PATH_TO_SETS}
+	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 
 check:
 	./run_linters.sh
@@ -32,7 +38,7 @@ build:
 rebuild: clean build
 
 launch_imp:
-	./build/HW-2 ${TYPE_WORK} ${PATH_NEW_DATABASE} ${PATH_OUTPUT_SORTED_DATABASE} ${PATH_REPORT}
+	./build/HW-2 ${TYPE_WORK} ${NEW_DATABASE} ${SORTED_DATABASE} ${REPORT}
 
 test_general:
 	./run_build.sh
@@ -41,8 +47,21 @@ test_general:
 coverage_tests_general:
 	./run_build.sh
 	${TARGET_TEST_GENERAL}
-	./run_coverage.sh ${PATH_GTEST_GENERAL} ${TARGET_COVERAGE}
+	./run_coverage.sh ${GTEST_GENERAL_COVERAGE} ${TARGET_COVERAGE}
 
 memtest_general:
 	./run_build.sh
 	./run_memtest.sh ${TARGET_TEST_GENERAL}
+
+test_imperative:
+	./run_build.sh
+	${TARGET_TEST_IMPERATIVE}
+
+coverage_tests_imperative:
+	./run_build.sh
+	${TARGET_TEST_IMPERATIVE}
+	./run_coverage.sh ${GTEST_IMPERATIVE_COVERAGE} ${TARGET_COVERAGE}
+
+memtest_imperative:
+	./run_build.sh
+	./run_memtest.sh ${TARGET_TEST_IMPERATIVE}

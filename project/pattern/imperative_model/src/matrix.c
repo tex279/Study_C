@@ -22,7 +22,7 @@ size_t **create_matrix(const size_t row, const size_t col) {
 }
 
 void free_matrix(size_t **matrix, const size_t row) {
-    for (size_t i = 0; i < row - 1; ++i) {
+    for (size_t i = 0; i < row; ++i) {
         free(matrix[i]);
     }
 
