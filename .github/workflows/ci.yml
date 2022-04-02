@@ -21,7 +21,7 @@ jobs:
   generate:
     runs-on: ubuntu-latest
     container: andeo1812/gcc_check_gtest
-    needs: [check]
+    needs: [build]
     steps:
       - uses: actions/checkout@v2
       - run: make generate
@@ -64,7 +64,7 @@ jobs:
       needs: [ test_imperative ]
       steps:
         - uses: actions/checkout@v2
-        - run: make coverage_tests_general;
+        - run: make coverage_tests_imperative;
     memtest_imperative:
       runs-on: ubuntu-latest
       container: andeo1812/gcc_check_gtest
