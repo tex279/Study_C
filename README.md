@@ -33,77 +33,48 @@
 
 `name[32] surname[64] gender[8] age[4] salaty[16] position[64] experience[4]`
 
-Что соответствует содержимому сета бланков [in.txt](project/gtest/data/ok/in.txt):
-```
-1 office Alex
-2 office Alex
-53 office Alex
-43 srorage_56 Zina
-44 srorage_56 Zina
-40 cooler Zina
-41 cooler Zina
-```
-
 ## Формат вывода:
 
-`storage responsible`
-
-`number 1 2 3`
-
-Что соответствует результату [out.txt](project/gtest/data/ok/out.txt):
 ```
-office Alex
-1 2
-office Alex
-53
-srorage_56 Zina
-43 44
-cooler Zina
-40 41
+Position Actor - 1
+Position Composer - 2
+Position Cook - 3
+Position Doctor - 4
+Position Engineer - 5
+Position Journalist - 6
+Position Pilot - 7
+Position Sailor - 8
+Position Teacher - 9
+Average salary report for:
+position - 1 exp 4 - 4656 
+position - 1 exp 9 - 145 
+position - 1 exp 10 - 5877 
 ```
 
 ## Устройство структуры:
 
-Это односвязный список из двухсвязных списков.
-
-Первый уровень - структура-звено. Содержит номер бланка, также указатель на следующее звено и предыдушее.
-
-Второй уровень - структура-списка звеньев. Хранит в себе указатель на первый узел номера, на последний, также содержит 
-название хранилища и имя отвественного.
-
-Третий уровень - структура-звено. Содержит указатель на структура второго уровня и указатель на следующее
-звено.
+Массив пользовательского типа.
 
 ## Работа программы:
 
-На вход принимает первым аргументом тип работы и пути к файлам. 
+На вход принимает первым аргументом тип работы многопоточная или последовательная и пути к файлам - базы данных и вывода отчета. 
 
 ### Примеры запуска:
 ```
-./build/main 1
+./build/HW-2 1 generated_database.txt sorted_database.txt report.txt
 ```
-- для чтения и записи из стандартных потоков.
+- для последовательного алгоритма.
 
 ```
-./build/main 2 project/gtest/data/ok/in.txt
+./build/HW-2 12generated_database.txt sorted_database.txt report.txt
 ```
-- для чтения из файла и записи в стандартный поток вывода.
-
-```
-./build/main 3 project/gtest/data/ok/in.txt project/gtest/data/ok/tmp.txt
-```
-- для чтения стандартного потока чтения и записи в стандартный поток вывода.
-
-```
-./build/main 4 project/gtest/data/ok/in.txt project/gtest/data/ok/tmp.txt
-```
-- для чтения из файла и записи из файла, если файла для записи нет то создаст.
+- для многопоточного
 
 ## Проверки:
 1. Стические анализаторы cppcheck, clang-tidy, cpplint.
 2. Сборка на cmake.
-3. Тестирование на gtest.
-4. Провекрка покрытия gtest. Если менее чем 70% (опционально в make) выдаст ошибку.
-5. Запуск тестов на valgring.
+3. Тестирование на gtest общего функционала для обоих библиотек.
+4. Провекрка покрытия gtest. Если менее чем 60% (опционально в make) выдаст ошибку для также для общего функционала и обоих библиотек.
+5. Запуск тестов на valgring также для общего функционала и обоих библиотек.
 
 При наличии замечаний или неудаче выдаст ошибку.
