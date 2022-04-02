@@ -46,17 +46,19 @@ typedef struct {
 } record_t;
 
 //  record functional
+record_t *create_record();
+
 record_t **create_set_record(const size_t number_records);
 
 int get_record(const char *source, record_t **out, const format_t *format);
 
 int assignment_record(record_t *target, const record_t *source);
 
-int copy_record(record_t *target, const record_t *source);
-
 int print_record(FILE* target, const record_t *source);
 
 int print_set_record(const char *path_output, record_t **source, const size_t number_records);
+
+int free_record(record_t *record);
 
 int free_set_record(record_t **record, const size_t number_records);
 

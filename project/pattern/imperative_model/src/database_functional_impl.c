@@ -19,7 +19,7 @@ size_t **get_distribution(FILE *target, const database_t *db) {
 
     char *cur_position = (db->set_records)[0]->position;
 
-    fprintf(target, "Position %s - %u\n", cur_position, 1);
+    fprintf(target, "Position %s - %d\n", cur_position, 1);
 
     size_t count_pos = 0;
     for (size_t i = 0; i < number_records; ++i) {
@@ -42,9 +42,7 @@ void print_report_salary(FILE *target, size_t **distribution, const size_t numbe
 
     for (size_t i = 0; i < number_pos; ++i) {
         for (size_t j = 0; j < interval_exp; ++j) {
-
             if (distribution[i][j]) {
-
                 fprintf(target, "position - %zu ", i + 1);
 
                 size_t exp = j;

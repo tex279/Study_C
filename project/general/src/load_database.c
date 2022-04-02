@@ -11,7 +11,7 @@
 #define ERR_GET_RECORD -8
 
 database_t *create_database() {
-    database_t *db = calloc(1, sizeof(database_t*));
+    database_t *db = calloc(1, sizeof(database_t));
     if (!db) {
         fprintf(stderr, "memory allocation error\n");
         return NULL;
@@ -58,7 +58,6 @@ int load_database(const char *source, database_t *db) {
     char global[SUM_LENGTH + 1];
     int length_buf = sizeof(global);
     for (size_t i = 0; i < numb_records; ++i) {
-
         fgets(global, length_buf, target);
 
         record_t *tmp = NULL;

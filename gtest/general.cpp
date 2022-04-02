@@ -38,14 +38,16 @@ TEST(TEST_RECORD, functional) {
     EXPECT_TRUE(print_record(stdout, tmp_1) == SUCCESS);
     EXPECT_TRUE(print_record(stdout, tmp_2) == SUCCESS);
 
-    //EXPECT_TRUE(free_set_record(&tmp_1, 1) == SUCCESS);
-    //EXPECT_TRUE(free_set_record(&tmp_2, 1) == SUCCESS);
+    EXPECT_TRUE(free_record(tmp_1) == SUCCESS);
+    EXPECT_TRUE(free_record(tmp_2) == SUCCESS);
 
     record_t **tmp_set = create_set_record(3);
 
     EXPECT_TRUE(tmp_set != NULL);
 
     EXPECT_TRUE(free_set_record(tmp_set, 3) == SUCCESS);
+
+    free_set_format(format);
 }
 
 TEST(TEST_DATABASE, functional) {

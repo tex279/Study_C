@@ -24,8 +24,8 @@ format_t *create_set_format() {
     if (!format->surname) {
         fprintf(stderr, "memory allocation error\n");
 
-        free(format);
         free(format->name);
+        free(format);
         return NULL;
     }
 
@@ -33,9 +33,9 @@ format_t *create_set_format() {
     if (!format->gender) {
         fprintf(stderr, "memory allocation error\n");
 
-        free(format);
         free(format->name);
         free(format->surname);
+        free(format);
         return NULL;
     }
 
@@ -43,10 +43,10 @@ format_t *create_set_format() {
     if (!format->age) {
         fprintf(stderr, "memory allocation error\n");
 
-        free(format);
         free(format->name);
         free(format->surname);
         free(format->gender);
+        free(format);
         return NULL;
     }
 
@@ -54,11 +54,11 @@ format_t *create_set_format() {
     if (!format->salary) {
         fprintf(stderr, "memory allocation error\n");
 
-        free(format);
         free(format->name);
         free(format->surname);
         free(format->gender);
         free(format->age);
+        free(format);
         return NULL;
     }
 
@@ -66,12 +66,12 @@ format_t *create_set_format() {
     if (!format->position) {
         fprintf(stderr, "memory allocation error\n");
 
-        free(format);
         free(format->name);
         free(format->surname);
         free(format->gender);
         free(format->age);
         free(format->salary);
+        free(format);
         return NULL;
     }
 
@@ -79,13 +79,13 @@ format_t *create_set_format() {
     if (!format->experience) {
         fprintf(stderr, "memory allocation error\n");
 
-        free(format);
         free(format->name);
         free(format->surname);
         free(format->gender);
         free(format->age);
         free(format->salary);
         free(format->position);
+        free(format);
         return NULL;
     }
 
