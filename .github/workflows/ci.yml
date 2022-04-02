@@ -18,29 +18,62 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           path: build/main
-  test:
+  generate:
     runs-on: ubuntu-latest
     container: andeo1812/gcc_check_gtest
-    needs: [build]
+    needs: [check]
     steps:
       - uses: actions/checkout@v2
-      - run: make test
-  coverage_tests:
+      - run: make generate
+  test_general:
     runs-on: ubuntu-latest
     container: andeo1812/gcc_check_gtest
-    needs: [test]
+    needs: [generate]
     steps:
       - uses: actions/checkout@v2
-      - run: make coverage_tests;
-  memtest:
+      - run: make test_general
+  coverage_tests_general:
     runs-on: ubuntu-latest
     container: andeo1812/gcc_check_gtest
-    needs: [build]
+    needs: [test_general]
     steps:
       - uses: actions/checkout@v2
-      - run: make memtest
+      - run: make coverage_tests_general;
+  memtest_general:
+    runs-on: ubuntu-latest
+    container: andeo1812/gcc_check_gtest
+    needs: [coverage_tests_general]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make memtest_general
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         if: failure()
         with:
           path: valgrind.log
+  test_imperative:
+    runs-on: ubuntu-latest
+    container: andeo1812/gcc_check_gtest
+    needs: [ generate ]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make test_imperative
+    coverage_tests_imperative:
+      runs-on: ubuntu-latest
+      container: andeo1812/gcc_check_gtest
+      needs: [ test_imperative ]
+      steps:
+        - uses: actions/checkout@v2
+        - run: make coverage_tests_general;
+    memtest_imperative:
+      runs-on: ubuntu-latest
+      container: andeo1812/gcc_check_gtest
+      needs: [ coverage_tests_imperative ]
+      steps:
+        - uses: actions/checkout@v2
+        - run: make memtest_imperative
+        - name: Upload artifacts
+          uses: actions/upload-artifact@v2
+          if: failure()
+          with:
+            path: valgrind.log
