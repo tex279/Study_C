@@ -17,7 +17,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          path: build/main
+          path: build/HW-2
   generate:
     runs-on: ubuntu-latest
     container: andeo1812/gcc_check_gtest
