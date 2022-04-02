@@ -6,9 +6,9 @@
 #include "utils.h"
 
 #define MAX_AGE 100
-#define MIN_AGE 18
+#define MIN_AGE 22
 
-#define MIN_EXP 0
+#define MIN_EXP 4
 
 #define MAX_SALARY 450000
 
@@ -81,7 +81,7 @@ int generate(const char *path_output, const size_t sample_size, const database_t
         fprintf(target,"%s ", get_rand_value(db->set_position, 0, db->count_position));
 
         //  experience
-        fprintf(target,"%zu\n",  get_rand_number(MIN_EXP, age - MIN_AGE));
+        fprintf(target,"%zu\n",  get_rand_number(MIN_EXP, age - MIN_AGE + MIN_EXP));
     }
 
     if (fclose(target)) {
