@@ -27,9 +27,9 @@ file(GLOB SOURCES project/main.c)
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${IMPERATIVE_MODEL_LIB_LIBRARIES})
-target_include_directories(${PROJECT_NAME} PUBLIC ${GENERAL_LIB_LIBRARIES})
-target_link_libraries(HW-2 PUBLIC GENERAL)
-target_link_libraries(HW-2 PUBLIC IMPERATIVE_MODEL)
+target_include_directories(${PROJECT_NAME} PUBLIC ${IMPERATIVE_MODEL_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PUBLIC ${GENERAL_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${GENERAL_LIB_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${IMPERATIVE_MODEL_LIB_LIBRARIES})
 
 add_subdirectory(generator_data)

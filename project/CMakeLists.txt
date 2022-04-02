@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.14)
 project(GENERAL)
 
 if (DEBUG)
+    set(CMAKE_C_STANDARD 99)
+    set(CMAKE_CXX_STANDARD 17)
+    set(CMAKE_C_FLAGS "-g -O0 -Wall -Wextra -Werror -Wpedantic -fprofile-arcs -ftest-coverage -Wlogical-op -Wredundant-decls -Wsign-conversion -Wcast-align -Wcast-qual -Wconversion -Wduplicated-branches -Wduplicated-cond -Wfloat-equal")
+    set(CMAKE_CXX_FLAGS "-g -O0 -Wall -Wextra -Werror -Wpedantic -fprofile-arcs -ftest-coverage -Wlogical-op -Wredundant-decls -Wsign-conversion -Wcast-align -Wcast-qual -Wconversion -Wduplicated-branches -Wduplicated-cond -Wfloat-equal")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -coverage -lgcov")
     add_definitions("-fprofile-arcs -ftest-coverage -fPIC -O0")
 endif(DEBUG)
 
@@ -23,6 +28,11 @@ set(GENERAL_INCLUDE_DIRS ${INCLUDE_DIRS} PARENT_SCOPE)
 project(IMPERATIVE_MODEL)
 
 if (DEBUG)
+    set(CMAKE_C_STANDARD 99)
+    set(CMAKE_CXX_STANDARD 17)
+    set(CMAKE_C_FLAGS "-g -O0 -Wall -Wextra -Werror -Wpedantic -fprofile-arcs -ftest-coverage -Wlogical-op -Wredundant-decls -Wsign-conversion -Wcast-align -Wcast-qual -Wconversion -Wduplicated-branches -Wduplicated-cond -Wfloat-equal")
+    set(CMAKE_CXX_FLAGS "-g -O0 -Wall -Wextra -Werror -Wpedantic -fprofile-arcs -ftest-coverage -Wlogical-op -Wredundant-decls -Wsign-conversion -Wcast-align -Wcast-qual -Wconversion -Wduplicated-branches -Wduplicated-cond -Wfloat-equal")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -coverage -lgcov")
     add_definitions("-fprofile-arcs -ftest-coverage -fPIC -O0")
 endif(DEBUG)
 
