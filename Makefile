@@ -49,6 +49,7 @@ test_general:
 
 coverage_tests_general:
 	./run_build.sh
+	./run_build.sh
 	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 	${TARGET_TEST_GENERAL}
 	./run_coverage.sh ${GTEST_GENERAL_COVERAGE} ${TARGET_COVERAGE}
@@ -65,8 +66,8 @@ test_imperative:
 
 coverage_tests_imperative:
 	./run_build.sh
+	./run_build.sh
 	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
-	${TARGET_TEST_GENERAL}
 	${TARGET_TEST_IMPERATIVE}
 	./run_coverage.sh ${GTEST_IMPERATIVE_COVERAGE} ${TARGET_COVERAGE}
 
@@ -74,3 +75,6 @@ memtest_imperative:
 	./run_build.sh
 	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 	./run_memtest.sh ${TARGET_TEST_IMPERATIVE}
+
+1coverage_tests_general:
+	./run_coverage.sh ${GTEST_GENERAL_COVERAGE} ${TARGET_COVERAGE}

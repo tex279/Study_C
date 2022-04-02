@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "load_database.h"
 #include "database_functional.h"
 
 #define NEEDED_COUNT_ARG 2

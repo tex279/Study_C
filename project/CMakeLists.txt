@@ -1,13 +1,12 @@
 cmake_minimum_required(VERSION 3.14)
-project(GENERAL)
 
 if (DEBUG)
     set(CMAKE_C_STANDARD 99)
-    set(CMAKE_CXX_STANDARD 17)
-    set(CMAKE_C_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage -fPIC  -Wall -Wextra -Werror -Wpedantic -fprofile-arcs -ftest-coverage -Wlogical-op -Wredundant-decls -Wsign-conversion -Wcast-align -Wcast-qual -Wconversion -Wduplicated-branches -Wduplicated-cond -Wfloat-equal")
-    set(CMAKE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage -fPIC  -Wall -Wextra -Werror -Wpedantic -fprofile-arcs -ftest-coverage -Wlogical-op -Wredundant-decls -Wsign-conversion -Wcast-align -Wcast-qual -Wconversion -Wduplicated-branches -Wduplicated-cond -Wfloat-equal")
+    set(CMAKE_C_FLAGS "-g -fprofile-arcs -ftest-coverage -fPIC -O0 -fPIC  -Wall -Wextra -Werror -Wpedantic")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -coverage -lgcov")
 endif(DEBUG)
+
+project(GENERAL)
 
 file(GLOB SOURCES general/src/utils.c
         general/src/format_record_impl.c
@@ -25,15 +24,6 @@ set(GENERAL_LIB_INCLUDE_DIRS ${INCLUDE_DIRS} PARENT_SCOPE)
 
 
 project(IMPERATIVE_MODEL)
-
-if (DEBUG)
-    set(CMAKE_C_STANDARD 99)
-    set(CMAKE_CXX_STANDARD 17)
-    set(CMAKE_C_FLAGS "-g -O0 -Wall -Wextra -Werror -Wpedantic -fprofile-arcs -ftest-coverage -Wlogical-op -Wredundant-decls -Wsign-conversion -Wcast-align -Wcast-qual -Wconversion -Wduplicated-branches -Wduplicated-cond -Wfloat-equal")
-    set(CMAKE_CXX_FLAGS "-g -O0 -Wall -Wextra -Werror -Wpedantic -fprofile-arcs -ftest-coverage -Wlogical-op -Wredundant-decls -Wsign-conversion -Wcast-align -Wcast-qual -Wconversion -Wduplicated-branches -Wduplicated-cond -Wfloat-equal")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -coverage -lgcov")
-    add_definitions("-fprofile-arcs -ftest-coverage -fPIC -O0")
-endif(DEBUG)
 
 file(GLOB SOURCES pattern/imperative_model/src/database_functional_impl.c
         pattern/imperative_model/src/matrix.c)
