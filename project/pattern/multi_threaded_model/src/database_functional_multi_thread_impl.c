@@ -104,11 +104,6 @@ int get_report_salary_ml(record_t **begin, const size_t end, size_t **sum_salary
 }
 
 void *get_interval_report_pos(void *ptr) {
-    if (pthread_detach(pthread_self())) {
-        fprintf(stderr, "error detach\n");
-        return NULL;
-    }
-
     report_thr_args *args = (report_thr_args *)ptr;
 
     if (get_report_salary_ml(args->begin, args->end, args->sum_salary) < 0) {
@@ -122,7 +117,12 @@ void *get_interval_report_pos(void *ptr) {
 
     free(args);
 
-    pthread_exit(0);
+    if (pthread_detach(pthread_self())) {
+        fprintf(stderr, "error detach\n");
+        return NULL;
+    }
+
+    return NULL;
 }
 
 /*size_t shift_pos(const size_t step, const size_t begin, const size_t iter, const size_t *set) {
@@ -143,9 +143,6 @@ int get_average_salary_report_ml(const database_t *db) {
 
     //  size_t numCPU = sysconf(_SC_NPROCESSORS_ONLN);
     //  fprintf(stdout, "%zu\n", numCPU);
-
-    pthread_attr_t attr;
-    pthread_attr_init(&attr);
 
     for (size_t i = 0; i < db->number_positions; ++i) {
         fprintf(stdout, "%zu ", count_workers[i]);
@@ -169,7 +166,7 @@ int get_average_salary_report_ml(const database_t *db) {
 
         pthread_t thr;
 
-        if (pthread_create(&thr, &attr, get_interval_report_pos, (void *)arg)) {
+        if (pthread_create(&thr, NULL, get_interval_report_pos, (void *)arg)) {
             fprintf(stderr, "create thread\n");
             return ERR_CREATE_THREAD;
         }
