@@ -24,27 +24,28 @@ int main(int argc, const char **argv) {
         return ERR_INPUT;
     }
 
-    database_t *db = create_database();
+    char* end = NULL;
+    long sort = strtol(argv[1], &end, 0);
+    if (*end != '\0') {
+        fprintf(stderr, "incorrect input type work\n");
+        return ERR_INPUT;
+    }
 
-    const char *path_to_db = argv[1];
+    const char *path_to_db = argv[2];
+
+    database_t *db = create_database();
 
     if (load_database(path_to_db, db) < 0) {
         fprintf(stderr, "error load_data\n");
         return ERR_LOAD_DATA;
     }
 
-    char* end = NULL;
-    long sort = strtol(argv[2], &end, 0);
-    if (*end != '\0') {
-        fprintf(stderr, "incorrect input type work\n");
-        return ERR_INPUT;
-    }
-
-    const char *path_to_out = argv[3];
-
-    if (sort) {
+    if (sort == NEEDED_SORT) {
         sort_set_record(db->set_records, db->number_records, position_rule_less);
-        print_set_record(path_to_out, db);
+
+        const char *path_to_sorted = argv[3];
+
+        print_set_record(path_to_sorted, db);
     }
 
     long type_work = strtol(argv[4], &end, 0);

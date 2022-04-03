@@ -41,12 +41,12 @@ generate:
 launch_imp:
 	./run_build.sh
 	mkdir -p report
-	./build/HW-2 ${NEW_DATABASE} 1 ${SORTED_DATABASE} 1
+	./build/HW-2 1 ${NEW_DATABASE} ${SORTED_DATABASE} 1
 
 launch_multi:
 	./run_build.sh
 	mkdir -p report
-	./build/HW-2 ${NEW_DATABASE} 1 ${SORTED_DATABASE} 2
+	./build/HW-2 1 ${NEW_DATABASE} ${SORTED_DATABASE} 2
 
 
 
