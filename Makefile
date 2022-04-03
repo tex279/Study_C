@@ -71,21 +71,21 @@ memtest_general:
 
 test_imperative:
 	./run_build.sh
-	mkdir -p report
+	mkdir -p report_imp
 	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 	${TARGET_TEST_IMPERATIVE}
 
 coverage_tests_imperative:
 	./run_build.sh
 	./run_build.sh
-	mkdir -p report
+	mkdir -p report_imp
 	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 	${TARGET_TEST_IMPERATIVE}
 	./run_coverage.sh ${GTEST_IMPERATIVE_COVERAGE} ${TARGET_COVERAGE}
 
 memtest_imperative:
 	./run_build.sh
-	mkdir -p report
+	mkdir -p report_imp
 	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 	./run_memtest.sh ${TARGET_TEST_IMPERATIVE}
 
@@ -93,20 +93,20 @@ memtest_imperative:
 
 test_multi:
 	./run_build.sh
-	mkdir -p report
+	mkdir -p report_multi
 	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 	${TARGET_TEST_MULTI}
 
 coverage_tests_multi:
 	./run_build.sh
 	./run_build.sh
-	mkdir -p report
+	mkdir -p report_multi
 	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 	${TARGET_TEST_MULTI}
 	./run_coverage.sh ${GTEST_MULTI_COVERAGE} ${TARGET_COVERAGE}
 
 memtest_multi:
 	./run_build.sh
-	mkdir -p report
+	mkdir -p report_multi
 	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 	./run_memtest.sh ${TARGET_TEST_MULTI}

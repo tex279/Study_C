@@ -10,7 +10,7 @@
 #define MAX_AGE 100
 #define MIN_AGE 18
 
-const char add_to_path[] = {"report/"};
+const char add_to_path[] = {"report_imp/"};
 const char format[] = {".txt"};
 
 #define BUF_STR_PATH 32

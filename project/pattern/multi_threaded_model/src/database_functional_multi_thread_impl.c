@@ -14,7 +14,7 @@
 
 #define BUF_STR_PATH 62
 
-const char add_to_path_dur[] = {"report/"};
+const char add_to_path_dur[] = {"report_multi/"};
 const char format_res[] = {".txt"};
 
 #define AGE_INTERVAL 82
@@ -74,7 +74,7 @@ int print_report_position_ml(const char *target, const size_t *distribution) {
 int get_report_salary_ml(record_t **begin, const size_t end, size_t **sum_salary) {
     char *cur_position = (begin[0])->position;
 
-    char path_out[BUF_STR_PATH];
+    //char path_out[BUF_STR_PATH];
 
     size_t i = 0;
     size_t k = 0;
@@ -86,9 +86,9 @@ int get_report_salary_ml(record_t **begin, const size_t end, size_t **sum_salary
 
             ++k;
         } else {
-            snprintf(path_out, BUF_STR_PATH, "%s%s%s", add_to_path_dur, cur_position, format_res);
+            //  snprintf(path_out, BUF_STR_PATH, "%s%s%s", add_to_path_dur, cur_position, format_res);
 
-            print_report_position_ml(path_out, sum_salary[i]);
+            print_report_position_ml(cur_position, sum_salary[i]);
 
             cur_position = (begin[k])->position;
 
@@ -96,9 +96,9 @@ int get_report_salary_ml(record_t **begin, const size_t end, size_t **sum_salary
         }
     }
 
-    snprintf(path_out, BUF_STR_PATH, "%s%s%s", add_to_path_dur, cur_position, format_res);
+    //  snprintf(path_out, BUF_STR_PATH, "%s%s%s", add_to_path_dur, cur_position, format_res);
 
-    print_report_position_ml(path_out, sum_salary[i]);
+    print_report_position_ml(cur_position, sum_salary[i]);
 
     return SUCCESS;
 }
@@ -141,16 +141,22 @@ int get_average_salary_report_ml(const database_t *db) {
         return ERR_ACOC;
     }
 
-    //  size_t numCPU = sysconf(_SC_NPROCESSORS_ONLN);
-    //  fprintf(stdout, "%zu\n", numCPU);
+    size_t numCPU = sysconf(_SC_NPROCESSORS_ONLN);
 
-    for (size_t i = 0; i < db->number_positions; ++i) {
+
+    /*for (size_t i = 0; i < db->number_positions; ++i) {
         fprintf(stdout, "%zu ", count_workers[i]);
     }
-    fprintf(stdout, "\n");
+    fprintf(stdout, "\n");*/
+
+    size_t partition = 0;
+
+    if (db->number_positions < numCPU) {
+        partition = db->number_positions;
+    }
 
     size_t cur_begin = 0;
-    for (size_t i = 0; i < db->number_positions; ++i) {
+    for (size_t i = 0; i < partition; ++i) {
         report_thr_args *arg = (report_thr_args *)malloc(sizeof(report_thr_args));
 
         fprintf(stdout, "%zu %zu\n", cur_begin, count_workers[i]);

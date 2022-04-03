@@ -8,4 +8,5 @@ test.log
 coverage.info
 generated_database.txt
 sorted_database.txt
-report/
+report_multi/
+report_imp/
