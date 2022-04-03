@@ -32,11 +32,9 @@ bool position_rule_less(const record_t *r_left, const record_t *r_right) {
 }
 
 void swap_record(record_t *r_left, record_t *r_right) {
-    record_t tmp;
-
-    assignment_record(&tmp, r_left);
-    assignment_record(r_left, r_right);
-    assignment_record(r_right, &tmp);
+    record_t tmp = *r_left;
+    *r_left = *r_right;
+    *r_right = tmp;
 }
 
 int sort_set_record(record_t **record, const size_t number_records, const sort_rule_t rule) {

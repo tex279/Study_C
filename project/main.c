@@ -5,7 +5,7 @@
 
 #include "database_functional_multu_thread.h"
 
-#define NEEDED_COUNT_ARG 2
+#define NEEDED_COUNT_ARG 3
 
 #define ERR_INPUT -1
 #define ERR_WRONG_TYPE_WORK -2

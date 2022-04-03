@@ -35,9 +35,6 @@ TEST(TEST_RECORD, functional) {
     EXPECT_TRUE(strcmp(surname_2, tmp_2->surname) == 0);
     EXPECT_TRUE(exp_2 == tmp_2->experience);
 
-    EXPECT_TRUE(print_record(stdout, tmp_1) == SUCCESS);
-    EXPECT_TRUE(print_record(stdout, tmp_2) == SUCCESS);
-
     EXPECT_TRUE(free_record(tmp_1) == SUCCESS);
     EXPECT_TRUE(free_record(tmp_2) == SUCCESS);
 

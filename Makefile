@@ -2,7 +2,7 @@
 
 all: clean check build generate test_general coverage_tests_general memtest_general test_imperative coverage_tests_imperative memtest_imperative test_multi coverage_tests_multi memtest_multi
 
-NUMBER_OF_RECORDS  = 1000
+NUMBER_OF_RECORDS  = 100
 GENERATOR = ./build/generator_data/generator
 SETS_FOR_GEN = generator_data/sets/female_name.txt generator_data/sets/male_name.txt generator_data/sets/surname.txt generator_data/sets/female_surname.txt generator_data/sets/male_surname.txt generator_data/sets/position.txt
 
@@ -37,16 +37,6 @@ rebuild: clean build
 generate:
 	./run_build.sh
 	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
-
-launch_imp:
-	./run_build.sh
-	mkdir -p report
-	./build/HW-2 1 ${NEW_DATABASE} ${SORTED_DATABASE} 1
-
-launch_multi:
-	./run_build.sh
-	mkdir -p report
-	./build/HW-2 1 ${NEW_DATABASE} ${SORTED_DATABASE} 2
 
 
 
@@ -110,3 +100,21 @@ memtest_multi:
 	mkdir -p report_multi
 	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 	./run_memtest.sh ${TARGET_TEST_MULTI}
+
+
+
+launch_imp:
+	./run_build.sh
+	mkdir -p report_imp
+	./build/HW-2 1 ${NEW_DATABASE} ${SORTED_DATABASE} 1
+
+launch_multi:
+	./run_build.sh
+	mkdir -p report_multi
+	./build/HW-2 1 ${NEW_DATABASE} ${SORTED_DATABASE} 2
+
+get_time_imperative:
+	time (./build/HW-2 0 ${SORTED_DATABASE} ${SORTED_DATABASE} 1)
+
+get_time_multi:
+	time (./build/HW-2 0 ${SORTED_DATABASE} ${SORTED_DATABASE} 2)
