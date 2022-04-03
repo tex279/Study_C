@@ -10,9 +10,10 @@
 #define MAX_AGE 100
 #define MIN_AGE 18
 
-char add_to_path[] = {"report/"};
-
 #define BUF_STR_PATH 32
+
+const char add_to_path_dur[] = {"report/"};
+const char format_res[] = {".txt"};
 
 #define AGE_INTERVAL 82
 
@@ -86,7 +87,7 @@ int get_report_salary_ml(record_t **begin, const size_t count_out) {
 
         char path_out[BUF_STR_PATH];
 
-        snprintf(path_out, sizeof path_out, "%s%s", add_to_path, cur_position);
+        snprintf(path_out, sizeof path_out, "%s%s%s", add_to_path_dur, cur_position, format_res);
 
         print_report_position_ml(path_out, sum_salary[i]);
 

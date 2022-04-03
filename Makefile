@@ -22,7 +22,7 @@ GTEST_IMPERATIVE_COVERAGE = build/project/CMakeFiles/IMPERATIVE_MODEL.dir/patter
 #2 - multi_threaded mod
 
 clean:
-	rm -rf build coverage-report valgrind.log test.log coverage.info generated_database.txt report.txt sorted_database.txt
+	rm -rf build coverage-report valgrind.log test.log coverage.info generated_database.txt report.txt sorted_database.txt report
 
 check:
 	./run_linters.sh
@@ -32,17 +32,19 @@ build:
 
 rebuild: clean build
 
+generate:
+	./run_build.sh
+	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
+
 launch_imp:
+	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 	mkdir -p report
 	./build/HW-2 1 ${NEW_DATABASE} ${SORTED_DATABASE} ${REPORT}
 
 launch_multi:
+	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 	mkdir -p report
 	./build/HW-2 2 ${NEW_DATABASE} ${SORTED_DATABASE} ${REPORT}
-
-generate:
-	./run_build.sh
-	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 
 test_general:
 	./run_build.sh
