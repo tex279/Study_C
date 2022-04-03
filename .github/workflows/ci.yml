@@ -77,27 +77,27 @@ jobs:
         if: failure()
         with:
           path: valgrind.log
-  test_multu:
+  test_multi:
     runs-on: ubuntu-latest
     container: andeo1812/gcc_check_gtest
     needs: [ generate ]
     steps:
       - uses: actions/checkout@v2
-      - run: make test_multu
-  coverage_tests_multu:
+      - run: make test_multi
+  coverage_tests_multi:
     runs-on: ubuntu-latest
     container: andeo1812/gcc_check_gtest
-    needs: [ test_multu ]
+    needs: [ test_multi ]
     steps:
       - uses: actions/checkout@v2
-      - run: make coverage_tests_multu;
-  memtest_multu:
+      - run: make coverage_tests_multi;
+  memtest_multi:
     runs-on: ubuntu-latest
     container: andeo1812/gcc_check_gtest
-    needs: [ coverage_tests_multu ]
+    needs: [ coverage_tests_multi ]
     steps:
       - uses: actions/checkout@v2
-      - run: make memtest_multu
+      - run: make memtest_multi
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         if: failure()
