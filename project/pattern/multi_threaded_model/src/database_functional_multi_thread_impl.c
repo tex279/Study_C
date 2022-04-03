@@ -104,7 +104,10 @@ int get_report_salary_ml(record_t **begin, const size_t end, size_t **sum_salary
 }
 
 void *get_interval_report_pos(void *ptr) {
-    pthread_detach(pthread_self());
+    if (pthread_detach(pthread_self())) {
+        fprintf(stderr, "error detach\n");
+        return NULL;
+    }
 
     report_thr_args *args = (report_thr_args *)ptr;
 
