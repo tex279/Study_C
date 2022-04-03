@@ -87,7 +87,7 @@ jobs:
   coverage_tests_multu:
     runs-on: ubuntu-latest
     container: andeo1812/gcc_check_gtest
-    needs: [ test_muiltu ]
+    needs: [ test_multu ]
     steps:
       - uses: actions/checkout@v2
       - run: make coverage_tests_multu;
