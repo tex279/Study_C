@@ -12,6 +12,9 @@
 #define ERR_LOAD_DATA -3
 #define ERR_GET_REPORT -4
 
+#define NEEDED_SORT 1
+#define DONT_NEEDED_SORT 2
+
 #define IMPERATIVE_MODEL 1
 #define MULTI_THREADED_MODEL 2
 
@@ -23,17 +26,28 @@ int main(int argc, const char **argv) {
 
     database_t *db = create_database();
 
-    if (load_database(argv[2], db) < 0) {
+    const char *path_to_db = argv[1];
+
+    if (load_database(path_to_db, db) < 0) {
         fprintf(stderr, "error load_data\n");
         return ERR_LOAD_DATA;
     }
 
-    sort_set_record(db->set_records, db->number_records, position_rule_less);
-
-    print_set_record(argv[3], db->set_records, db->number_records);
-
     char* end = NULL;
-    long type_work = strtol(argv[1], &end, 0);
+    long sort = strtol(argv[2], &end, 0);
+    if (*end != '\0') {
+        fprintf(stderr, "incorrect input type work\n");
+        return ERR_INPUT;
+    }
+
+    const char *path_to_out = argv[3];
+
+    if (sort) {
+        sort_set_record(db->set_records, db->number_records, position_rule_less);
+        print_set_record(path_to_out, db);
+    }
+
+    long type_work = strtol(argv[4], &end, 0);
     if (*end != '\0') {
         fprintf(stderr, "incorrect input type work\n");
         return ERR_INPUT;

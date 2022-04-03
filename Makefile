@@ -2,7 +2,7 @@
 
 all: clean check build generate test_general coverage_tests_general memtest_general test_imperative coverage_tests_imperative memtest_imperative test_multi coverage_tests_multi memtest_multi
 
-NUMBER_OF_RECORDS  = 40
+NUMBER_OF_RECORDS  = 1000
 GENERATOR = ./build/generator_data/generator
 SETS_FOR_GEN = generator_data/sets/female_name.txt generator_data/sets/male_name.txt generator_data/sets/surname.txt generator_data/sets/female_surname.txt generator_data/sets/male_surname.txt generator_data/sets/position.txt
 
@@ -41,12 +41,12 @@ generate:
 launch_imp:
 	./run_build.sh
 	mkdir -p report
-	./build/HW-2 1 ${NEW_DATABASE} ${SORTED_DATABASE} ${REPORT}
+	./build/HW-2 ${NEW_DATABASE} 1 ${SORTED_DATABASE} 1
 
 launch_multi:
 	./run_build.sh
 	mkdir -p report
-	./build/HW-2 2 ${NEW_DATABASE} ${SORTED_DATABASE} ${REPORT}
+	./build/HW-2 ${NEW_DATABASE} 1 ${SORTED_DATABASE} 2
 
 
 

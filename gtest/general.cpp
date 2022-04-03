@@ -61,7 +61,7 @@ TEST(TEST_DATABASE, functional) {
 
     EXPECT_TRUE(sort_set_record(db->set_records, db->number_records, position_rule_less) == SUCCESS);
 
-    EXPECT_TRUE(print_set_record(path_output_sorted_db, db->set_records, db->number_records) == SUCCESS);
+    EXPECT_TRUE(print_set_record(path_output_sorted_db, db) == SUCCESS);
 
     EXPECT_TRUE(free_database(db) == SUCCESS);
 }

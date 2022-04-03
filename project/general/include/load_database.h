@@ -56,8 +56,6 @@ int assignment_record(record_t *target, const record_t *source);
 
 int print_record(FILE* target, const record_t *source);
 
-int print_set_record(const char *path_output, record_t **source, const size_t number_records);
-
 int free_record(record_t *record);
 
 int free_set_record(record_t **record, const size_t number_records);
@@ -82,5 +80,7 @@ typedef struct {
 database_t *create_database();
 
 int load_database(const char *source, database_t *db);
+
+int print_set_record(const char *path_output, const database_t *db);
 
 int free_database(database_t *db);

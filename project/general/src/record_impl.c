@@ -204,7 +204,7 @@ int print_record(FILE* target, const record_t *source) {
     return SUCCESS;
 }
 
-int print_set_record(const char *path_output, record_t **source, size_t number_records) {
+int print_set_record(const char *path_output, const database_t *db) {
     FILE *target = stdout;
 
     if (path_output) {
@@ -215,8 +215,13 @@ int print_set_record(const char *path_output, record_t **source, size_t number_r
         }
     }
 
+    size_t number_records = db->number_records;
+
+    fprintf(target, "%zu\n", number_records);
+    fprintf(target, "%zu\n", db->number_positions);
+
     for (size_t i = 0; i < number_records; ++i) {
-        print_record(target, source[i]);
+        print_record(target, db->set_records[i]);
     }
 
     if (path_output) {
