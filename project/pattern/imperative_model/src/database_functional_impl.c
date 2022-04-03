@@ -50,8 +50,6 @@ int get_report_salary(record_t **begin, const size_t count_out_pos, const size_t
 
     char *cur_position = (begin[0])->position;
 
-    fprintf(stdout, "%zu %zu\n", count_out_pos, end);
-
     char path_out[BUF_STR_PATH];
 
     size_t i = 0;

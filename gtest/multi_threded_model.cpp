@@ -4,7 +4,7 @@ extern "C" {
     #include "database_functional_multu_thread.h"
 }
 
-TEST(TEST_IMPERATIVE_BUSNESS_LOGIC, functional) {
+TEST(TEST_MULTI_BUSNESS_LOGIC, functional) {
     char path_to_database[] = {"generated_database.txt"};
 
     database_t *db = create_database();

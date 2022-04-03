@@ -20,7 +20,7 @@ typedef struct {
 
 void *get_interval_report_pos(void *ptr);
 
-size_t shift_pos(const size_t step, const size_t begin, const size_t iter, size_t *set);
+//size_t shift_pos(const size_t step, const size_t begin, const size_t iter, const size_t *set);
 
 int get_average_salary_report_ml(const database_t *db);
 

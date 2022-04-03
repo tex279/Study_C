@@ -30,7 +30,7 @@ size_t *get_count_workers_ml(const database_t *db) {
 
     size_t *distribution  = calloc(db->number_positions, sizeof(size_t));
     if (!distribution) {
-        fprintf(stdout, "memory allocation error\n");
+        fprintf(stderr, "memory allocation error for workers\n");
         return NULL;
     }
 
@@ -53,7 +53,7 @@ size_t *get_count_workers_ml(const database_t *db) {
 int print_report_position_ml(const char *target, const size_t *distribution) {
     FILE *tg = fopen(target, "w+");
     if (!tg) {
-        fprintf(stderr, "error open file for write\n");
+        fprintf(stderr, "error open file for write for position\n");
         return ERR_OPEN_FILE;
     }
 
@@ -64,7 +64,7 @@ int print_report_position_ml(const char *target, const size_t *distribution) {
     }
 
     if (fclose(tg)) {
-        fprintf(stderr, "failed close file\n");
+        fprintf(stderr, "failed close file for position\n");
         return ERR_CLOSE_FILE;
     }
 
@@ -78,8 +78,6 @@ int get_report_salary_ml(record_t **begin, const size_t count_out_pos, const siz
     }
 
     char *cur_position = (begin[0])->position;
-
-    fprintf(stdout, "%zu %zu\n", count_out_pos, end);
 
     char path_out[BUF_STR_PATH];
 
@@ -118,14 +116,14 @@ void *get_interval_report_pos(void *ptr) {
         return NULL;
     }
 
-    fprintf(stdout,"HELLO\n");
+    //  fprintf(stdout,"HELLO\n");
 
-    free(args);
+    pthread_detach(pthread_self());
 
     return NULL;
 }
 
-size_t shift_pos(const size_t step, const size_t begin, const size_t iter, size_t *set) {
+/*size_t shift_pos(const size_t step, const size_t begin, const size_t iter, const size_t *set) {
     size_t res = begin;
 
     for (size_t i = 0; i < step; ++i) {
@@ -133,7 +131,7 @@ size_t shift_pos(const size_t step, const size_t begin, const size_t iter, size_
     }
 
     return res;
-}
+}*/
 
 int get_average_salary_report_ml(const database_t *db) {
     size_t *count_workers = get_count_workers_ml(db);
@@ -152,36 +150,20 @@ int get_average_salary_report_ml(const database_t *db) {
 
     size_t cur_begin = 0;
     for (size_t i = 0; i < db->number_positions; ++i) {
-        report_thr_args *arg = (report_thr_args *)malloc(sizeof(report_thr_args));
-        if (!arg) {
-            fprintf(stderr, "memory allocation error\n");
-            return ERR_ACOC;
-        }
+        report_thr_args arg;
 
-        arg->begin = &((db->set_records)[cur_begin]);
-        arg->count_pos = 1;
-        arg->end = count_workers[i];
+        arg.begin = &((db->set_records)[cur_begin]);
+        arg.count_pos = 1;
+        arg.end = count_workers[i];
 
         pthread_t thr;
 
-        pthread_attr_t tattr;
-
-        if (pthread_attr_init(&tattr)) {
+        if (pthread_create(&thr, NULL, get_interval_report_pos, (void *)&arg)) {
             fprintf(stderr, "create thread\n");
             return ERR_CREATE_THREAD;
         }
 
-        if (pthread_attr_setdetachstate(&tattr, PTHREAD_CREATE_DETACHED)) {
-            fprintf(stderr, "create thread\n");
-            return ERR_CREATE_THREAD;
-        }
-
-        if (pthread_create(&thr, &tattr, get_interval_report_pos, (void *)arg)) {
-            fprintf(stderr, "create thread\n");
-            return ERR_CREATE_THREAD;
-        }
-
-        //  fprintf(stdout, "%zu %zu\n", cur_begin, arg->end);
+        fprintf(stdout, "%zu %zu\n", cur_begin, arg.end);
 
         cur_begin += count_workers[i];
     }

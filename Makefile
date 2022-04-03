@@ -2,7 +2,7 @@
 
 all: clean check build generate test_general coverage_tests_general memtest_general test_imperative coverage_tests_imperative memtest_imperative test_multi coverage_tests_multi memtest_multi
 
-NUMBER_OF_RECORDS  = 40
+NUMBER_OF_RECORDS  = 600
 GENERATOR = ./build/generator_data/generator
 SETS_FOR_GEN = generator_data/sets/female_name.txt generator_data/sets/male_name.txt generator_data/sets/surname.txt generator_data/sets/female_surname.txt generator_data/sets/male_surname.txt generator_data/sets/position.txt
 
@@ -71,18 +71,21 @@ memtest_general:
 
 test_imperative:
 	./run_build.sh
+	mkdir -p report
 	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 	${TARGET_TEST_IMPERATIVE}
 
 coverage_tests_imperative:
 	./run_build.sh
 	./run_build.sh
+	mkdir -p report
 	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 	${TARGET_TEST_IMPERATIVE}
 	./run_coverage.sh ${GTEST_IMPERATIVE_COVERAGE} ${TARGET_COVERAGE}
 
 memtest_imperative:
 	./run_build.sh
+	mkdir -p report
 	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 	./run_memtest.sh ${TARGET_TEST_IMPERATIVE}
 
@@ -90,17 +93,20 @@ memtest_imperative:
 
 test_multi:
 	./run_build.sh
+	mkdir -p report
 	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 	${TARGET_TEST_MULTI}
 
 coverage_tests_multi:
 	./run_build.sh
 	./run_build.sh
+	mkdir -p report
 	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 	${TARGET_TEST_MULTI}
 	./run_coverage.sh ${GTEST_MULTI_COVERAGE} ${TARGET_COVERAGE}
 
 memtest_multi:
 	./run_build.sh
+	mkdir -p report
 	${GENERATOR} ${NUMBER_OF_RECORDS} ${NEW_DATABASE} ${SETS_FOR_GEN}
 	./run_memtest.sh ${TARGET_TEST_MULTI}
