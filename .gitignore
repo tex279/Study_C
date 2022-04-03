@@ -7,5 +7,5 @@ valgrind.log
 test.log
 coverage.info
 generated_database.txt
-report.txt
 sorted_database.txt
+report/

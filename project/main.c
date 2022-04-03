@@ -3,6 +3,8 @@
 
 #include "database_functional.h"
 
+#include "database_functional_multu_thread.h"
+
 #define NEEDED_COUNT_ARG 2
 
 #define ERR_INPUT -1
@@ -48,6 +50,12 @@ int main(int argc, const char **argv) {
             break;
         }
         case MULTI_THREADED_MODEL: {
+            if (get_average_salary_report_ml(db) < 0) {
+                fprintf(stderr, "error get average salary report\n");
+                free_database(db);
+                return ERR_GET_REPORT;
+            }
+
             break;
         }
         default: {

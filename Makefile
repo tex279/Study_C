@@ -22,7 +22,6 @@ TAR = build/gtest/gtest_general
 TAR2 = build/gtest/gtest_imperative
 #1 - imperative mod
 #2 - multi_threaded mod
-TYPE_WORK = 1
 
 clean:
 	rm -rf build coverage-report valgrind.log test.log coverage.info generated_database.txt report.txt sorted_database.txt
@@ -36,7 +35,12 @@ build:
 rebuild: clean build
 
 launch_imp:
-	./build/HW-2 ${TYPE_WORK} ${NEW_DATABASE} ${SORTED_DATABASE} ${REPORT}
+	mkdir -p report
+	./build/HW-2 1 ${NEW_DATABASE} ${SORTED_DATABASE} ${REPORT}
+
+launch_multi:
+	mkdir -p report
+	./build/HW-2 2 ${NEW_DATABASE} ${SORTED_DATABASE} ${REPORT}
 
 generate:
 	./run_build.sh
