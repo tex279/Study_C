@@ -74,21 +74,21 @@ int print_report_position_ml(const char *target, const size_t *distribution) {
 int get_report_salary_ml(record_t **begin, const size_t end, size_t **sum_salary) {
     char *cur_position = (begin[0])->position;
 
-    //char path_out[BUF_STR_PATH];
+    char path_out[BUF_STR_PATH];
 
     size_t i = 0;
     size_t k = 0;
     while (k < end) {
-        //  fprintf(stdout, "%s\n", (begin)[0]->position);
+        fprintf(stdout, "%s\n", (begin)[0]->position);
 
         if (strcmp((begin)[k]->position, cur_position) == 0) {
             sum_salary[i][(begin)[k]->experience] += (begin)[k]->salary;
 
             ++k;
         } else {
-            //  snprintf(path_out, BUF_STR_PATH, "%s%s%s", add_to_path_dur, cur_position, format_res);
+            snprintf(path_out, BUF_STR_PATH, "%s%s%s", add_to_path_dur, cur_position, format_res);
 
-            print_report_position_ml(cur_position, sum_salary[i]);
+            print_report_position_ml(path_out, sum_salary[i]);
 
             cur_position = (begin[k])->position;
 
@@ -96,9 +96,9 @@ int get_report_salary_ml(record_t **begin, const size_t end, size_t **sum_salary
         }
     }
 
-    //  snprintf(path_out, BUF_STR_PATH, "%s%s%s", add_to_path_dur, cur_position, format_res);
+    snprintf(path_out, BUF_STR_PATH, "%s%s%s", add_to_path_dur, cur_position, format_res);
 
-    print_report_position_ml(cur_position, sum_salary[i]);
+    print_report_position_ml(path_out, sum_salary[i]);
 
     return SUCCESS;
 }
