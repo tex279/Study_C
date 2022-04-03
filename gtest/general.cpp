@@ -24,14 +24,14 @@ TEST(TEST_RECORD, functional) {
 
     format_t *format = create_set_format();
 
-    record_t *tmp_1 = NULL;
-    record_t *tmp_2 = NULL;
+    record_t *tmp_1 = (record_t*)calloc(1, sizeof(record_t));
+    record_t *tmp_2 = (record_t*)calloc(1, sizeof(record_t));
 
-    EXPECT_TRUE(get_record(record_1, &tmp_1, format) > 0);
+    EXPECT_TRUE(get_record(record_1, tmp_1, format) > 0);
     EXPECT_TRUE(strcmp(surname_1, tmp_1->surname) == 0);
     EXPECT_TRUE(exp_1 == tmp_1->experience);
 
-    EXPECT_TRUE(get_record(record_2, &tmp_2, format) > 0);
+    EXPECT_TRUE(get_record(record_2, tmp_2, format) > 0);
     EXPECT_TRUE(strcmp(surname_2, tmp_2->surname) == 0);
     EXPECT_TRUE(exp_2 == tmp_2->experience);
 

@@ -61,8 +61,7 @@ int load_database(const char *source, database_t *db) {
     for (size_t i = 0; i < numb_records; ++i) {
         fgets(global, length_buf, target);
 
-        record_t *tmp = NULL;
-        if (get_record(global, &tmp, set_format) < 0) {
+        if (get_record(global, db->set_records[i], set_format) < 0) {
             fprintf(stderr, "error get records\n");
 
             fclose(target);
@@ -70,10 +69,6 @@ int load_database(const char *source, database_t *db) {
             free_set_record(db->set_records, i);
             return ERR_GET_RECORD;
         }
-
-        assignment_record(db->set_records[i], tmp);
-
-        free(tmp);
     }
 
     free_set_format(set_format);

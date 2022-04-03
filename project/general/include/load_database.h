@@ -50,9 +50,9 @@ record_t *create_record();
 
 record_t **create_set_record(const size_t number_records);
 
-int get_record(const char *source, record_t **out, const format_t *format);
+int get_record(const char *source, record_t *out, const format_t *format);
 
-int assignment_record(record_t *target, const record_t *source);
+//  int assignment_record(record_t *target, const record_t *source);
 
 int print_record(FILE* target, const record_t *source);
 
