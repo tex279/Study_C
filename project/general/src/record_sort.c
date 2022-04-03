@@ -5,27 +5,8 @@
 #include "load_database.h"
 
 bool position_rule_less(const record_t *r_left, const record_t *r_right) {
-    size_t length_l = strlen(r_left->position);
-    size_t length_r = strlen(r_right->position);
-
-    size_t length_compare = length_r;
-
-    if (length_l < length_compare) {
-        length_compare = length_l;
-    }
-
-    for (size_t i = 0; i < length_compare; ++i) {
-        if ((r_left->position)[i] > (r_right->position)[i]) {
-            return true;
-        } else {
-            if ((r_left->position)[i] == (r_right->position)[i]) {
-                continue;
-            }
-        }
-
-        if ((r_left->position)[i] < (r_right->position)[i]) {
-            return false;
-        }
+    if (strcmp(r_left->position, r_right->position) > 0) {
+        return true;
     }
 
     return false;
@@ -37,20 +18,50 @@ void swap_record(record_t *r_left, record_t *r_right) {
     *r_right = tmp;
 }
 
-int sort_set_record(record_t **record, const size_t number_records, const sort_rule_t rule) {
-    bool sorted = false;
+void sort_set_record_q(record_t **array, size_t l, size_t r, sort_rule_t rule) {
+    size_t i = l;
+    size_t j = r;
 
-    while (!sorted) {
-        sorted = true;
+    record_t *pp_left = array[l];
+    record_t *pp_right = array[r];
+    record_t *pp_mid = array[(l + r) >> 1];
 
-        for (size_t i = 0; i < number_records - 1; ++i) {
-            if (rule(record[i], record[i + 1])) {
-                swap_record(record[i], record[i + 1]);
+    if (rule(pp_left, pp_right)) {
+        swap_record(pp_left, pp_right);
+    }
 
-                sorted = false;
-            }
+    if (rule(pp_left, pp_mid)) {
+        swap_record(pp_right, pp_mid);
+    }
+
+    record_t *p = pp_right;
+
+    while (i <= j) {
+        while (rule(array[i], p)) {
+            ++i;
+        }
+
+        while (rule(p, array[j])) {
+            --j;
+        }
+
+        if (i <= j) {
+            swap_record(array[i], array[j]);
+
+            ++i;
+            --j;
         }
     }
 
-    return SUCCESS;
+    if (l < j) {
+        sort_set_record_q(array, l, j, rule);
+    }
+
+    if (i < r) {
+        sort_set_record_q(array, i, r, rule);
+    }
+}
+
+void sort_quick_recursive(record_t **array, size_t size, sort_rule_t rule) {
+    sort_set_record_q(array, 0, size - 1, rule);
 }

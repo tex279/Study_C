@@ -41,7 +41,7 @@ int main(int argc, const char **argv) {
     }
 
     if (sort == NEEDED_SORT) {
-        sort_set_record(db->set_records, db->number_records, position_rule_less);
+        sort_quick_recursive(db->set_records, db->number_records, position_rule_less);
 
         const char *path_to_sorted = argv[3];
 

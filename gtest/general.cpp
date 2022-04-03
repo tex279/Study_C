@@ -56,7 +56,7 @@ TEST(TEST_DATABASE, functional) {
 
     EXPECT_TRUE(load_database(path_to_database, db) > 0);
 
-    EXPECT_TRUE(sort_set_record(db->set_records, db->number_records, position_rule_less) == SUCCESS);
+    sort_quick_recursive(db->set_records, db->number_records, position_rule_less);
 
     EXPECT_TRUE(print_set_record(path_output_sorted_db, db) == SUCCESS);
 

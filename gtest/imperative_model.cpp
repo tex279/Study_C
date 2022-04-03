@@ -12,7 +12,7 @@ TEST(TEST_IMPERATIVE_BUSNESS_LOGIC, functional) {
 
     load_database(path_to_database, db);
 
-    sort_set_record(db->set_records, db->number_records, position_rule_less);
+    sort_quick_recursive(db->set_records, db->number_records, position_rule_less);
 
     print_set_record(path_sor_database, db);
 

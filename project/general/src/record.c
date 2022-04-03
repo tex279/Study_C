@@ -46,7 +46,6 @@ int get_record(const char *source, record_t *record, const format_t *format) {
 
     char *end = NULL;
 
-
     char buf_name[L_NAME];
     if (sscanf(&source[indent], format->name, buf_name) != 1) {
         fprintf(stderr, "error get field name\n");
@@ -143,19 +142,6 @@ int get_record(const char *source, record_t *record, const format_t *format) {
 
     return SUCCESS;
 }
-
-
-/*int assignment_record(record_t *target, const record_t *source) {
-    target->name = source->name;
-    target->surname = source->surname;
-    target->position = source->position;
-    target->gender = source->gender;
-    target->age = source->age;
-    target->salary = source->salary;
-    target->experience = source->experience;
-
-    return SUCCESS;
-}*/
 
 int print_record(FILE* target, const record_t *source) {
     fprintf(target, "%s ", source->name);

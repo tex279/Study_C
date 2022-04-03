@@ -52,8 +52,6 @@ record_t **create_set_record(const size_t number_records);
 
 int get_record(const char *source, record_t *out, const format_t *format);
 
-//  int assignment_record(record_t *target, const record_t *source);
-
 int print_record(FILE* target, const record_t *source);
 
 int free_record(record_t *record);
@@ -67,7 +65,9 @@ bool position_rule_less(const record_t *r_left, const record_t *r_right);
 
 void swap_record(record_t *r_left, record_t *r_right);
 
-int sort_set_record(record_t **record, const size_t number_records, const sort_rule_t rule);
+void sort_set_record_q(record_t **array, size_t l, size_t r, sort_rule_t rule);
+
+void sort_quick_recursive(record_t **array, size_t size, sort_rule_t rule);
 
 
 typedef struct {

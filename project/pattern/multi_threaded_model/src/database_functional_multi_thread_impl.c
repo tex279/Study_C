@@ -151,12 +151,6 @@ size_t *get_dynamic_distribution(const size_t res_count, const size_t count_obje
         }
     }
 
-    for (size_t i = 0; i < res_count; ++i) {
-        fprintf(stdout,"%zu ", distribution[i]);
-    }
-
-    fprintf(stdout,"\n");
-
     return distribution;
 }
 
