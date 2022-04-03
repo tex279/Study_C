@@ -1,90 +1,84 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "database_functional.h"
+
 #include "matrix.h"
 
 #define MAX_AGE 100
 #define MIN_AGE 18
 
-size_t **get_distribution(FILE *target, const database_t *db) {
-    size_t number_records = db->number_records;
+char add_to_path[] = {"report/"};
 
-    size_t **distribution  = create_matrix(db->number_positions, MAX_AGE - MIN_AGE);
-    if (!distribution) {
-        fprintf(stderr, "memory allocation error\n");
-        return NULL;
+#define BUF_STR_PATH 32
+
+#define AGE_INTERVAL 82
+
+#define ERR_OPEN_FILE -2
+#define ERR_CLOSE_FILE -3
+#define ERR_GET_REPORT -4
+
+int print_report_position(const char *target, const size_t *distribution) {
+    FILE *tg = fopen(target, "w+");
+    if (!tg) {
+        fprintf(stderr, "error open file for write\n");
+        return ERR_OPEN_FILE;
     }
 
-    char *cur_position = (db->set_records)[0]->position;
-
-    fprintf(target, "Position %s - %d\n", cur_position, 1);
-
-    size_t count_pos = 0;
-    for (size_t i = 0; i < number_records; ++i) {
-        if (strcmp((db->set_records)[i]->position, cur_position) != 0) {
-            ++count_pos;
-
-            cur_position = (db->set_records[i])->position;
-
-            fprintf(target, "Position %s - %zu\n", cur_position, count_pos + 1);
+    for (size_t i = 0; i < AGE_INTERVAL; ++i) {
+        if (distribution[i]) {
+            fprintf(tg, "exp %zu - %zu\n", i, distribution[i] /  i);
         }
-
-        distribution[count_pos][(db->set_records)[i]->experience] += (db->set_records)[i]->salary;
     }
 
-    return distribution;
+    if (fclose(tg)) {
+        fprintf(stderr, "failed close file\n");
+        return ERR_CLOSE_FILE;
+    }
+
+    return SUCCESS;
 }
 
-void print_report_salary(FILE *target, size_t **distribution, const size_t number_pos, const size_t interval_exp) {
-    fprintf(target, "Average salary report for:\n");
-
-    for (size_t i = 0; i < number_pos; ++i) {
-        for (size_t j = 0; j < interval_exp; ++j) {
-            if (distribution[i][j]) {
-                fprintf(target, "position - %zu ", i + 1);
-
-                size_t exp = j;
-
-                if (!j) {
-                    exp = j + 1;
-                }
-
-                fprintf(target, "exp %zu - %zu ", j, distribution[i][j] /  exp);
-
-                fprintf(target, "\n");
-            }
-        }
-    }
-}
-
-int get_average_salary_report(const char *path_out, const database_t *db) {
-    FILE *target = stdout;
-
-    if (path_out) {
-        target = fopen(path_out, "w+");
-        if (!target) {
-            fprintf(stderr, "error open file for write\n");
-            return ERR_OPEN_FILE;
-        }
-    }
-
-    size_t **distribution = get_distribution(target, db);
-    if (!distribution) {
+int get_report_salary(record_t **begin, const size_t count_out) {
+    size_t **sum_salary = create_matrix(count_out, AGE_INTERVAL);
+    if (!sum_salary) {
         return ERR_ACOC;
     }
 
-    print_report_salary(target, distribution, db->number_positions, MAX_AGE - MIN_AGE);
+    char *cur_position = (begin[0])->position;
 
-    if (path_out) {
-        if (fclose(target)) {
-            fprintf(stderr, "failed close file\n");
-            return ERR_CLOSE_FILE;
+    size_t i = 1;
+    size_t k = 0;
+    while (i < count_out) {
+        while (strcmp((begin)[k]->position, cur_position) == 0) {
+            sum_salary[i][(begin)[k]->experience] += (begin)[k]->salary;
+
+            ++k;
         }
+
+        char path_out[BUF_STR_PATH];
+
+        snprintf(path_out, sizeof path_out, "%s%s", add_to_path, cur_position);
+
+        print_report_position(path_out, sum_salary[i]);
+
+        cur_position = (begin[k])->position;
+
+        ++i;
     }
 
-    free_matrix(distribution, db->number_positions);
+    free_matrix(sum_salary, count_out);
+
+    return SUCCESS;
+}
+
+int get_average_salary_report(const database_t *db) {
+    if (get_report_salary(db->set_records, db->number_positions) < 0) {
+        fprintf(stderr, "error get report\n");
+        return ERR_GET_REPORT;
+    }
 
     return SUCCESS;
 }

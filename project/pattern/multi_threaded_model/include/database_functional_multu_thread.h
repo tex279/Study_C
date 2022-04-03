@@ -8,9 +8,9 @@
 
 size_t *get_count_workers(const database_t *db);
 
-int print_report_position(const char *target, const size_t *distribution);
+int print_report_position_ml(const char *target, const size_t *distribution);
 
-int get_report_salary(record_t **begin, const size_t count_out);
+int get_report_salary_ml(record_t **begin, const size_t count_out);
 
 int get_average_salary_report_ml(const database_t *db);
 

@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #include "database_functional_multu_thread.h"
+
 #include "matrix.h"
 
 #define MAX_AGE 100
@@ -45,7 +46,7 @@ size_t *get_count_workers(const database_t *db) {
     return distribution;
 }
 
-int print_report_position(const char *target, const size_t *distribution) {
+int print_report_position_ml(const char *target, const size_t *distribution) {
     FILE *tg = fopen(target, "w+");
     if (!tg) {
         fprintf(stderr, "error open file for write\n");
@@ -66,7 +67,7 @@ int print_report_position(const char *target, const size_t *distribution) {
     return SUCCESS;
 }
 
-int get_report_salary(record_t **begin, const size_t count_out) {
+int get_report_salary_ml(record_t **begin, const size_t count_out) {
     size_t **sum_salary = create_matrix(count_out, AGE_INTERVAL);
     if (!sum_salary) {
         return ERR_ACOC;
@@ -87,9 +88,7 @@ int get_report_salary(record_t **begin, const size_t count_out) {
 
         snprintf(path_out, sizeof path_out, "%s%s", add_to_path, cur_position);
 
-        fprintf(stdout, "%s\n", path_out);
-
-        print_report_position(path_out, sum_salary[i]);
+        print_report_position_ml(path_out, sum_salary[i]);
 
         cur_position = (begin[k])->position;
 
@@ -107,7 +106,7 @@ int get_average_salary_report_ml(const database_t *db) {
         return ERR_ACOC;
     }
 
-    if (get_report_salary(db->set_records, db->number_positions) < 0) {
+    if (get_report_salary_ml(db->set_records, db->number_positions) < 0) {
         fprintf(stderr, "error get report\n");
         return ERR_GET_REPORT;
     }

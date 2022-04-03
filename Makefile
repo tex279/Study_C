@@ -18,8 +18,6 @@ TARGET_COVERAGE = [6789]
 GTEST_GENERAL_COVERAGE = build/project/CMakeFiles/GENERAL.dir/general/src
 GTEST_IMPERATIVE_COVERAGE = build/project/CMakeFiles/IMPERATIVE_MODEL.dir/pattern/imperative_model/src
 
-TAR = build/gtest/gtest_general
-TAR2 = build/gtest/gtest_imperative
 #1 - imperative mod
 #2 - multi_threaded mod
 

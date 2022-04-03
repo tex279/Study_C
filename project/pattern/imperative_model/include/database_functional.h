@@ -1,15 +1,13 @@
 #pragma once //  NOLINT
 
 #define ERR_ACOC -1
-#define ERR_OPEN_FILE -2
-#define ERR_CLOSE_FILE -3
 
 #define SUCCESS 1
 
 #include "load_database.h"
 
-int get_average_salary_report(const char *target, const database_t *db);
+int print_report_position(const char *target, const size_t *distribution);
 
-size_t **get_distribution(FILE *target, const database_t *db);
+int get_report_salary(record_t **begin, const size_t count_out);
 
-void print_report_salary(FILE *target, size_t **distribution, const size_t number_pos, const size_t inter_exp);
+int get_average_salary_report(const database_t *db);

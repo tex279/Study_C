@@ -7,7 +7,6 @@ extern "C" {
 
 TEST(TEST_IMPERATIVE_BUSNESS_LOGIC, functional) {
     char path_to_database[] = {"generated_database.txt"};
-    char path_to_report[] = {"report.txt"};
 
     database_t *db = create_database();
 
@@ -15,7 +14,7 @@ TEST(TEST_IMPERATIVE_BUSNESS_LOGIC, functional) {
 
     sort_set_record(db->set_records, db->number_records, position_rule_less);
 
-    EXPECT_TRUE(get_average_salary_report(path_to_report, db) > 0);
+    EXPECT_TRUE(get_average_salary_report(db) > 0);
 
     free_database(db);
 }

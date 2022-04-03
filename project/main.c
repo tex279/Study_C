@@ -41,7 +41,7 @@ int main(int argc, const char **argv) {
 
     switch (type_work) {
         case IMPERATIVE_MODEL: {
-            if (get_average_salary_report(argv[4], db) < 0) {
+            if (get_average_salary_report(db) < 0) {
                 fprintf(stderr, "error get average salary report\n");
                 free_database(db);
                 return ERR_GET_REPORT;
