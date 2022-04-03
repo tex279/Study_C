@@ -45,7 +45,7 @@ file(GLOB SOURCES pattern/multi_threaded_model/src/database_functional_multi_thr
 
 file(GLOB INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/pattern/multi_threaded_model/include)
 
-add_library(${PROJECT_NAME} STATIC ${SOURCES})
+add_library(${PROJECT_NAME} SHARED ${SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/pattern/multi_threaded_model/include)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/general/include)
 

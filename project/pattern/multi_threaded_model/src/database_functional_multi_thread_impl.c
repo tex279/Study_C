@@ -84,8 +84,6 @@ int get_report_salary_ml(record_t **begin, const size_t end, const  size_t count
     size_t i = 0;
     size_t k = 0;
     while (k < end) {
-        fprintf(stdout, "%s\n", (begin)[0]->position);
-
         if (strcmp((begin)[k]->position, cur_position) == 0) {
             sum_salary[i][(begin)[k]->experience] += (begin)[k]->salary;
 
@@ -141,11 +139,6 @@ int get_average_salary_report_ml(const database_t *db) {
 
     size_t numCPU = sysconf(_SC_NPROCESSORS_ONLN);
 
-    /*for (size_t i = 0; i < db->number_positions; ++i) {
-        fprintf(stdout, "%zu ", count_workers[i]);
-    }
-    fprintf(stdout, "\n");*/
-
     size_t partition = 0;
 
     if (db->number_positions < numCPU) {
@@ -160,7 +153,7 @@ int get_average_salary_report_ml(const database_t *db) {
     for (size_t i = 0; i < partition; ++i) {
         report_thr_args *arg = (report_thr_args *)malloc(sizeof(report_thr_args));
 
-        fprintf(stdout, "%zu %zu\n", cur_begin, count_workers[i]);
+        //  fprintf(stdout, "%zu %zu\n", cur_begin, count_workers[i]);
 
         arg->begin = &((db->set_records)[cur_begin]);
         arg->count_pos = 1;
