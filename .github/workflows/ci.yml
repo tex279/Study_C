@@ -87,7 +87,7 @@ jobs:
   coverage_tests_muiltu:
     runs-on: ubuntu-latest
     container: andeo1812/gcc_check_gtest
-    needs: [ test_imperative ]
+    needs: [ test_muiltu ]
     steps:
       - uses: actions/checkout@v2
       - run: make coverage_tests_muiltu;
@@ -97,7 +97,7 @@ jobs:
     needs: [ coverage_tests_muiltu ]
     steps:
       - uses: actions/checkout@v2
-      - run: make memtest_imperative
+      - run: make memtest_muiltu
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         if: failure()
