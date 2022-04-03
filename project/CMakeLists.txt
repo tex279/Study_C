@@ -8,11 +8,7 @@ endif(DEBUG)
 
 project(GENERAL)
 
-file(GLOB SOURCES general/src/utils.c
-        general/src/format_record_impl.c
-        general/src/load_database.c
-        general/src/record_impl.c
-        general/src/record_sort_impl.c)
+file(GLOB SOURCES general/src/*.c)
 
 file(GLOB INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/general/include)
 
@@ -25,8 +21,7 @@ set(GENERAL_LIB_INCLUDE_DIRS ${INCLUDE_DIRS} PARENT_SCOPE)
 
 project(IMPERATIVE_MODEL)
 
-file(GLOB SOURCES pattern/imperative_model/src/database_functional_impl.c
-        pattern/imperative_model/src/matrix.c)
+file(GLOB SOURCES pattern/imperative_model/src/*.c)
 
 file(GLOB INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/pattern/imperative_model/include)
 

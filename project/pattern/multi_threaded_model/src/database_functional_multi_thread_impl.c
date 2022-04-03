@@ -121,15 +121,44 @@ void *get_interval_report_pos(void *ptr) {
     return NULL;
 }
 
-/*size_t shift_pos(const size_t step, const size_t begin, const size_t iter, const size_t *set) {
-    size_t res = begin;
+size_t shift_pos(const size_t step, const size_t iter, const size_t *set) {
+    size_t res = 0;
 
     for (size_t i = 0; i < step; ++i) {
         res += set[iter + i];
     }
 
     return res;
-}*/
+}
+
+size_t *get_dynamic_distribution(const size_t res_count, const size_t count_objects, const size_t count_workers) {
+    size_t *distribution  = calloc(res_count, sizeof(size_t));
+    if (!distribution) {
+        fprintf(stderr, "memory allocation error for get count workers thread\n");
+        return NULL;
+    }
+
+    size_t min_count = count_objects / count_workers;
+    size_t add = count_objects % count_workers;
+
+    for (size_t i = 0; i < res_count; ++i) {
+        if (add) {
+            distribution[i] = min_count + 1;
+
+            --add;
+        } else {
+            distribution[i] = min_count;
+        }
+    }
+
+    for (size_t i = 0; i < res_count; ++i) {
+        fprintf(stdout,"%zu ", distribution[i]);
+    }
+
+    fprintf(stdout,"\n");
+
+    return distribution;
+}
 
 int get_average_salary_report_ml(const database_t *db) {
     size_t *count_workers = get_count_workers_ml(db);
@@ -139,35 +168,39 @@ int get_average_salary_report_ml(const database_t *db) {
 
     size_t numCPU = sysconf(_SC_NPROCESSORS_ONLN);
 
-    size_t partition = 0;
-
-    if (db->number_positions < numCPU) {
-        partition = db->number_positions;
-    } else  {
+    size_t partition = db->number_positions;
+    if (partition > numCPU) {
         partition = numCPU;
     }
 
+    size_t *distribution = get_dynamic_distribution(partition, db->number_positions, numCPU);
+    if (!distribution) {
+        return ERR_ACOC;
+    }
     pthread_t thr[partition];
 
     size_t cur_begin = 0;
+    size_t cur_pos = 0;
     for (size_t i = 0; i < partition; ++i) {
         report_thr_args *arg = (report_thr_args *)malloc(sizeof(report_thr_args));
 
-        //  fprintf(stdout, "%zu %zu\n", cur_begin, count_workers[i]);
-
         arg->begin = &((db->set_records)[cur_begin]);
-        arg->count_pos = 1;
-        arg->end = count_workers[i];
+        arg->count_pos = distribution[i];
+        arg->end = shift_pos(distribution[i], cur_pos, count_workers);
 
         if (pthread_create(&thr[i], NULL, get_interval_report_pos, (void *)arg)) {
             fprintf(stderr, "create thread\n");
             return ERR_CREATE_THREAD;
         }
-
         pthread_join(thr[i], NULL);
 
-        cur_begin += count_workers[i];
+        cur_begin += shift_pos(distribution[i], cur_pos, count_workers);
+
+        cur_pos += distribution[i];
+
     }
+
+    free(distribution);
 
     free(count_workers);
 

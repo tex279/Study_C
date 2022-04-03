@@ -1,4 +1,4 @@
-9
+21
 Engineer
 Teacher
 Doctor
@@ -8,3 +8,15 @@ Sailor
 Cook
 Journalist
 Composer
+Student
+Librarian
+Photographer
+Jeweller
+Editor
+Barman
+Cashier
+Janitor
+Fitter
+Tailor
+Fisherman
+Watchman

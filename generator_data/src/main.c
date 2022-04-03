@@ -38,5 +38,5 @@ int main(int argc, const char **argv) {
 
     free_database(db);
 
-    return SUCCESS;
+    return EXIT_SUCCESS;
 }

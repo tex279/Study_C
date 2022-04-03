@@ -2,7 +2,7 @@
 
 all: clean check build generate test_general coverage_tests_general memtest_general test_imperative coverage_tests_imperative memtest_imperative test_multi coverage_tests_multi memtest_multi
 
-NUMBER_OF_RECORDS  = 1000
+NUMBER_OF_RECORDS  = 89
 GENERATOR = ./build/generator_data/generator
 SETS_FOR_GEN = generator_data/sets/female_name.txt generator_data/sets/male_name.txt generator_data/sets/surname.txt generator_data/sets/female_surname.txt generator_data/sets/male_surname.txt generator_data/sets/position.txt
 
@@ -24,7 +24,7 @@ GTEST_MULTI_COVERAGE = build/project/CMakeFiles/MULTI_THREADED_MODEL.dir/pattern
 #2 - multi_threaded mod
 
 clean:
-	rm -rf build coverage-report valgrind.log test.log coverage.info generated_database.txt report.txt sorted_database.txt report
+	rm -rf build coverage-report valgrind.log test.log coverage.info generated_database.txt report.txt sorted_database.txt report_imp report_multi
 
 check:
 	./run_linters.sh

@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "utils.h"
+#include "load_variants.h"
 
 #define MAX_AGE 100
 #define MIN_AGE 22
@@ -14,15 +14,12 @@
 
 #define LENGTH_STRING_FORMAT 10
 
-#define ERR_OPEN_FILE -1
-#define ERR_CLOSE_FILE -2
-
 size_t get_rand_number(const size_t min, const size_t max) {
     return (min + (size_t)rand() % (max - min + 1));
 }
 
 char *get_rand_value(char **source, const size_t min, const size_t max) {
-    return source[get_rand_number(min, max)];
+    return source[get_rand_number(min, max - 1)];
 }
 
 
@@ -35,12 +32,11 @@ int generate(const char *path_output, const size_t sample_size, const database_t
 
     fprintf(target,"%zu\n", sample_size);
 
-    fprintf(target,"%zu\n", db->count_position + 1);
+    fprintf(target,"%zu\n", db->count_position);
 
     for (size_t i = 0; i < sample_size; ++i) {
         bool gender = (bool)get_rand_number(0, 1);
 
-        //
         bool type_surname = (bool)get_rand_number(0, 1);
 
         size_t age = get_rand_number(MIN_AGE, MAX_AGE);
@@ -89,5 +85,5 @@ int generate(const char *path_output, const size_t sample_size, const database_t
         return ERR_CLOSE_FILE;
     }
 
-    return SUCCESS;
+    return EXIT_SUCCESS;
 }

@@ -2,7 +2,7 @@
 
 #include <stddef.h>
 
-#include "utils.h"
+#include "load_variants.h"
 
 //  rand
 char *get_rand_value(char **source, const size_t min, const size_t max);
