@@ -35,20 +35,18 @@
 
 ## Формат вывода:
 
+В работе создает директорию report* в зависимости
+от метода и там же создаются файлы отвечающие за распределение по должностям:
+
+Actor.txt
 ```
-Position Actor - 1
-Position Composer - 2
-Position Cook - 3
-Position Doctor - 4
-Position Engineer - 5
-Position Journalist - 6
-Position Pilot - 7
-Position Sailor - 8
-Position Teacher - 9
-Average salary report for:
-position - 1 exp 4 - 4656 
-position - 1 exp 9 - 145 
-position - 1 exp 10 - 5877 
+exp 4 - 379648
+exp 5 - 49136
+exp 6 - 217894
+exp 7 - 104281
+exp 8 - 64867
+exp 9 - 111761
+exp 10 - 34688
 ```
 
 ## Устройство структуры:
@@ -57,16 +55,18 @@ position - 1 exp 10 - 5877
 
 ## Работа программы:
 
-На вход принимает первым аргументом тип работы многопоточная или последовательная и пути к файлам - базы данных и вывода отчета. 
+На вход принимает первым аргументом требование к сортировке, путь к базе
+данных, путь к отсортированной базе данных (для вывода), тип работы 
+императивный или многопоточный.
 
 ### Примеры запуска:
 ```
-./build/HW-2 1 generated_database.txt sorted_database.txt report.txt
+./build/HW-2 1 generated_database.txt sorted_database.txt 1
 ```
 - для последовательного алгоритма.
 
 ```
-./build/HW-2 12generated_database.txt sorted_database.txt report.txt
+./build/HW-2 1 generated_database.txt sorted_database.txt 2
 ```
 - для многопоточного
 
