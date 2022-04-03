@@ -77,3 +77,29 @@ jobs:
         if: failure()
         with:
           path: valgrind.log
+  test_muiltu:
+    runs-on: ubuntu-latest
+    container: andeo1812/gcc_check_gtest
+    needs: [ generate ]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make test_muiltu
+  coverage_tests_muiltu:
+    runs-on: ubuntu-latest
+    container: andeo1812/gcc_check_gtest
+    needs: [ test_imperative ]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make coverage_tests_muiltu;
+  memtest_muiltu:
+    runs-on: ubuntu-latest
+    container: andeo1812/gcc_check_gtest
+    needs: [ coverage_tests_muiltu ]
+    steps:
+      - uses: actions/checkout@v2
+      - run: make memtest_imperative
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          path: valgrind.log

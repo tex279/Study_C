@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 
 if (DEBUG)
     set(CMAKE_C_STANDARD 99)
-    set(CMAKE_C_FLAGS "-g -fprofile-arcs -ftest-coverage -fPIC -O0 -fPIC  -Wall -Wextra -Werror -Wpedantic")
+    set(CMAKE_C_FLAGS "-g -lpthread -fprofile-arcs -ftest-coverage -fPIC -O0 -fPIC  -Wall -Wextra -Werror -Wpedantic -lpthread")
     set(CMAKE_C_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -coverage -lgcov")
 endif(DEBUG)
 

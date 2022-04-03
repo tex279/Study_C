@@ -3,7 +3,7 @@ project(gtest_general)
 
 if (DEBUG)
     set(CMAKE_CXX_STANDARD 17)
-    set(CMAKE_CXX_FLAGS "-g -O0 -fprofile-arcs -Wall -Wextra -Werror -Wpedantic -fprofile-arcs -ftest-coverage -Wlogical-op -Wredundant-decls -Wsign-conversion -Wcast-align -Wcast-qual -Wconversion -Wduplicated-branches -Wduplicated-cond -Wfloat-equal")
+    set(CMAKE_CXX_FLAGS "-g -O0 -lpthread -fprofile-arcs -Wall -Wextra -Werror -Wpedantic -fprofile-arcs -ftest-coverage -Wlogical-op -Wredundant-decls -Wsign-conversion -Wcast-align -Wcast-qual -Wconversion -Wduplicated-branches -Wduplicated-cond -Wfloat-equal")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -coverage -lgcov")
 endif(DEBUG)
 

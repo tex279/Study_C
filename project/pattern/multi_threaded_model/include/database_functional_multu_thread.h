@@ -10,12 +10,13 @@ size_t *get_count_workers_ml(const database_t *db);
 
 int print_report_position_ml(const char *target, const size_t *distribution);
 
-int get_report_salary_ml(record_t **begin, const size_t count_out_pos, const size_t end);
+int get_report_salary_ml(record_t **begin, const size_t end, size_t **sum_salary);
 
 typedef struct {
     record_t **begin;
     size_t end;
     size_t count_pos;
+    size_t **sum_salary;
 } report_thr_args;
 
 void *get_interval_report_pos(void *ptr);

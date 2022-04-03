@@ -12,7 +12,7 @@
 #define MAX_AGE 100
 #define MIN_AGE 18
 
-#define BUF_STR_PATH 32
+#define BUF_STR_PATH 62
 
 const char add_to_path_dur[] = {"report/"};
 const char format_res[] = {".txt"};
@@ -71,12 +71,7 @@ int print_report_position_ml(const char *target, const size_t *distribution) {
     return SUCCESS;
 }
 
-int get_report_salary_ml(record_t **begin, const size_t count_out_pos, const size_t end) {
-    size_t **sum_salary = create_matrix(count_out_pos, AGE_INTERVAL);
-    if (!sum_salary) {
-        return ERR_ACOC;
-    }
-
+int get_report_salary_ml(record_t **begin, const size_t end, size_t **sum_salary) {
     char *cur_position = (begin[0])->position;
 
     char path_out[BUF_STR_PATH];
@@ -84,12 +79,14 @@ int get_report_salary_ml(record_t **begin, const size_t count_out_pos, const siz
     size_t i = 0;
     size_t k = 0;
     while (k < end) {
+        //  fprintf(stdout, "%s\n", (begin)[0]->position);
+
         if (strcmp((begin)[k]->position, cur_position) == 0) {
             sum_salary[i][(begin)[k]->experience] += (begin)[k]->salary;
 
             ++k;
         } else {
-            snprintf(path_out, sizeof path_out, "%s%s%s", add_to_path_dur, cur_position, format_res);
+            snprintf(path_out, BUF_STR_PATH, "%s%s%s", add_to_path_dur, cur_position, format_res);
 
             print_report_position_ml(path_out, sum_salary[i]);
 
@@ -99,28 +96,30 @@ int get_report_salary_ml(record_t **begin, const size_t count_out_pos, const siz
         }
     }
 
-    snprintf(path_out, sizeof path_out, "%s%s%s", add_to_path_dur, cur_position, format_res);
+    snprintf(path_out, BUF_STR_PATH, "%s%s%s", add_to_path_dur, cur_position, format_res);
 
     print_report_position_ml(path_out, sum_salary[i]);
-
-    free_matrix(sum_salary, count_out_pos);
 
     return SUCCESS;
 }
 
 void *get_interval_report_pos(void *ptr) {
+    pthread_detach(pthread_self());
+
     report_thr_args *args = (report_thr_args *)ptr;
 
-    if (get_report_salary_ml(args->begin, args->count_pos, args->end) < 0) {
+    if (get_report_salary_ml(args->begin, args->end, args->sum_salary) < 0) {
         fprintf(stderr, "error get report\n");
         return NULL;
     }
 
-    //  fprintf(stdout,"HELLO\n");
+    fprintf(stdout,"HELLO\n");
 
-    pthread_detach(pthread_self());
+    free_matrix(args->sum_salary, args->count_pos);
 
-    return NULL;
+    free(args);
+
+    pthread_exit(0);
 }
 
 /*size_t shift_pos(const size_t step, const size_t begin, const size_t iter, const size_t *set) {
@@ -140,30 +139,37 @@ int get_average_salary_report_ml(const database_t *db) {
     }
 
     //  size_t numCPU = sysconf(_SC_NPROCESSORS_ONLN);
+    //  fprintf(stdout, "%zu\n", numCPU);
 
-    /*fprintf(stdout, "%zu\n", numCPU);
+    pthread_attr_t attr;
+    pthread_attr_init(&attr);
 
     for (size_t i = 0; i < db->number_positions; ++i) {
         fprintf(stdout, "%zu ", count_workers[i]);
     }
-    fprintf(stdout, "\n");*/
+    fprintf(stdout, "\n");
 
     size_t cur_begin = 0;
     for (size_t i = 0; i < db->number_positions; ++i) {
-        report_thr_args arg;
+        report_thr_args *arg = (report_thr_args *)malloc(sizeof(report_thr_args));
 
-        arg.begin = &((db->set_records)[cur_begin]);
-        arg.count_pos = 1;
-        arg.end = count_workers[i];
+        fprintf(stdout, "%zu %zu\n", cur_begin, count_workers[i]);
+
+        arg->begin = &((db->set_records)[cur_begin]);
+        arg->count_pos = 1;
+        arg->end = count_workers[i];
+
+        arg->sum_salary = create_matrix(arg->count_pos, AGE_INTERVAL);
+        if (!arg->sum_salary) {
+            return ERR_ACOC;
+        }
 
         pthread_t thr;
 
-        if (pthread_create(&thr, NULL, get_interval_report_pos, (void *)&arg)) {
+        if (pthread_create(&thr, &attr, get_interval_report_pos, (void *)arg)) {
             fprintf(stderr, "create thread\n");
             return ERR_CREATE_THREAD;
         }
-
-        fprintf(stdout, "%zu %zu\n", cur_begin, arg.end);
 
         cur_begin += count_workers[i];
     }
