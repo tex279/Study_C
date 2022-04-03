@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <pthread.h>
+#include <unistd.h>
 
 #include "database_functional_multu_thread.h"
 
@@ -20,9 +22,10 @@ const char format_res[] = {".txt"};
 #define ERR_OPEN_FILE -2
 #define ERR_CLOSE_FILE -3
 #define ERR_GET_REPORT -4
+#define ERR_CREATE_THREAD -5
 
 
-size_t *get_count_workers(const database_t *db) {
+size_t *get_count_workers_ml(const database_t *db) {
     size_t number_records = db->number_records;
 
     size_t *distribution  = calloc(db->number_positions, sizeof(size_t));
@@ -68,48 +71,119 @@ int print_report_position_ml(const char *target, const size_t *distribution) {
     return SUCCESS;
 }
 
-int get_report_salary_ml(record_t **begin, const size_t count_out) {
-    size_t **sum_salary = create_matrix(count_out, AGE_INTERVAL);
+int get_report_salary_ml(record_t **begin, const size_t count_out_pos, const size_t end) {
+    size_t **sum_salary = create_matrix(count_out_pos, AGE_INTERVAL);
     if (!sum_salary) {
         return ERR_ACOC;
     }
 
     char *cur_position = (begin[0])->position;
 
-    size_t i = 1;
+    fprintf(stdout, "%zu %zu\n", count_out_pos, end);
+
+    char path_out[BUF_STR_PATH];
+
+    size_t i = 0;
     size_t k = 0;
-    while (i < count_out) {
-        while (strcmp((begin)[k]->position, cur_position) == 0) {
+    while (k < end) {
+        if (strcmp((begin)[k]->position, cur_position) == 0) {
             sum_salary[i][(begin)[k]->experience] += (begin)[k]->salary;
 
             ++k;
+        } else {
+            snprintf(path_out, sizeof path_out, "%s%s%s", add_to_path_dur, cur_position, format_res);
+
+            print_report_position_ml(path_out, sum_salary[i]);
+
+            cur_position = (begin[k])->position;
+
+            ++i;
         }
-
-        char path_out[BUF_STR_PATH];
-
-        snprintf(path_out, sizeof path_out, "%s%s%s", add_to_path_dur, cur_position, format_res);
-
-        print_report_position_ml(path_out, sum_salary[i]);
-
-        cur_position = (begin[k])->position;
-
-        ++i;
     }
 
-    free_matrix(sum_salary, count_out);
+    snprintf(path_out, sizeof path_out, "%s%s%s", add_to_path_dur, cur_position, format_res);
+
+    print_report_position_ml(path_out, sum_salary[i]);
+
+    free_matrix(sum_salary, count_out_pos);
 
     return SUCCESS;
 }
 
+void *get_interval_report_pos(void *ptr) {
+    report_thr_args *args = (report_thr_args *)ptr;
+
+    if (get_report_salary_ml(args->begin, args->count_pos, args->end) < 0) {
+        fprintf(stderr, "error get report\n");
+        return NULL;
+    }
+
+    fprintf(stdout,"HELLO\n");
+
+    free(args);
+
+    return NULL;
+}
+
+size_t shift_pos(const size_t step, const size_t begin, const size_t iter, size_t *set) {
+    size_t res = begin;
+
+    for (size_t i = 0; i < step; ++i) {
+        res += set[iter + i];
+    }
+
+    return res;
+}
+
 int get_average_salary_report_ml(const database_t *db) {
-    size_t *count_workers = get_count_workers(db);
+    size_t *count_workers = get_count_workers_ml(db);
     if (!count_workers) {
         return ERR_ACOC;
     }
 
-    if (get_report_salary_ml(db->set_records, db->number_positions) < 0) {
-        fprintf(stderr, "error get report\n");
-        return ERR_GET_REPORT;
+    //  size_t numCPU = sysconf(_SC_NPROCESSORS_ONLN);
+
+    /*fprintf(stdout, "%zu\n", numCPU);
+
+    for (size_t i = 0; i < db->number_positions; ++i) {
+        fprintf(stdout, "%zu ", count_workers[i]);
+    }
+    fprintf(stdout, "\n");*/
+
+    size_t cur_begin = 0;
+    for (size_t i = 0; i < db->number_positions; ++i) {
+        report_thr_args *arg = (report_thr_args *)malloc(sizeof(report_thr_args));
+        if (!arg) {
+            fprintf(stderr, "memory allocation error\n");
+            return ERR_ACOC;
+        }
+
+        arg->begin = &((db->set_records)[cur_begin]);
+        arg->count_pos = 1;
+        arg->end = count_workers[i];
+
+        pthread_t thr;
+
+        pthread_attr_t tattr;
+
+        if (pthread_attr_init(&tattr)) {
+            fprintf(stderr, "create thread\n");
+            return ERR_CREATE_THREAD;
+        }
+
+        if (pthread_attr_setdetachstate(&tattr, PTHREAD_CREATE_DETACHED)) {
+            fprintf(stderr, "create thread\n");
+            return ERR_CREATE_THREAD;
+        }
+
+        if (pthread_create(&thr, &tattr, get_interval_report_pos, (void *)arg)) {
+            fprintf(stderr, "create thread\n");
+            return ERR_CREATE_THREAD;
+        }
+
+        //  fprintf(stdout, "%zu %zu\n", cur_begin, arg->end);
+
+        cur_begin += count_workers[i];
     }
 
     free(count_workers);

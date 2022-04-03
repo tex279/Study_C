@@ -42,41 +42,47 @@ int print_report_position(const char *target, const size_t *distribution) {
     return SUCCESS;
 }
 
-int get_report_salary(record_t **begin, const size_t count_out) {
-    size_t **sum_salary = create_matrix(count_out, AGE_INTERVAL);
+int get_report_salary(record_t **begin, const size_t count_out_pos, const size_t end) {
+    size_t **sum_salary = create_matrix(count_out_pos, AGE_INTERVAL);
     if (!sum_salary) {
         return ERR_ACOC;
     }
 
     char *cur_position = (begin[0])->position;
 
-    size_t i = 1;
+    fprintf(stdout, "%zu %zu\n", count_out_pos, end);
+
+    char path_out[BUF_STR_PATH];
+
+    size_t i = 0;
     size_t k = 0;
-    while (i < count_out) {
-        while (strcmp((begin)[k]->position, cur_position) == 0) {
+    while (k < end) {
+        if (strcmp((begin)[k]->position, cur_position) == 0) {
             sum_salary[i][(begin)[k]->experience] += (begin)[k]->salary;
 
             ++k;
+        } else {
+            snprintf(path_out, sizeof path_out, "%s%s%s", add_to_path, cur_position, format);
+
+            print_report_position(path_out, sum_salary[i]);
+
+            cur_position = (begin[k])->position;
+
+            ++i;
         }
-
-        char path_out[BUF_STR_PATH];
-
-        snprintf(path_out, sizeof path_out, "%s%s%s", add_to_path, cur_position, format);
-
-        print_report_position(path_out, sum_salary[i]);
-
-        cur_position = (begin[k])->position;
-
-        ++i;
     }
 
-    free_matrix(sum_salary, count_out);
+    snprintf(path_out, sizeof path_out, "%s%s%s", add_to_path, cur_position, format);
+
+    print_report_position(path_out, sum_salary[i]);
+
+    free_matrix(sum_salary, count_out_pos);
 
     return SUCCESS;
 }
 
 int get_average_salary_report(const database_t *db) {
-    if (get_report_salary(db->set_records, db->number_positions) < 0) {
+    if (get_report_salary(db->set_records, db->number_positions , db->number_records) < 0) {
         fprintf(stderr, "error get report\n");
         return ERR_GET_REPORT;
     }

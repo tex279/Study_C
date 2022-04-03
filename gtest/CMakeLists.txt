@@ -19,8 +19,8 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC ${GENERAL_LIB_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} ${GENERAL_LIB_LIBRARIES} ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
-project(gtest_imperative)
 
+project(gtest_imperative)
 
 file(GLOB SOURCES imperative_model.cpp)
 
@@ -33,3 +33,17 @@ target_link_libraries(${PROJECT_NAME} ${GENERAL_LIB_LIBRARIES} ${GTEST_BOTH_LIBR
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${IMPERATIVE_MODEL_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} ${IMPERATIVE_MODEL_LIB_LIBRARIES} ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+
+project(gtest_multi)
+
+file(GLOB SOURCES multi_threded_model.cpp)
+
+find_package(GTest REQUIRED)
+
+add_executable(${PROJECT_NAME} ${SOURCES})
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${GENERAL_LIB_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} ${GENERAL_LIB_LIBRARIES} ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${MULTI_THREADED_MODEL_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} ${MULTI_THREADED_MODEL_LIB_LIBRARIES} ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})

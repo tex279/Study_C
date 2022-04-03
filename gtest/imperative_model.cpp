@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 extern "C" {
-    #include "load_database.h"
     #include "database_functional.h"
 }
 

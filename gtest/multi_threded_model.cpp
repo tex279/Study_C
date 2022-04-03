@@ -1,33 +1,20 @@
 #include <gtest/gtest.h>
 
 extern "C" {
-    #include "list_parts.h"
-    #include "list_blanks.h"
-    #include "blank.h"
-    #include "utils.h"
+    #include "database_functional_multu_thread.h"
 }
 
-TEST(TEST_BLANKS, list_functional) {
-char stor[] = {"sto123r"};
-char res[] = {"re123s"};
+TEST(TEST_IMPERATIVE_BUSNESS_LOGIC, functional) {
+    char path_to_database[] = {"generated_database.txt"};
 
-list_blanks_t *list = create_list(10, stor, res);
-EXPECT_TRUE(list != NULL);
+    database_t *db = create_database();
 
-EXPECT_TRUE(list->first->number == 10);
-EXPECT_TRUE(list->last->number == 10);
+    load_database(path_to_database, db);
 
-EXPECT_TRUE(strcmp(list->storage, stor) == 0);
-EXPECT_TRUE(strcmp(list->responsible, res) == 0);
+    sort_set_record(db->set_records, db->number_records, position_rule_less);
 
-EXPECT_TRUE(insert(list, 4) != NULL);
-EXPECT_TRUE(list->first->number == 4);
-EXPECT_TRUE(list->last->number == 10);
+    EXPECT_TRUE(get_average_salary_report_ml(db) > 0);
 
-EXPECT_TRUE(insert(list, 16) != NULL);
-EXPECT_TRUE(list->first->number == 4);
-EXPECT_TRUE(list->last->number == 16);
-
-EXPECT_TRUE(free_list_blank(list) == SUCCESS);
+    free_database(db);
 }
 
