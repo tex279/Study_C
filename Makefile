@@ -18,7 +18,7 @@ TARGET_TEST_MULTI = ./build/gtest/gtest_multi
 TARGET_COVERAGE = [6789]
 GTEST_GENERAL_COVERAGE = build/project/CMakeFiles/GENERAL.dir/general/src
 GTEST_IMPERATIVE_COVERAGE = build/project/CMakeFiles/IMPERATIVE_MODEL.dir/pattern/imperative_model/src
-GTEST_MULTI_COVERAGE = build/project/CMakeFiles/IMPERATIVE_MODEL.dir/pattern/imperative_model/src
+GTEST_MULTI_COVERAGE = build/project/CMakeFiles/MULTI_THREADED_MODEL.dir/pattern/multi_threaded_model/src
 
 #1 - imperative mod
 #2 - multi_threaded mod
