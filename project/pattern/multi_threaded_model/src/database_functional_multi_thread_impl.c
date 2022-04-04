@@ -186,12 +186,14 @@ int get_average_salary_report_ml(const database_t *db) {
             fprintf(stderr, "create thread\n");
             return ERR_CREATE_THREAD;
         }
-        pthread_join(thr[i], NULL);
-
         cur_begin += shift_pos(distribution[i], cur_pos, count_workers);
 
         cur_pos += distribution[i];
 
+    }
+
+    for (size_t i = 0; i < partition; i++) {
+        pthread_join(thr[i], NULL);
     }
 
     free(distribution);
