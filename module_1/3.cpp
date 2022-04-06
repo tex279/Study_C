@@ -100,9 +100,7 @@ void Deque::PushBack(int data) {
             Resize();
         }
 
-        ++last;
-
-        last = (last) % capacity;
+        last = (last + 1) % capacity;
 
         array[last] = data;
 
@@ -138,9 +136,7 @@ int Deque::PopBack() {
 
     array[last] = 0;
 
-    --last;
-
-    last = (last) % capacity;
+    last = (last - 1) % capacity;
 
     return res;
 }
