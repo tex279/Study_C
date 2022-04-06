@@ -6,8 +6,10 @@ TARGET = 7
 
 TARGET_IN = 7
 
+TARGET_MODULE = mudule_1
+
 build:
-	g++ --std=gnu++20 interview_contest/$(TARGET)/$(TARGET_IN).cpp -o task
+	g++ --std=gnu++20 $(TARGET_MODULE)/$(TARGET)/$(TARGET_IN).cpp -o task
 
 launch:
 	./task
