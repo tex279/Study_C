@@ -77,41 +77,38 @@ void Deque::Resize() {
 void Deque::PushFront(int data) {
     if (IsEmpty()) {
         array[first] = data;
-
-        ++size;
     } else {
         if (IsFull()) {
             Resize();
         }
 
-        first = (first + size - 1) % size;
+        first = (first - 1) % capacity;
 
         array[first] = data;
 
-        ++size;
     }
+
+    ++size;
 }
 
 void Deque::PushBack(int data) {
-    std::cout << last << " " << size << " " << array[last] << std::endl;
-
     if (IsEmpty()) {
         array[last] = data;
-
-        ++size;
     } else {
         if (IsFull()) {
+
             Resize();
         }
 
-        last = (last + size + 1) % size;
+        ++last;
+
+        last = (last) % capacity;
 
         array[last] = data;
 
-        ++size;
     }
 
-    std::cout << last << " " << size << " " << array[last] << std::endl;
+    ++size;
 }
 
 int Deque::PopFront() {
@@ -119,11 +116,13 @@ int Deque::PopFront() {
         return -1;
     }
 
+    --size;
+
     int res = array[first];
 
-    first = (first + size + 1) % size;
+    array[first] = 0;
 
-    --size;
+    first = (first + 1) % capacity;
 
     return res;
 }
@@ -133,20 +132,23 @@ int Deque::PopBack() {
         return -1;
     }
 
+    --size;
+
     int res = array[last];
 
-    last = (last + size - 1) % size;
+    array[last] = 0;
 
-    --size;
+    --last;
+
+    last = (last) % capacity;
 
     return res;
 }
 
 void Deque::Print() {
-    //  std::cout << first << " " << size << std::endl;
-
    for (size_t i = 0 ; i < size; ++i) {
-       std::cout << array[(i + first + size) % (size)] << " ";
+       //  std::cout << (first + size + i) % size << " " << std::endl;
+       std::cout << array[(first + i) % capacity] << " ";
    }
 
    std::cout << std::endl;
@@ -169,8 +171,6 @@ void run_work(std::istream &input, std::ostream &output) {
         switch (type_operation) {
             case PUSH_FRONT: {
                 deque.PushFront(value);
-
-                deque.Print();
                 break;
             }
             case POP_FRONT: {
@@ -182,13 +182,10 @@ void run_work(std::istream &input, std::ostream &output) {
                     output << "YES" << std::endl;
                 }
 
-                deque.Print();
                 break;
             }
             case PUSH_BACK: {
                 deque.PushBack(value);
-
-                deque.Print();
                 break;
             }
             case POP_BACK: {
@@ -199,17 +196,13 @@ void run_work(std::istream &input, std::ostream &output) {
                 } else {
                     output << "YES" << std::endl;
                 }
-
-                deque.Print();
                 break;
             }
             default: {
                 break;
             }
-
         }
     }
-
 }
 
 int main() {
