@@ -2,14 +2,15 @@
 
 all: clear build launch
 
-TARGET = 7
+TARGET = 1
 
-TARGET_IN = 7
-
-TARGET_MODULE = mudule_1
+TARGET_MODULE = module_1
 
 build:
-	g++ --std=gnu++20 $(TARGET_MODULE)/$(TARGET)/$(TARGET_IN).cpp -o task
+	g++ --std=gnu++20 -Wall -Wextra -Werror -Wpedantic $(TARGET_MODULE)/$(TARGET).cpp -o task
+
+check:
+	./run_linters.sh
 
 launch:
 	./task
