@@ -64,7 +64,9 @@ bool Deque::IsFull() {
 }
 
 void Deque::Resize() {
-    int *new_buf = new int[capacity * 2];
+    capacity *= 2;
+
+    int *new_buf = new int[capacity];
     for (size_t i = 0; i < size; ++i) {
         new_buf[i] = array[i];
     }
@@ -96,7 +98,6 @@ void Deque::PushBack(int data) {
         array[last] = data;
     } else {
         if (IsFull()) {
-
             Resize();
         }
 
