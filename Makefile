@@ -2,7 +2,7 @@
 
 all: clear build launch
 
-TARGET = 1
+TARGET = 2
 
 TARGET_MODULE = module_1
 
