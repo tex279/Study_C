@@ -2,12 +2,17 @@
 
 all: clear build launch
 
-TARGET = 3
+TARGET_DZ = 3
+
+TARGET_RK = B
 
 TARGET_MODULE = module_1
 
-build:
-	g++ --std=gnu++20 -Wall -Wextra -Werror -Wpedantic $(TARGET_MODULE)/$(TARGET).cpp -o task
+build_dz:
+	g++ --std=gnu++20 -Wall -Wextra -Werror -Wpedantic $(TARGET_MODULE)/$(TARGET_DZ).cpp -o task
+
+build_rk:
+	g++ --std=gnu++20 -Wall -Wextra -Werror -Wpedantic $(TARGET_MODULE)/RK/$(TARGET_RK).cpp -o task
 
 check:
 	./run_linters.sh
