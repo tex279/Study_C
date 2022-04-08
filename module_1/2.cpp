@@ -34,29 +34,32 @@ void exponential_search(const int key, const int *array, const size_t left, cons
     intr.end = right - 1;
 }
 
-size_t binary_search(const int key, const int* array, size_t left,  size_t right) {
-    if (key < array[left]) {
-        return left;
-    }
-
+size_t binary_search(const int key, const int* array, size_t left, size_t right) {
     if (key > array[right]) {
         return right;
     }
 
-    while (left + 1 != right) {
+    if (key < array[left]) {
+        return left;
+    }
+
+    while (left < right) {
         size_t mid = (left + right) / 2;
 
-        if (array[mid] > key) {
-            right = mid;
+        if (key > array[mid]) {
+            left = mid + 1;
         } else {
-            left = mid;
+            right = mid;
         }
     }
 
-    if (key - array[left] > array[right] - key) {
-        return right;
+    //std::cout << left << " " << right << std::endl;
+    //std::cout << array[left] << " " << array[right] << std::endl;
+
+    if (array[right] - key >= key - array[right -1]) {
+        return right - 1;
     } else {
-        return left;
+        return right;
     }
 }
 

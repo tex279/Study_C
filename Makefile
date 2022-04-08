@@ -2,9 +2,9 @@
 
 all: clear build launch
 
-TARGET_DZ = 3
+TARGET_DZ = 2
 
-TARGET_RK = B
+TARGET_RK = A
 
 TARGET_MODULE = module_1
 

@@ -2,8 +2,6 @@
 #include <iostream>
 #include <cassert>
 
-//  Реализовать дек с динамическим зацикленным буфером.
-
 #define COUNT_COMMAND 1000000
 
 #define START_CAPACITY 16
@@ -31,10 +29,7 @@ public:
     void Print();
 
     Deque();
-    virtual ~Deque();
-
-    Deque(const Deque &other) = delete;
-    Deque& operator=(const Deque &other) = delete;
+    ~Deque();
 };
 
 
