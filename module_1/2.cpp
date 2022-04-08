@@ -58,7 +58,6 @@ size_t binary_search(const int key, const int* array, size_t left,  size_t right
     } else {
         return left;
     }
-
 }
 
 int *input_array(size_t max_count, size_t &count) {
