@@ -12,6 +12,36 @@
 
 const char female[] = {"female"};
 
+#define GET_FIELD_STR(field_name, source, indent, format, buf, target) do {     \
+    if (sscanf(&source[indent], format, buf) != 1) {                            \
+        fprintf(stderr, "%s - %s", field_name, ERR_READ_FIELD_M);               \
+        free(record);                                                           \
+        return ERR_GET_FIELD;                                                   \
+    }                                                                           \
+                                                                                \
+    target = create_str(buf);                                                   \
+    if (!target) {                                                              \
+        return ERR_ALOCC;                                                       \
+    }                                                                           \
+                                                                                \
+    indent += strlen(buf) + 1;                                                  \
+} while (0)
+
+#define GET_FIELD_NUMBER(field_name, source, indent, format, buf, target) do {  \
+    if (sscanf(&source[indent], format, buf) != 1) {                            \
+        fprintf(stderr, "%s - %s", field_name, ERR_READ_FIELD_M);               \
+        return ERR_GET_FIELD;                                                   \
+    }                                                                           \
+                                                                                \
+    target = strtoul(buf, &end, 0);                            \
+    if (*end != '\0') {                                                         \
+        fprintf(stderr, "%s - %s", field_name, ERR_CONVERSION_M);               \
+        return ERR_CONVERT_NUMBER;                                              \
+    }                                                                           \
+                                                                                \
+    indent += strlen(buf) + 1;                                                  \
+} while (0)
+
 record_t *create_record() {
     record_t *record = calloc(1, sizeof(record_t));
     if (!record) {
@@ -48,37 +78,13 @@ int get_record(const char *source, record_t *record, const format_t *format) {
 
     char *end = NULL;
 
-
-    //  name
     char buf[MAX_BUF_LENGTH];
-    if (sscanf(&source[indent], format->name, buf) != 1) {
-        fprintf(stderr, "%s %s", "name -", ERR_READ_FIELD_M);
-        free(record);
-        return ERR_GET_FIELD;
-    }
-    record->name = create_str(buf);
-    if (!record->name) {
-        return ERR_ALOCC;
-    }
 
-    indent += strlen(buf) + 1;
+    GET_FIELD_STR("name", source, indent, format->name, buf, record->name);
 
+    GET_FIELD_STR("surname", source, indent, format->surname, buf, record->surname);
 
-    // surname
-    if (sscanf(&source[indent], format->surname, buf) != 1) {
-        fprintf(stderr, "%s %s", "surname -", ERR_READ_FIELD_M);
-        return ERR_GET_FIELD;
-    }
-    record->surname = create_str(buf);
-    if (!record->surname) {
-        return ERR_ALOCC;
-    }
-
-    indent += strlen(buf) + 1;
-
-
-    //  gender
-    if (sscanf(&source[indent], format->position, buf) != 1) {
+    if (sscanf(&source[indent], format->gender, buf) != 1) {
         fprintf(stderr, "%s %s", "gender -", ERR_READ_FIELD_M);
         return ERR_GET_FIELD;
     }
@@ -90,60 +96,13 @@ int get_record(const char *source, record_t *record, const format_t *format) {
 
     indent += strlen(buf) + 1;
 
+    GET_FIELD_NUMBER("age", source, indent, format->age, buf, record->age);
 
-    //  age
-    if (sscanf(&source[indent], format->age, buf) != 1) {
-        fprintf(stderr, "%s %s", "age -", ERR_READ_FIELD_M);
-        return ERR_GET_FIELD;
-    }
+    GET_FIELD_NUMBER("salary", source, indent, format->salary, buf, record->salary);
 
-    record->age = strtoul(buf, &end, 0);
-    if (*end != '\0') {
-        fprintf(stderr, "%s %s", "age -", ERR_CONVERSION_M);
-        return ERR_CONVERT_NUMBER;
-    }
+    GET_FIELD_STR("position", source, indent, format->position, buf, record->position);
 
-    indent += strlen(buf) + 1;
-
-
-    //  salary
-    if (sscanf(&source[indent], format->salary, buf) != 1) {
-        fprintf(stderr, "%s %s", "salary -", ERR_READ_FIELD_M);
-        return ERR_GET_FIELD;
-    }
-
-    record->salary = strtoul(buf, &end, 0);
-    if (*end != '\0') {
-        fprintf(stderr, "%s %s", "salary -", ERR_CONVERSION_M);
-        return ERR_CONVERT_NUMBER;
-    }
-    indent += strlen(buf) + 1;
-
-
-    //  position
-    if (sscanf(&source[indent], format->position, buf) != 1) {
-        fprintf(stderr, "%s %s", "position -", ERR_READ_FIELD_M);
-        return ERR_GET_FIELD;
-    }
-    record->position = create_str(buf);
-    if (!record->position) {
-        return ERR_ALOCC;
-    }
-
-    indent += strlen(buf);
-
-
-    //  experience
-    if (sscanf(&source[indent], format->experience, buf) != 1) {
-        fprintf(stderr, "%s %s", "experience -", ERR_READ_FIELD_M);
-        return ERR_GET_FIELD;
-    }
-
-    record->experience = strtoul(buf, &end, 0);
-    if (*end != '\0') {
-        fprintf(stderr, "%s %s", "experience -", ERR_CONVERSION_M);
-        return ERR_CONVERT_NUMBER;
-    }
+    GET_FIELD_NUMBER("experience", source, indent, format->experience, buf, record->experience);
 
     return SUCCESS;
 }
