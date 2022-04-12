@@ -120,7 +120,6 @@ int get_record(const char *source, record_t *record, const format_t *format) {
     indent += strlen(buf) + 1;
 
 
-
     //  position
     if (sscanf(&source[indent], format->position, buf) != 1) {
         fprintf(stderr, "%s %s", "position -", ERR_READ_FIELD_M);
