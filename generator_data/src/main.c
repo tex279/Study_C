@@ -12,20 +12,20 @@
 
 int main(int argc, const char **argv) {
     if (argc < NEEDED_COUNT_ARG) {
-        fprintf(stderr, "incorrect input");
+        fprintf(stderr, ERR_INPUT_M);
         return ERR_INPUT;
     }
 
     char* end = NULL;
     size_t sample_size  = strtoul(argv[1], &end, 0);
     if (*end != '\0') {
-        fprintf(stderr, "incorrect input sample size");
+        fprintf(stderr, ERR_CONVERSION_M);
         return ERR_INPUT;
     }
 
     database_t *db = load_data(argv, 2);
     if (!db) {
-        fprintf(stderr, "error load data");
+        fprintf(stderr, ERR_LOAD_DATA_M);
         return LOAD_DATA;
     }
 
@@ -33,6 +33,7 @@ int main(int argc, const char **argv) {
 
     int res = generate(path_output, sample_size, db);
     if (res < 0) {
+        fprintf(stderr, ERR_GENERATE_M);
         return ERR_GENERATE;
     }
 

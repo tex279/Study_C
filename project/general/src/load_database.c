@@ -14,7 +14,7 @@
 database_t *create_database() {
     database_t *db = calloc(1, sizeof(database_t));
     if (!db) {
-        fprintf(stderr, "memory allocation error\n");
+        fprintf(stderr, ERR_ALOC_M);
         return NULL;
     }
 
@@ -24,14 +24,14 @@ database_t *create_database() {
 int load_database(const char *source, database_t *db) {
     format_t *set_format = create_set_format();
     if (!set_format) {
-        fprintf(stderr, "error create set formats\n");
+        fprintf(stderr, ERR_CREATE_SET_FORMATS_M);
         return ERR_CREATE_SET_FORMATS;
     }
 
     FILE *target = fopen(source, "r");
     if (!target) {
         free_set_format(set_format);
-        fprintf(stderr, "error open file for read\n");
+        fprintf(stderr, ERR_OPEN_F_READ_M);
         return ERR_OPEN_FILE;
     }
 
@@ -48,7 +48,7 @@ int load_database(const char *source, database_t *db) {
 
     db->set_records = create_set_record(numb_records);
     if (!db->set_records) {
-        fprintf(stderr, "error create set records\n");
+        fprintf(stderr, ERR_CREATE_SET_RECORDS_M);
 
         free_set_format(set_format);
         fclose(target);
@@ -62,7 +62,7 @@ int load_database(const char *source, database_t *db) {
         fgets(global, length_buf, target);
 
         if (get_record(global, db->set_records[i], set_format) < 0) {
-            fprintf(stderr, "error get records\n");
+            fprintf(stderr, ERR_READ_RECORD_M);
 
             fclose(target);
             free_set_format(set_format);
@@ -74,7 +74,7 @@ int load_database(const char *source, database_t *db) {
     free_set_format(set_format);
 
     if (fclose(target)) {
-        fprintf(stderr, "failed close file\n");
+        fprintf(stderr, ERR_CLOSE_F_M);
         return ERR_CLOSE_FILE;
     }
 

@@ -10,7 +10,7 @@
 format_t *create_set_format() {
     format_t *format = calloc(1, sizeof(format_t));
     if (!format) {
-        fprintf(stderr, "memory allocation error\n");
+        fprintf(stderr, ERR_ALOC_M);
         return NULL;
     }
 
@@ -22,7 +22,7 @@ format_t *create_set_format() {
 
     format->surname = create_format(L_SURNAME, LENGTH_STRING_FORMAT);
     if (!format->surname) {
-        fprintf(stderr, "memory allocation error\n");
+        fprintf(stderr, ERR_ALOC_M);
 
         free_set_format(format);
         return NULL;
@@ -30,7 +30,7 @@ format_t *create_set_format() {
 
     format->gender = create_format(L_GENDER, LENGTH_STRING_FORMAT);
     if (!format->gender) {
-        fprintf(stderr, "memory allocation error\n");
+        fprintf(stderr, ERR_ALOC_M);
 
         free_set_format(format);
         return NULL;
@@ -38,7 +38,7 @@ format_t *create_set_format() {
 
     format->age = create_format(L_AGE, LENGTH_STRING_FORMAT);
     if (!format->age) {
-        fprintf(stderr, "memory allocation error\n");
+        fprintf(stderr, ERR_ALOC_M);
 
         free_set_format(format);
         return NULL;
@@ -46,7 +46,7 @@ format_t *create_set_format() {
 
     format->salary = create_format(L_SALARY, LENGTH_STRING_FORMAT);
     if (!format->salary) {
-        fprintf(stderr, "memory allocation error\n");
+        fprintf(stderr, ERR_ALOC_M);
 
         free_set_format(format);
         return NULL;
@@ -54,7 +54,7 @@ format_t *create_set_format() {
 
     format->position = create_format(L_POSITION, LENGTH_STRING_FORMAT);
     if (!format->position) {
-        fprintf(stderr, "memory allocation error\n");
+        fprintf(stderr, ERR_ALOC_M);
 
         free_set_format(format);
         return NULL;
@@ -62,7 +62,7 @@ format_t *create_set_format() {
 
     format->experience = create_format(L_EXPERIENCE, LENGTH_STRING_FORMAT);
     if (!format->experience) {
-        fprintf(stderr, "memory allocation error\n");
+        fprintf(stderr, ERR_ALOC_M);
 
         free_set_format(format);
         return NULL;

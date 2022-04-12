@@ -18,6 +18,35 @@
 #define IMPERATIVE_MODEL 1
 #define MULTI_THREADED_MODEL 2
 
+int get_report(database_t *db, long type_work) {
+    switch (type_work) {
+        case IMPERATIVE_MODEL: {
+            if (get_average_salary_report(db) < 0) {
+                fprintf(stderr, "error get average salary report\n");
+                free_database(db);
+                return ERR_GET_REPORT;
+            }
+
+            break;
+        }
+        case MULTI_THREADED_MODEL: {
+            if (get_average_salary_report_ml(db) < 0) {
+                fprintf(stderr, "error get average salary report\n");
+                free_database(db);
+                return ERR_GET_REPORT;
+            }
+
+            break;
+        }
+        default: {
+            fprintf(stderr, "incorrect input type work: not such type");
+            return ERR_WRONG_TYPE_WORK;
+        }
+    }
+
+    return EXIT_SUCCESS;
+}
+
 int main(int argc, const char **argv) {
     if (argc < NEEDED_COUNT_ARG) {
         fprintf(stderr, "incorrect input\n");
@@ -54,29 +83,8 @@ int main(int argc, const char **argv) {
         return ERR_INPUT;
     }
 
-    switch (type_work) {
-        case IMPERATIVE_MODEL: {
-            if (get_average_salary_report(db) < 0) {
-                fprintf(stderr, "error get average salary report\n");
-                free_database(db);
-                return ERR_GET_REPORT;
-            }
-
-            break;
-        }
-        case MULTI_THREADED_MODEL: {
-            if (get_average_salary_report_ml(db) < 0) {
-                fprintf(stderr, "error get average salary report\n");
-                free_database(db);
-                return ERR_GET_REPORT;
-            }
-
-            break;
-        }
-        default: {
-            fprintf(stderr, "incorrect input type work: not such type");
-            return ERR_WRONG_TYPE_WORK;
-        }
+    if (get_report(db, type_work) < 0) {
+        return ERR_GET_REPORT;
     }
 
     free_database(db);

@@ -1,8 +1,12 @@
 #pragma once //  NOLINT
 
 #define ERR_ACOC -1
-
 #define SUCCESS 1
+
+#define ERR_OPEN_F_WRITE_M "error open file for write\n"
+#define ERR_CLOSE_F_M "failed close file\n"
+
+#define ERR_GET_REPORT_M "error get report\n"
 
 #include "load_database.h"
 

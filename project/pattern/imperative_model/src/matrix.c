@@ -6,14 +6,14 @@
 size_t **create_matrix(const size_t row, const size_t col) {
     size_t **matrix  = calloc(row, sizeof(size_t*));
     if (!matrix) {
-        fprintf(stderr, "memory allocation error\n");
+        fprintf(stderr, ERR_ALOC_M);
         return NULL;
     }
 
     for (size_t i = 0; i < row; ++i) {
         matrix[i] = calloc(col, sizeof(size_t));
         if (!matrix[i]) {
-            fprintf(stderr, "memory allocation error\n");
+            fprintf(stderr, ERR_ALOC_M);
             return NULL;
         }
     }

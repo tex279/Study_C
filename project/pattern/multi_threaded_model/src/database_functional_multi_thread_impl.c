@@ -30,7 +30,7 @@ size_t *get_count_workers_ml(const database_t *db) {
 
     size_t *distribution  = calloc(db->number_positions, sizeof(size_t));
     if (!distribution) {
-        fprintf(stderr, "memory allocation error for workers\n");
+        fprintf(stderr, ERR_ALOC_M);
         return NULL;
     }
 
@@ -53,7 +53,7 @@ size_t *get_count_workers_ml(const database_t *db) {
 int print_report_position_ml(const char *target, const size_t *distribution) {
     FILE *tg = fopen(target, "w+");
     if (!tg) {
-        fprintf(stderr, "error open file for write for position\n");
+        fprintf(stderr, ERR_OPEN_F_READ_M);
         return ERR_OPEN_FILE;
     }
 
@@ -64,7 +64,7 @@ int print_report_position_ml(const char *target, const size_t *distribution) {
     }
 
     if (fclose(tg)) {
-        fprintf(stderr, "failed close file for position\n");
+        fprintf(stderr, ERR_CLOSE_F_M);
         return ERR_CLOSE_FILE;
     }
 
@@ -112,7 +112,7 @@ void *get_interval_report_pos(void *ptr) {
     report_thr_args *args = (report_thr_args *)ptr;
 
     if (get_report_salary_ml(args->begin, args->end, args->count_pos) < 0) {
-        fprintf(stdout, "error get report\n");
+        fprintf(stdout, ERR_GET_REPORT_M);
         return NULL;
     }
 
@@ -134,7 +134,7 @@ size_t shift_pos(const size_t step, const size_t iter, const size_t *set) {
 size_t *get_dynamic_distribution(const size_t res_count, const size_t count_objects, const size_t count_workers) {
     size_t *distribution  = calloc(res_count, sizeof(size_t));
     if (!distribution) {
-        fprintf(stderr, "memory allocation error for get count workers thread\n");
+        fprintf(stderr, ERR_ALOC_M);
         return NULL;
     }
 

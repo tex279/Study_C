@@ -65,7 +65,7 @@ bool position_rule_less(const record_t *r_left, const record_t *r_right);
 
 void swap_record(record_t *r_left, record_t *r_right);
 
-void sort_set_record_q(record_t **array, size_t l, size_t r, sort_rule_t rule);
+void sort_set_record_q(record_t **array, size_t left, size_t right, sort_rule_t rule);
 
 void sort_quick_recursive(record_t **array, size_t size, sort_rule_t rule);
 

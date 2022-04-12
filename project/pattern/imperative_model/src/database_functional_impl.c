@@ -24,7 +24,7 @@ const char format[] = {".txt"};
 int print_report_position(const char *target, const size_t *distribution) {
     FILE *tg = fopen(target, "w+");
     if (!tg) {
-        fprintf(stderr, "error open file for write\n");
+        fprintf(stderr, ERR_OPEN_F_WRITE_M);
         return ERR_OPEN_FILE;
     }
 
@@ -35,7 +35,7 @@ int print_report_position(const char *target, const size_t *distribution) {
     }
 
     if (fclose(tg)) {
-        fprintf(stderr, "failed close file\n");
+        fprintf(stderr, ERR_CLOSE_F_M);
         return ERR_CLOSE_FILE;
     }
 
@@ -81,7 +81,7 @@ int get_report_salary(record_t **begin, const size_t count_out_pos, const size_t
 
 int get_average_salary_report(const database_t *db) {
     if (get_report_salary(db->set_records, db->number_positions , db->number_records) < 0) {
-        fprintf(stderr, "error get report\n");
+        fprintf(stderr, ERR_GET_REPORT_M);
         return ERR_GET_REPORT;
     }
 

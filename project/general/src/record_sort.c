@@ -18,13 +18,13 @@ void swap_record(record_t *r_left, record_t *r_right) {
     *r_right = tmp;
 }
 
-void sort_set_record_q(record_t **array, size_t l, size_t r, sort_rule_t rule) {
-    size_t i = l;
-    size_t j = r;
+void sort_set_record_q(record_t **array, size_t left, size_t right, sort_rule_t rule) {
+    size_t i = left;
+    size_t j = right;
 
-    record_t *pp_left = array[l];
-    record_t *pp_right = array[r];
-    record_t *pp_mid = array[(l + r) >> 1];
+    record_t *pp_left = array[left];
+    record_t *pp_right = array[right];
+    record_t *pp_mid = array[(left + right) >> 1];
 
     if (rule(pp_left, pp_right)) {
         swap_record(pp_left, pp_right);
@@ -53,12 +53,12 @@ void sort_set_record_q(record_t **array, size_t l, size_t r, sort_rule_t rule) {
         }
     }
 
-    if (l < j) {
-        sort_set_record_q(array, l, j, rule);
+    if (left < j) {
+        sort_set_record_q(array, left, j, rule);
     }
 
-    if (i < r) {
-        sort_set_record_q(array, i, r, rule);
+    if (i < right) {
+        sort_set_record_q(array, i, right, rule);
     }
 }
 

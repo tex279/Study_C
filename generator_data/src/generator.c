@@ -4,6 +4,7 @@
 #include <stddef.h>
 
 #include "load_variants.h"
+#include "utils.h"
 
 #define MAX_AGE 100
 #define MIN_AGE 22
@@ -26,7 +27,7 @@ char *get_rand_value(char **source, const size_t min, const size_t max) {
 int generate(const char *path_output, const size_t sample_size, const database_t *db) {
     FILE *target = fopen(path_output, "w+");
     if (!target) {
-        fprintf(stderr, "error open file for write");
+        fprintf(stderr, ERR_OPEN_F_WRITE_M);
         return ERR_OPEN_FILE;
     }
 
@@ -51,13 +52,10 @@ int generate(const char *path_output, const size_t sample_size, const database_t
         //  surname
         if (type_surname) {
             fprintf(target,"%s ", get_rand_value(db->set_surname, 0, db->count_surname));
+        } else if (gender) {
+            fprintf(target,"%s ", get_rand_value(db->set_female_surname, 0, db->count_female_surname));
         } else {
-            if (gender) {
-                fprintf(target,"%s ", get_rand_value(db->set_female_surname, 0, db->count_female_surname));
-            } else {
-                fprintf(target,"%s ", get_rand_value(db->set_male_surname, 0, db->count_male_surname));
-            }
-
+            fprintf(target,"%s ", get_rand_value(db->set_male_surname, 0, db->count_male_surname));
         }
 
         //  gender
@@ -81,7 +79,7 @@ int generate(const char *path_output, const size_t sample_size, const database_t
     }
 
     if (fclose(target)) {
-        fprintf(stderr, "failed close file");
+        fprintf(stderr, ERR_CLOSE_F_M);
         return ERR_CLOSE_FILE;
     }
 

@@ -2,19 +2,16 @@
 #include <string.h>
 #include <stdio.h>
 
-
 #include "load_variants.h"
-
 #include "utils.h"
 
 #define BUF_SIZE 64
-
 #define LENGTH_STRING_FORMAT 10
 
 int get_set(const char *source, char ***set_l) {
     FILE *flow_source = fopen(source, "r");
     if (!flow_source) {
-        fprintf(stderr, "error open file for read\n");
+        fprintf(stderr, ERR_OPEN_F_READ_M);
         return ERR_OPEN_FILE;
     }
 
@@ -23,7 +20,7 @@ int get_set(const char *source, char ***set_l) {
 
     char **set = calloc((size_t)count, sizeof(char*));
     if (!set) {
-        fprintf(stderr, "memory allocation error\n");
+        fprintf(stderr, ERR_ALOC_M);
         return ERR_ACOC;
     }
 
@@ -37,7 +34,7 @@ int get_set(const char *source, char ***set_l) {
 
         if (fscanf(flow_source, format, buf) != 1) {
             free(format);
-            fprintf(stderr, "error read record\n");
+            fprintf(stderr, ERR_READ_RECORD_M);
             return ERR_READ;
         }
 
@@ -47,7 +44,7 @@ int get_set(const char *source, char ***set_l) {
     free(format);
 
     if (fclose(flow_source)) {
-        fprintf(stderr, "failed close file\n");
+        fprintf(stderr, ERR_CLOSE_F_M);
         return ERR_CLOSE_FILE;
     }
 
@@ -59,7 +56,7 @@ int get_set(const char *source, char ***set_l) {
 database_t *create_db() {
     database_t *db = calloc(1, sizeof(database_t));
     if (!db) {
-        fprintf(stderr, "memory allocation error\n");
+        fprintf(stderr, ERR_ALOC_M);
         return NULL;
     }
 

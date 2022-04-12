@@ -8,12 +8,14 @@
 #define ERR_GET_FIELD -1
 #define ERR_CONVERT_NUMBER -2
 
+#define MAX_BUF_LENGTH 64
+
 const char female[] = {"female"};
 
 record_t *create_record() {
     record_t *record = calloc(1, sizeof(record_t));
     if (!record) {
-        fprintf(stderr, "memory allocation error\n");
+        fprintf(stderr, ERR_ALOC_M);
 
         free(record);
         return NULL;
@@ -25,7 +27,7 @@ record_t *create_record() {
 record_t **create_set_record(const size_t number_records) {
     record_t **set_record = calloc(number_records, sizeof(record_t*));
     if (!set_record) {
-        fprintf(stderr, "memory allocation error\n");
+        fprintf(stderr, ERR_ALOC_M);
         return NULL;
     }
 
@@ -46,97 +48,101 @@ int get_record(const char *source, record_t *record, const format_t *format) {
 
     char *end = NULL;
 
-    char buf_name[L_NAME];
-    if (sscanf(&source[indent], format->name, buf_name) != 1) {
-        fprintf(stderr, "error get field name\n");
+
+    //  name
+    char buf[MAX_BUF_LENGTH];
+    if (sscanf(&source[indent], format->name, buf) != 1) {
+        fprintf(stderr, "%s %s", "name -", ERR_READ_FIELD_M);
         free(record);
         return ERR_GET_FIELD;
     }
-    record->name = create_str(buf_name);
+    record->name = create_str(buf);
     if (!record->name) {
         return ERR_ALOCC;
     }
 
-    indent += strlen(buf_name) + 1;
+    indent += strlen(buf) + 1;
 
-    char buf_surname[L_SURNAME];
-    if (sscanf(&source[indent], format->surname, buf_surname) != 1) {
-        fprintf(stderr, "error get field surname\n");
+
+    // surname
+    if (sscanf(&source[indent], format->surname, buf) != 1) {
+        fprintf(stderr, "%s %s", "surname -", ERR_READ_FIELD_M);
         return ERR_GET_FIELD;
     }
-    record->surname = create_str(buf_surname);
+    record->surname = create_str(buf);
     if (!record->surname) {
         return ERR_ALOCC;
     }
 
-    indent += strlen(buf_surname) + 1;
+    indent += strlen(buf) + 1;
 
 
-    char buf_gender[L_GENDER];
-    if (sscanf(&source[indent], format->position, buf_gender) != 1) {
-        fprintf(stderr, "error get field gender\n");
+    //  gender
+    if (sscanf(&source[indent], format->position, buf) != 1) {
+        fprintf(stderr, "%s %s", "gender -", ERR_READ_FIELD_M);
         return ERR_GET_FIELD;
     }
-    if (strcmp(buf_gender, female) == 0) {
+    if (strcmp(buf, female) == 0) {
         record->gender = true;
     } else {
         record->gender = false;
     }
 
-    indent += strlen(buf_gender) + 1;
+    indent += strlen(buf) + 1;
 
 
-    char buf_age[L_AGE];
-    if (sscanf(&source[indent], format->age, buf_age) != 1) {
-        fprintf(stderr, "error get field age\n");
+    //  age
+    if (sscanf(&source[indent], format->age, buf) != 1) {
+        fprintf(stderr, "%s %s", "age -", ERR_READ_FIELD_M);
         return ERR_GET_FIELD;
     }
 
-    record->age = strtoul(buf_age, &end, 0);
+    record->age = strtoul(buf, &end, 0);
     if (*end != '\0') {
-        fprintf(stderr, "error convert str to number age\n");
+        fprintf(stderr, "%s %s", "age -", ERR_CONVERSION_M);
         return ERR_CONVERT_NUMBER;
     }
 
-    indent += strlen(buf_age) + 1;
+    indent += strlen(buf) + 1;
 
 
-    char buf_salary[L_SALARY];
-    if (sscanf(&source[indent], format->salary, buf_salary) != 1) {
-        fprintf(stderr, "error get field salary\n");
+    //  salary
+    if (sscanf(&source[indent], format->salary, buf) != 1) {
+        fprintf(stderr, "%s %s", "salary -", ERR_READ_FIELD_M);
         return ERR_GET_FIELD;
     }
 
-    record->salary = strtoul(buf_salary, &end, 0);
+    record->salary = strtoul(buf, &end, 0);
     if (*end != '\0') {
-        fprintf(stderr, "error convert str to number salary\n");
+        fprintf(stderr, "%s %s", "salary -", ERR_CONVERSION_M);
         return ERR_CONVERT_NUMBER;
     }
-    indent += strlen(buf_salary) + 1;
+    indent += strlen(buf) + 1;
 
 
-    char buf_position[L_POSITION];
-    if (sscanf(&source[indent], format->position, buf_position) != 1) {
-        fprintf(stderr, "error get field position\n");
+
+    //  position
+    if (sscanf(&source[indent], format->position, buf) != 1) {
+        fprintf(stderr, "%s %s", "position -", ERR_READ_FIELD_M);
         return ERR_GET_FIELD;
     }
-    record->position = create_str(buf_position);
+    record->position = create_str(buf);
     if (!record->position) {
         return ERR_ALOCC;
     }
 
-    indent += strlen(buf_position);
+    indent += strlen(buf);
 
 
-    char buf_experience[L_EXPERIENCE];
-    if (sscanf(&source[indent], format->experience, buf_experience) != 1) {
-        fprintf(stderr, "error get field experience\n");
+    //  experience
+    if (sscanf(&source[indent], format->experience, buf) != 1) {
+        fprintf(stderr, "%s %s", "experience -", ERR_READ_FIELD_M);
         return ERR_GET_FIELD;
     }
 
-    record->experience = strtoul(buf_experience, &end, 0);
+    record->experience = strtoul(buf, &end, 0);
     if (*end != '\0') {
-        fprintf(stderr, "error convert str to number experience\n");
+        fprintf(stderr, "%s %s", "experience -", ERR_CONVERSION_M);
         return ERR_CONVERT_NUMBER;
     }
 
@@ -176,7 +182,7 @@ int print_set_record(const char *path_output, const database_t *db) {
     if (path_output) {
         target = fopen(path_output, "w+");
         if (!target) {
-            fprintf(stderr, "error open file for read\n");
+            fprintf(stderr, ERR_OPEN_F_READ_M);
             return ERR_OPEN_FILE;
         }
     }
@@ -192,7 +198,7 @@ int print_set_record(const char *path_output, const database_t *db) {
 
     if (path_output) {
         if (fclose(target)) {
-            fprintf(stderr, "failed close file\n");
+            fprintf(stderr, ERR_CLOSE_F_M);
             return ERR_CLOSE_FILE;
         }
     }
