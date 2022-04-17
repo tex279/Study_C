@@ -18,4 +18,4 @@
 
 7 - 3
 
-https://contest.yandex.ru/contest/36255/enter
+https://contest.yandex.ru/contest/36255/enter 
