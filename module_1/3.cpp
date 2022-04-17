@@ -71,7 +71,7 @@ void Deque::Resize() {
         new_buf[i] = array[i];
     }
 
-    delete array;
+    delete[] array;
 
     array = new_buf;
 }
