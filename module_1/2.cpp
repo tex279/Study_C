@@ -69,9 +69,6 @@ int *input_array(size_t max_count, size_t &count) {
     assert(count <= max_count);
 
     int *res = new int [count];
-    if (!res) {
-        return nullptr;
-    }
 
     for (size_t i = 0; i < count; ++i) {
         std::cin >> res[i];

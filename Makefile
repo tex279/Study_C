@@ -2,7 +2,7 @@
 
 all: clear build launch
 
-TARGET_DZ = 4
+TARGET_DZ = 5
 
 TARGET_RK = A
 
