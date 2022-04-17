@@ -1,5 +1,24 @@
 #include <iostream>
 
+//    В операционной системе Technux есть планировщик процессов.
+//    Каждый процесс характеризуется:
+//
+//    приоритетом P
+//    временем, которое он уже отработал t
+//            временем, которое необходимо для завершения работы процесса T
+//
+//    Планировщик процессов выбирает процесс с минимальным значением P * (t + 1), выполняет его время P и кладет обратно в очередь процессов.
+//    Если выполняется условие t >= T, то процесс считается завершенным и удаляется из очереди.
+//    Требуется посчитать кол-во переключений процессора.
+//
+//    Требования:
+//
+//    В качестве очереди с приоритетом нужно использовать кучу.
+//    Куча должна быть реализована в виде шаблонного класса.
+//    Решение должно поддерживать передачу функции сравнения снаружи.
+//    Куча должна быть динамической.
+
+
 #define START_CAPACITY 16
 
 template<typename T>
@@ -185,6 +204,8 @@ void Heap<T, CompareRule>::Add(T data) {
     }
 }
 
+
+
 template<typename T, class CompareRule>
 T Heap<T, CompareRule>::ExtractTop() {
     T res = array[0];
@@ -205,24 +226,6 @@ void Heap<T, CompareRule>::Print(std::ostream &output) {
     for (size_t i = 0; i < size; ++i) {
         output << "(" << i << ")" << " " << array[i];
     }
-}
-
-
-
-void run_work_test(std::istream &input, std::ostream &output) {
-    size_t count = 0;
-
-    input >> count;
-
-    int *array = new int [count];
-
-    for (size_t i = 0; i < count; ++i) {
-        input >> array[i];
-    }
-
-    Heap<int, More<int>> heap(array, count);
-
-    heap.Print(output);
 }
 
 void run_work(std::istream &input, std::ostream &output) {
