@@ -4,9 +4,21 @@
 
 template<typename T>
 struct ProcessElement {
-    T total_time;
-    T worked_time;
-    int priority;
+    T time;
+    T work_time;
+    T priority;
+    friend std::ostream& operator<<(std::ostream &os, const ProcessElement<T> &it)  {
+        return os << it.priority << " " << it.work_time << " " << it.time << std::endl;
+    }
+};
+
+
+template<typename T>
+class LessPriorityTime {
+public:
+    bool operator() (const ProcessElement<T> &l, const ProcessElement<T> &r) const {
+        return (l.priority * (l.work_time + 1)) < (r.priority * (r.work_time + 1));
+    }
 };
 
 template<typename T>
@@ -181,7 +193,9 @@ T Heap<T, CompareRule>::ExtractTop() {
 
     --size;
 
-    SiftDown(0);
+    if (!IsEmpty()) {
+        SiftDown(0);
+    }
 
     return res;
 }
@@ -189,15 +203,13 @@ T Heap<T, CompareRule>::ExtractTop() {
 template<typename T, class CompareRule>
 void Heap<T, CompareRule>::Print(std::ostream &output) {
     for (size_t i = 0; i < size; ++i) {
-        output << array[i] << "(" << i << ")" << " ";
+        output << "(" << i << ")" << " " << array[i];
     }
-
-    output << std::endl;
 }
 
 
 
-void run_work(std::istream &input, std::ostream &output) {
+void run_work_test(std::istream &input, std::ostream &output) {
     size_t count = 0;
 
     input >> count;
@@ -211,6 +223,37 @@ void run_work(std::istream &input, std::ostream &output) {
     Heap<int, More<int>> heap(array, count);
 
     heap.Print(output);
+}
+
+void run_work(std::istream &input, std::ostream &output) {
+    size_t count = 0;
+
+    input >> count;
+
+    ProcessElement<int> *array = new ProcessElement<int>[count];
+
+    for (size_t i = 0; i < count; ++i) {
+        input >> array[i].priority >> array[i].time;
+    }
+
+    Heap<ProcessElement<int>, LessPriorityTime<int>> heap(array, count);
+
+    //  heap.Print(output);
+
+    size_t count_processor = 0;
+    while (!heap.IsEmpty()) {
+        ProcessElement<int> tmp = heap.ExtractTop();
+
+        tmp.work_time += tmp.priority;
+
+        if (tmp.work_time < tmp.time) {
+            heap.Add(tmp);
+        }
+
+        count_processor++;
+    }
+
+    output << count_processor << std::endl;
 }
 
 int main() {
