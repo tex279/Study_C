@@ -134,23 +134,23 @@ void Heap<T, CompareRule>::SiftDown(size_t pos) {
         child_left = 2 * pos + 1;
         child_right = 2 * pos + 2;
 
-        if (child_left > size - 1) {
+        if (child_left <= size - 1) {
+            max_child = child_left;
+        } else {
             break;
         }
 
-        if (rule(array[child_left], array[child_right])) {
-            max_child = child_left;
-        } else {
+        if (child_left < size - 1 && rule(array[child_right], array[max_child])) {
             max_child = child_right;
         }
 
         if (rule(array[pos], array[max_child])) {
             break;
+        } else {
+            std::swap(array[pos], array[max_child]);
+
+            pos = max_child;
         }
-
-        std::swap(array[pos], array[max_child]);
-
-        pos = max_child;
     }
 
 }
@@ -208,7 +208,7 @@ void run_work(std::istream &input, std::ostream &output) {
         input >> array[i];
     }
 
-    Heap<int, Less<int>> heap(array, count);
+    Heap<int, More<int>> heap(array, count);
 
     heap.Print(output);
 }
