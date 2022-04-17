@@ -2,13 +2,37 @@
 
 #define START_CAPACITY 16
 
+template<typename T>
+struct ProcessElement {
+    T total_time;
+    T worked_time;
+    int priority;
+};
+
+template<typename T>
+class Less {
+public:
+    bool operator() (const T& l, const T& r) const {
+        return l < r;
+    }
+};
+
+template<typename T>
+class More {
+public:
+    bool operator() (const T& l, const T& r) const {
+        return l > r;
+    }
+};
+
+template<typename T, class CompareRule = More<T>>
 class Heap {
     size_t capacity;
     size_t size;
 
-    size_t last;
+    T *array;
 
-    int *array;
+    CompareRule rule;
 
     void SiftUp(size_t pos);
     void SiftDown(size_t pos);
@@ -18,29 +42,31 @@ public:
     bool IsEmpty();
     bool IsFull();
 
-    void Add(int data);
-    int ExtractTop();
+    void Add(T data);
+    T ExtractTop();
 
     void Print(std::ostream &output);
 
     Heap();
-    Heap(int *arr, size_t size_arr);
+    Heap(T *arr, size_t size_arr);
     ~Heap();
+
+    Heap(const T& other) = delete;
+    Heap &operator=(const Heap &other) = delete;
 };
 
-Heap::Heap() {
-    array = new int[START_CAPACITY];
+template<typename T, class CompareRule>
+Heap<T, CompareRule>::Heap() {
+    array = new T[START_CAPACITY];
     capacity = START_CAPACITY;
-    last = 0;
     size = 0;
 }
 
-Heap::Heap(int *arr, size_t size_arr) : Heap() {
+template<typename T, class CompareRule>
+Heap<T, CompareRule>::Heap(T *arr, size_t size_arr) : Heap() {
     while (capacity < size_arr) {
         Resize();
     }
-
-    last = size_arr - 1;
 
     size = size_arr;
 
@@ -53,22 +79,26 @@ Heap::Heap(int *arr, size_t size_arr) : Heap() {
     }
 }
 
-Heap::~Heap() {
-    delete array;
+template<typename T, class CompareRule>
+Heap<T, CompareRule>::~Heap() {
+    delete[] array;
 }
 
-bool Heap::IsEmpty() {
+template<typename T, class CompareRule>
+bool Heap<T, CompareRule>::IsEmpty() {
     return size == 0;
 }
 
-bool Heap::IsFull() {
+template<typename T, class CompareRule>
+bool Heap<T, CompareRule>::IsFull() {
     return size == capacity;
 }
 
-void Heap::Resize() {
+template<typename T, class CompareRule>
+void Heap<T, CompareRule>::Resize() {
     capacity *= 2;
 
-    int *new_buf = new int[capacity];
+    T *new_buf = new T[capacity];
     for (size_t i = 0; i < size; ++i) {
         new_buf[i] = array[i];
     }
@@ -78,11 +108,12 @@ void Heap::Resize() {
     array = new_buf;
 }
 
-void Heap::SiftUp(size_t pos) {
+template<typename T, class CompareRule>
+void Heap<T, CompareRule>::SiftUp(size_t pos) {
     size_t pos_parent = (pos - 1) / 2;
-    while (array[pos_parent] < array[pos]) {
+    while (rule(array[pos], array[pos_parent])) {
 
-        std::swap(array[pos_parent], array[pos]);
+        std::swap(array[pos], array[pos_parent]);
 
         if (pos_parent == 0) {
             break;
@@ -94,7 +125,8 @@ void Heap::SiftUp(size_t pos) {
     }
 }
 
-void Heap::SiftDown(size_t pos) {
+template<typename T, class CompareRule>
+void Heap<T, CompareRule>::SiftDown(size_t pos) {
     size_t child_left = 0;
     size_t child_right = 0;
     size_t max_child = 0;
@@ -102,17 +134,17 @@ void Heap::SiftDown(size_t pos) {
         child_left = 2 * pos + 1;
         child_right = 2 * pos + 2;
 
-        if (child_left > last) {
+        if (child_left > size - 1) {
             break;
         }
 
-        if (array[child_left] > array[child_right]) {
+        if (rule(array[child_left], array[child_right])) {
             max_child = child_left;
         } else {
             max_child = child_right;
         }
 
-        if (array[pos] > array[max_child]) {
+        if (rule(array[pos], array[max_child])) {
             break;
         }
 
@@ -123,46 +155,49 @@ void Heap::SiftDown(size_t pos) {
 
 }
 
-void Heap::Add(int data) {
+template<typename T, class CompareRule>
+void Heap<T, CompareRule>::Add(T data) {
     if (IsEmpty()) {
-        array[last] = data;
-        size++;
+        array[0] = data;
+        ++size;
     } else {
         if (IsFull()) {
             Resize();
         }
 
-        last++;
+        ++size;
 
-        array[last] = data;
+        array[size - 1] = data;
 
-        size++;
-
-        SiftUp(last);
+        SiftUp(size - 1);
     }
 }
 
-int Heap::ExtractTop() {
-    int res = array[0];
+template<typename T, class CompareRule>
+T Heap<T, CompareRule>::ExtractTop() {
+    T res = array[0];
 
-    array[0] = array[last];
+    array[0] = array[size - 1];
 
-    size--;
-    last--;
+    --size;
 
     SiftDown(0);
 
     return res;
 }
 
-void Heap::Print(std::ostream &output) {
+template<typename T, class CompareRule>
+void Heap<T, CompareRule>::Print(std::ostream &output) {
     for (size_t i = 0; i < size; ++i) {
         output << array[i] << "(" << i << ")" << " ";
     }
+
     output << std::endl;
 }
 
-void run_work_place(std::istream &input, std::ostream &output) {
+
+
+void run_work(std::istream &input, std::ostream &output) {
     size_t count = 0;
 
     input >> count;
@@ -173,30 +208,13 @@ void run_work_place(std::istream &input, std::ostream &output) {
         input >> array[i];
     }
 
-    Heap heap(array, count);
-
-    heap.Print(output);
-}
-
-void run_work(std::istream &input, std::ostream &output) {
-    Heap heap;
-
-    size_t count = 0;
-
-    input >> count;
-
-    int buf = 0;
-
-    for (size_t i = 0; i < count; ++i) {
-        input >> buf;
-        heap.Add(buf);
-    }
+    Heap<int, Less<int>> heap(array, count);
 
     heap.Print(output);
 }
 
 int main() {
-    run_work_place(std::cin, std::cout);
+    run_work(std::cin, std::cout);
 
     return EXIT_SUCCESS;
 }
