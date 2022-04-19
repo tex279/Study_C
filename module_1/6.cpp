@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <cassert>
 
@@ -44,21 +45,20 @@ public:
 
 template<typename T, class CompareRule = Less<T>>
 int get_median(T *array, int left, int right, CompareRule rule = Less<T>()) {
-    int median = (left + right) / 2;
+    int rand_pos_1 = (rand() % (right - left - 1)) + left;
+    int rand_pos_2 = (rand() % (right - left - 1)) + left;
+    int rand_pos_3 = (rand() % (right - left - 1)) + left;
 
-    if (rule(array[left], array[right])) {
-        std::swap(left, right);
-    }
+    T mediana = (array[rand_pos_1] + array[rand_pos_2] + array[rand_pos_3]) / 3.0;
 
-    if (rule(array[left], array[median])) {
-        std::swap(left, median);
-    }
+    if (rule(std::abs(mediana - array[rand_pos_2]), std::abs(mediana - array[rand_pos_1])))
+        std::swap(rand_pos_2, rand_pos_1);
+    if (rule(std::abs(mediana - array[rand_pos_3]), std::abs(mediana - array[rand_pos_2])))
+        std::swap(rand_pos_3, rand_pos_2);
+    if (rule(std::abs(mediana - array[rand_pos_2]), std::abs(mediana - array[rand_pos_1])))
+        std::swap(rand_pos_2, rand_pos_1);
 
-    if (rule(array[median], array[right])) {
-        std::swap(median, right);
-    }
-
-    return median;
+    return rand_pos_1;
 }
 
 template<typename T, class CompareRule = Less<T>>
@@ -67,7 +67,7 @@ int partition(T *array, int left, int right, CompareRule rule = Less<T>()) {
         return left;
     }
 
-    int pivot = get_median(array, left, right - 1, rule);
+    int pivot = get_median(array, left, right, rule);
 
     std::swap(array[right - 1], array[pivot]);
 
@@ -92,6 +92,8 @@ int partition(T *array, int left, int right, CompareRule rule = Less<T>()) {
 
 template<typename T, class CompareRule = Less<T>>
 T find_k_statistics(T *array, int left, int right, int target, CompareRule rule = Less<T>()) {
+    srand(time(NULL));
+
     while (true) {
         int pos_pivot = partition(array, left, right, rule);
         if (pos_pivot == target) {
