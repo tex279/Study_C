@@ -91,9 +91,10 @@ int partition(T *array, int left, int right, CompareRule rule = Less<T>()) {
 }
 
 template<typename T, class CompareRule = Less<T>>
-T find_k_statistics(T *array, int left, int right, int target, CompareRule rule = Less<T>()) {
+T find_k_statistics(T *array, int right, int target, CompareRule rule = Less<T>()) {
     srand(time(NULL));
 
+    int left = 0;
     while (true) {
         int pos_pivot = partition(array, left, right, rule);
         if (pos_pivot == target) {
@@ -115,9 +116,9 @@ int main() {
     size_t length = 0;
     int *array = input_array(MAX, length);
 
-    std::cout << find_k_statistics(array, 0, length, (length * 0.1)) << std::endl;
-    std::cout << find_k_statistics(array, 0, length, (length * 0.5)) << std::endl;
-    std::cout << find_k_statistics(array, 0, length, (length * 0.9)) << std::endl;
+    std::cout << find_k_statistics(array, length, (length * 0.1)) << std::endl;
+    std::cout << find_k_statistics(array, length, (length * 0.5)) << std::endl;
+    std::cout << find_k_statistics(array, length, (length * 0.9)) << std::endl;
 
     delete[] array;
 
