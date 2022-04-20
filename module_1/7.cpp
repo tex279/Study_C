@@ -63,6 +63,10 @@ void binary_MSD(u_int64_t *arr, size_t begin, size_t end, size_t k = 5) {
             break;
         }
 
+        if (i == j - 1) {
+            break;
+        }
+
         std::swap(arr[i], arr[j]);
         ++i;
         --j;
