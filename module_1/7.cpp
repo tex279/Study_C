@@ -7,13 +7,17 @@
 
 #define MAX_COUNT_ARRAY 1000000
 
+bool get_bit(u_int64_t number, size_t bit) {
+    return ((number >> bit) & 1);
+}
 
-unsigned long long *input_array(size_t max_count, size_t &count) {
+
+u_int64_t *input_array(size_t max_count, size_t &count) {
     std::cin >> count;
 
     assert(count <= max_count);
 
-    unsigned long long *res = new unsigned long long[count];
+    u_int64_t *res = new u_int64_t [count];
 
     for (size_t i = 0; i < count; ++i) {
         std::cin >> res[i];
@@ -23,8 +27,12 @@ unsigned long long *input_array(size_t max_count, size_t &count) {
 }
 
 
-void binary_MSD(unsigned long long *arr, size_t begin, size_t end, size_t k) {
+void binary_MSD(u_int64_t *arr, size_t begin, size_t end, size_t k = 10) {
     assert(arr != nullptr);
+
+    if (end - begin == 1) {
+        return;
+    }
 
     if (!k) {
         return;
@@ -34,23 +42,39 @@ void binary_MSD(unsigned long long *arr, size_t begin, size_t end, size_t k) {
     size_t j = end;
     std::cout << i << " " << j << " " << std::endl;
     while (true) {
-        while (!((arr[i] >> k) & 1) && i < end) {
-            ++i;
+        while (i < end) {
+            if (!((arr[i] >> k) & 1)) {
+                ++i;
+            } else {
+                break;
+            }
         }
 
-        while (((arr[j] >> k) & 1) && j > begin) {
-            --j;
+        if (i == end) {
+            break;
         }
 
-        if (i == j) {
+
+        while (j > begin) {
+            if (((arr[j] >> k) & 1)) {
+                --j;
+            } else {
+                break;
+            }
+        }
+
+        if (j == begin) {
             break;
         }
 
         std::swap(arr[i], arr[j]);
+        ++i;
+        --j;
 
         if (i == j - 1) {
             break;
         }
+
     }
 
     std::cout << begin  << " " << i << " " << j << " " << end << std::endl;
@@ -60,16 +84,16 @@ void binary_MSD(unsigned long long *arr, size_t begin, size_t end, size_t k) {
     }
 
     if (end - j > 1) {
-        //binary_MSD(arr, j, end, k + 1);
+        //  binary_MSD(arr, j, end, k + 1);
     }
 }
 
 
 int main() {
     size_t length = 0;
-    unsigned long long *array = input_array(MAX_COUNT_ARRAY, length);
+    u_int64_t *array = input_array(MAX_COUNT_ARRAY, length);
 
-    binary_MSD(array, 0, length - 1, 32);
+    binary_MSD(array, 0, length - 1);
 
     for(size_t i = 0; i < length; ++i) {
         std::cout << array[i] << " ";
