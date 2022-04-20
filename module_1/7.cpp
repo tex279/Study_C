@@ -4,7 +4,6 @@
 //    Дан массив неотрицательных целых 64-разрядных чисел. Количество чисел не больше 10^6.
 //    Отсортировать массив методом MSD по битам (бинарный QuickSort).
 
-
 #define MAX_COUNT_ARRAY 1000000
 
 bool get_bit(u_int64_t number, size_t bit) {
@@ -32,36 +31,22 @@ void binary_MSD(u_int64_t *arr, size_t begin, size_t end, size_t k = 63) {
 
     size_t i = begin;
     size_t j = end;
-    std::cout << i << " " << j << " " << std::endl;
     while (true) {
         while (!get_bit(arr[i], k) && i < end) {
            ++i;
-            std::cout << i << " " << j << std::endl;
         }
 
         while (get_bit(arr[j], k) && j > begin) {
             --j;
-            std::cout << i << " " << j << std::endl;
         }
 
 
         if (i < j) {
-            std::cout << "--------->" << arr[i] << "   " << arr[j] << "<--------------" << std::endl;
             std::swap(arr[i], arr[j]);
         } else {
             break;
         }
-        std::cout << i << " " << j << std::endl;
-        std::cout << "BINGO" << std::endl;
     }
-
-    std::cout << begin  << " " << i << " " << j << " " << end << std::endl;
-    for(size_t i = begin; i != end + 1; ++i) {
-        std::cout << arr[i] << " ";
-    }
-    std::cout << std::endl;
-    std::cout << "------------------" << std::endl;
-
 
     if (!k) {
         return;
@@ -86,25 +71,9 @@ int main() {
     for(size_t i = 0; i < length; ++i) {
         std::cout << array[i] << " ";
     }
-
     std::cout << std::endl;
 
     delete[] array;
 
     return EXIT_SUCCESS;
 }
-
-/*
- *
- *  while (!((arr[i] >> k) & 1)) {
-            ++i;
-        }
-
-        while ((arr[j] >> k) & 1) {
-            --j;
-        }
-
-        if (i == j - 1) {
-            break;
-        }
- */
