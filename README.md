@@ -16,6 +16,6 @@
 
 6 - 2 - YES
 
-7 - 3
+7 - 3 - YES
 
 https://contest.yandex.ru/contest/36255/enter 
