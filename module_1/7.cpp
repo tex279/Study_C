@@ -51,6 +51,7 @@ void binary_MSD(u_int64_t *arr, size_t begin, size_t end, size_t k = 63) {
         return;
     }
 
+    //  По итогу работы вернехнего цикла i = j + 1 поэтому такой порядок для i и j для рекурсивного вызова.
     if (j - begin > 0) {
         binary_MSD(arr, begin, j, k - 1);
     }
