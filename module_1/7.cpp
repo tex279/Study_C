@@ -27,7 +27,7 @@ u_int64_t *input_array(size_t max_count, size_t &count) {
 }
 
 
-void binary_MSD(u_int64_t *arr, size_t begin, size_t end, size_t k = 5) {
+void binary_MSD(u_int64_t *arr, size_t begin, size_t end, size_t k = 3) {
     assert(arr != nullptr);
 
     if (end - begin == 1) {
@@ -38,41 +38,33 @@ void binary_MSD(u_int64_t *arr, size_t begin, size_t end, size_t k = 5) {
     size_t j = end;
     std::cout << i << " " << j << " " << std::endl;
     while (true) {
-        while (i != j) {
-            if (!get_bit(arr[i], k)) {
-                ++i;
-            } else {
-                break;
-            }
+        while (!get_bit(arr[i], k) && i < j) {
+           ++i;
+            std::cout << i << " " << j << std::endl;
         }
 
-        if (i == j) {
+        while (get_bit(arr[j], k) && j > i) {
+            --j;
+            std::cout << i << " " << j << std::endl;
+        }
+        if (i < j) {
+            std::swap(arr[i], arr[j]);
+            ++i;
+            --j;
+        } else {
             break;
         }
-
-
-        while (j != i) {
-            if (get_bit(arr[j], k)) {
-                --j;
-            } else {
-                break;
-            }
-        }
-
-        if (j == i) {
-            break;
-        }
-
-        if (i == j - 1) {
-            break;
-        }
-
-        std::swap(arr[i], arr[j]);
-        ++i;
-        --j;
+        std::cout << i << " " << j << std::endl;
+        std::cout << "BINGO" << std::endl;
     }
 
-    std::cout << begin  << " " << i << " " << j << " " << end << std::endl;
+    std::cout << begin  << " " << i << " " << j + 1 << " " << end << std::endl;
+    for(size_t i = 0; i != end + 1; ++i) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << std::endl;
+    std::cout << "------------------" << std::endl;
+
 
     if (!k) {
         return;
@@ -82,8 +74,8 @@ void binary_MSD(u_int64_t *arr, size_t begin, size_t end, size_t k = 5) {
         binary_MSD(arr, begin, i, k - 1);
     }
 
-    if (end - j > 1) {
-        binary_MSD(arr, j, end, k - 1);
+    if (end - j + 1 > 1) {
+        binary_MSD(arr, j + 1, end, k - 1);
     }
 }
 
