@@ -33,13 +33,12 @@ void binary_MSD(u_int64_t *arr, size_t begin, size_t end, size_t k = 63) {
     size_t j = end;
     while (true) {
         while (!get_bit(arr[i], k) && i < end) {
-           ++i;
+            ++i;
         }
 
         while (get_bit(arr[j], k) && j > begin) {
             --j;
         }
-
 
         if (i < j) {
             std::swap(arr[i], arr[j]);
