@@ -27,12 +27,8 @@ u_int64_t *input_array(size_t max_count, size_t &count) {
 }
 
 
-void binary_MSD(u_int64_t *arr, size_t begin, size_t end, size_t k = 4) {
+void binary_MSD(u_int64_t *arr, size_t begin, size_t end, size_t k = 63) {
     assert(arr != nullptr);
-
-    if (end - begin <= 1) {
-        return;
-    }
 
     size_t i = begin;
     size_t j = end;
@@ -50,6 +46,7 @@ void binary_MSD(u_int64_t *arr, size_t begin, size_t end, size_t k = 4) {
 
 
         if (i < j) {
+            std::cout << "--------->" << arr[i] << "   " << arr[j] << "<--------------" << std::endl;
             std::swap(arr[i], arr[j]);
         } else {
             break;
@@ -59,7 +56,7 @@ void binary_MSD(u_int64_t *arr, size_t begin, size_t end, size_t k = 4) {
     }
 
     std::cout << begin  << " " << i << " " << j << " " << end << std::endl;
-    for(size_t i = 0; i != end + 1; ++i) {
+    for(size_t i = begin; i != end + 1; ++i) {
         std::cout << arr[i] << " ";
     }
     std::cout << std::endl;
@@ -70,11 +67,11 @@ void binary_MSD(u_int64_t *arr, size_t begin, size_t end, size_t k = 4) {
         return;
     }
 
-    if (j - begin > 1) {
+    if (j - begin > 0) {
         binary_MSD(arr, begin, j, k - 1);
     }
 
-    if (end - i > 1) {
+    if (end - i > 0) {
         binary_MSD(arr, i, end, k - 1);
     }
 }
