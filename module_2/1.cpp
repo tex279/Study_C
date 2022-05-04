@@ -1,32 +1,218 @@
-#include <stdio.h>
 #include <iostream>
 #include <cassert>
+#include <forward_list>
+#include <vector>
 
-//  Инвертируйте значение бита в числе N по его номеру K.
-//  Необходимо использование битовых операций.
-//  Использование арифметических операций запрещено.
+const size_t INITIAL_CAPACITY = 8;
 
-#define MAX_NUMBER (u_int32_t)(2e32 - 1)
-#define MAX_BIT (u_int32_t)(32 - 1)
+const double MAX_ALPHA = 3/4;
 
-u_int32_t input(u_int32_t max) {
-    u_int32_t number = 0;
+const size_t EPSILON = 10e-10;
 
-    std::cin >> number;
 
-    assert(max >= number);
+class StringHasher {
+    size_t prime;
 
-    return number;
+public:
+    StringHasher(size_t prime = 71) : prime(prime);
+
+    size_t operator()(const std::string &str)
+};
+
+size_t StringHasher::operator()(const std::string &str) {
+    size_t hash = 0;
+
+    for (auto &ch : str) {
+        hash = hash * this->prime + ch;
+    }
+
+    return hash;
 }
 
+
+template <typename T>
+struct HashTableNode {
+    T data;
+    HashTableNode<T> *next;
+
+    HashTableNode() : next(nullptr) {};
+
+    HashTableNode(const T &data, HashTableNode<T> *next) : data(data), next(next) {};
+    ~HashTableNode() = default;
+};
+
+template <typename T, typename Hasher>
+class HashTable {
+    std::vector<HashTableNode<T>*> table;
+
+    Hasher hasher;
+
+    size_t size;
+
+    void Resize();
+public:
+    bool IsFull() const;
+
+    bool Add(const T &key);
+    bool Delete(const T &key);
+    bool Has(const T &key);
+    
+    T Extract();
+
+    HashTable(const size_t initial_capacity = INITIAL_CAPACITY) : table(initial_capacity, nullptr), size(0) {};
+    ~HashTable();
+};
+
+template <typename T, typename Hasher>
+HashTable<T, Hasher>::~HashTable() {
+    for (size_t i = 0; i < this->table.size(); ++i) {
+        HashTableNode<T> *node = this->table[i];
+
+        while (node) {
+            HashTableNode<T> *next = node->next;
+
+            delete node;
+
+            node = next;
+        }
+    }
+}
+
+template <typename T, typename Hasher>
+bool HashTable<T, Hasher>::Has(const T &key) {
+    size_t hash = this->hasher(key) % this->table.size();
+
+    HashTableNode<T> *node = this->table[hash];
+    while (node) {
+        if (node->data == key) {
+            return false;
+        }
+
+        node = node->next;
+    }
+
+    table[hash] = new HashTableNode<T>(key, table[hash]);
+
+    this->++size;
+
+    return true;
+}
+
+template <typename T, typename Hasher>
+bool HashTable<T, Hasher>::IsFull() const {
+    return std::abs(this->table.size() * MAX_ALPHA - this->size) < EPSILON;
+}
+
+template <typename T, typename Hasher>
+bool HashTable<T, Hasher>::Add(const T &key) {
+    if (IsFull()) {
+        Resize();
+    }
+
+    size_t hash = this->hasher(key) % this->table.size();
+
+    HashTableNode<T> *node = this->table[hash];
+    while (node) {
+        if (node->data == key) {
+            return true;
+        }
+
+        node = node->next;
+    }
+
+    return false;
+}
+
+template <typename T, typename Hasher>
+void HashTable<T, Hasher>::Resize() {
+    std::vector<HashTableNode<T*>> new_table(this->table.size() * 2, nullptr);
+
+    for (auto &value : this->table) {
+        HashTableNode<T> *node = value;
+
+        while (node) {
+            HashTableNode<T> *next = node->next;
+
+            size_t new_hash = this->hasher(node->data) % new_table.size();
+
+            node->next = new_table[new_hash];
+
+            new_table[new_hash] = node;
+
+            node = next;
+        }
+    }
+
+    this->table = std::move(new_table);
+}
+
+template <typename T, typename Hasher>
+bool HashTable<T, Hasher>::Delete(const T &key) {
+    size_t hash = this->hasher(key) % this->table.size();
+
+    HashTableNode<T> *node = this->table[hash];
+    HashTableNode<T> *prev = nullptr;
+    while (node) {
+        if (node->data == key) {
+            break;
+        }
+        prev = node;
+
+        node = node->next;
+    }
+
+    if (!node) {
+        return false;
+    }
+
+    if (!prev) {
+        this->table[hash] =  node->next;
+    } else {
+        prev->next = node->next;
+    }
+
+    delete node;
+
+    size--;
+
+    return true;
+}
+
+void run(std::istream &input, std::ostream &output) {
+    HashTable<std::string, StringHasher> hash_table;
+
+    char op = {};
+
+    std::string key = {};
+
+    while (input >> op >> key) {
+        switch (op) {
+            case '+': {
+                output << (hash_table.Add(key) ? "OK" : "FAIL") << std::endl;
+                break;
+            }
+
+            case '-': {
+                output << (hash_table.Delete(key) ? "OK" : "FAIL") << std::endl;
+                break;
+            }
+
+            case '?': {
+                output << (hash_table.Has(key) ? "OK" : "FAIL") << std::endl;
+                break;
+            }
+
+            default: {
+                break;
+            }
+
+        }
+    }
+}
+
+
 int main() {
-    u_int32_t number = input(MAX_NUMBER);
-
-    u_int32_t bit = input(MAX_BIT);
-
-    u_int32_t res = number ^ (1 << bit);
-
-    std::cout << res << std::endl;
+    run(std::cin, std::cout);
 
     return EXIT_SUCCESS;
 }
