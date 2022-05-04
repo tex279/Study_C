@@ -2,11 +2,11 @@
 
 all: clear build launch
 
-TARGET_DZ = 7
+TARGET_DZ = 1
 
 TARGET_RK = A
 
-TARGET_MODULE = module_1
+TARGET_MODULE = module_2
 
 build_dz:
 	g++ --std=gnu++20 -Wall -Wextra -Werror -Wpedantic $(TARGET_MODULE)/$(TARGET_DZ).cpp -o task

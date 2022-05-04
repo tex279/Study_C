@@ -14,9 +14,9 @@ class StringHasher {
     size_t prime;
 
 public:
-    StringHasher(size_t prime = 71) : prime(prime);
+    StringHasher(size_t prime = 71) : prime(prime) {};
 
-    size_t operator()(const std::string &str)
+    size_t operator()(const std::string &str);
 };
 
 size_t StringHasher::operator()(const std::string &str) {
@@ -93,7 +93,7 @@ bool HashTable<T, Hasher>::Has(const T &key) {
 
     table[hash] = new HashTableNode<T>(key, table[hash]);
 
-    this->++size;
+    ++this->size;
 
     return true;
 }
@@ -125,7 +125,7 @@ bool HashTable<T, Hasher>::Add(const T &key) {
 
 template <typename T, typename Hasher>
 void HashTable<T, Hasher>::Resize() {
-    std::vector<HashTableNode<T*>> new_table(this->table.size() * 2, nullptr);
+    std::vector<HashTableNode<T>*> new_table(this->table.size() * 2, nullptr);
 
     for (auto &value : this->table) {
         HashTableNode<T> *node = value;
