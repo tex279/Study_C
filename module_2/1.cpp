@@ -6,17 +6,18 @@ const size_t INITIAL_CAPACITY = 8;
 
 const double MAX_ALPHA = 3.0 / 4.0;
 
+enum  status_node {NIL = 0, KEY, DEL};
+
 
 class StringHasher {
-    size_t prime;
-
 public:
-    StringHasher(size_t prime = 71) : prime(prime) {};
+    StringHasher() = default;
+    ~StringHasher() = default;
 
     size_t operator()(const std::string &str);
 };
 
-size_t StringHasher::operator()(const std::string &str) {
+size_t StringHasher::operator()(const std::string &str, const size_t prime) {
     size_t hash = 0;
 
     for (auto &ch: str) {
@@ -26,24 +27,37 @@ size_t StringHasher::operator()(const std::string &str) {
     return hash;
 }
 
+template<typename Hasher>
+class DoubleHashProbing {
+  Hasher hasher;
+public:
+    size_t operator()();
+};
+
+template<typename Hasher>
+size_t DoubleHashProbing<Hasher>::operator()(const std::string &str) {
+    return hasher(str, 71) + hasher(str, 43);
+}
+
 
 template<typename T>
 struct HashTableNode {
     T data;
-    HashTableNode<T> *next;
 
-    HashTableNode() : next(nullptr) {};
+    status_node status;
 
-    HashTableNode(const T &data, HashTableNode<T> *next) : data(data), next(next) {};
+    HashTableNode() : status(NIL);
+
+    HashTableNode(const T &data) : data(data), next(KEY) {};
 
     ~HashTableNode() = default;
 };
 
-template<typename T, typename Hasher>
+template<typename T, typename Probing>
 class HashTable {
-    std::vector<HashTableNode<T> *> table;
+    std::vector<HashTableNode<T>> table;
 
-    Hasher hasher;
+    Probing probing;
 
     size_t size;
 
@@ -58,27 +72,10 @@ public:
 
     bool Search(const T &key);
 
-    T Extract();
-
     HashTable(const size_t initial_capacity = INITIAL_CAPACITY) : table(initial_capacity, nullptr), size(0) {};
 
-    ~HashTable();
+    ~HashTable() = default;
 };
-
-template<typename T, typename Hasher>
-HashTable<T, Hasher>::~HashTable() {
-    for (auto &value: table) {
-        HashTableNode<T> *node = value;
-
-        while (node) {
-            HashTableNode<T> *next = node->next;
-
-            delete node;
-
-            node = next;
-        }
-    }
-}
 
 template<typename T, typename Hasher>
 bool HashTable<T, Hasher>::IsFull() const {
@@ -180,6 +177,7 @@ void HashTable<T, Hasher>::Resize() {
 
     table = std::move(new_table);
 }
+
 
 void run(std::istream &input, std::ostream &output) {
     HashTable<std::string, StringHasher> hash_table;

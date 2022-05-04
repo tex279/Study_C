@@ -58,8 +58,6 @@ public:
 
     bool Search(const T &key);
 
-    T Extract();
-
     HashTable(const size_t initial_capacity = INITIAL_CAPACITY) : table(initial_capacity, nullptr), size(0) {};
 
     ~HashTable();
