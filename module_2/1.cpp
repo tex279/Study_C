@@ -31,12 +31,12 @@ template<typename Hasher>
 class DoubleHashProbing {
   Hasher hasher;
 public:
-    size_t operator()();
+    size_t operator()(const std::string &str, const size_t iteration);
 };
 
 template<typename Hasher>
-size_t DoubleHashProbing<Hasher>::operator()(const std::string &str) {
-    return hasher(str, 71) + hasher(str, 43);
+size_t DoubleHashProbing<Hasher>::operator()(const std::string &str, const size_t iteration) {
+    return hasher(str, 71) + hasher(str, 43) * iteration;
 }
 
 
@@ -84,98 +84,32 @@ bool HashTable<T, Hasher>::IsFull() const {
 
 template<typename T, typename Hasher>
 bool HashTable<T, Hasher>::Add(const T &key) {
-    if (IsFull()) {
-        Resize();
-    }
 
-    size_t hash = hasher(key) % table.size();
-
-    HashTableNode<T> *node = table[hash];
-    while (node) {
-        if (node->data == key) {
-            return false;
-        }
-
-        node = node->next;
-    }
-
-    table[hash] = new HashTableNode<T>(key, table[hash]);
-
-    ++size;
-
-    return true;
 }
 
 template<typename T, typename Hasher>
 bool HashTable<T, Hasher>::Delete(const T &key) {
-    size_t hash = hasher(key) % table.size();
 
-    HashTableNode<T> *node = table[hash];
-
-    HashTableNode<T> *prev = nullptr;
-    while (node) {
-        if (node->data == key) {
-            break;
-        }
-        prev = node;
-
-        node = node->next;
-    }
-
-    if (!node) {
-        return false;
-    }
-
-    if (!prev) {
-        table[hash] = node->next;
-    } else {
-        prev->next = node->next;
-    }
-
-    delete node;
-
-    size--;
-
-    return true;
 }
 
 template<typename T, typename Hasher>
 bool HashTable<T, Hasher>::Search(const T &key) {
-    size_t hash = hasher(key) % table.size();
 
-    HashTableNode<T> *node = table[hash];
-    while (node) {
-        if (node->data == key) {
-            return true;
-        }
-
-        node = node->next;
-    }
-
-    return false;
 }
 
 template<typename T, typename Hasher>
 void HashTable<T, Hasher>::Resize() {
-    std::vector < HashTableNode<T> * > new_table(this->table.size() * 2, nullptr);
+    std::vector <HashTableNode<T>> new_table(this->table.size() * 2, nullptr);
 
-    for (auto &value: table) {
-        HashTableNode<T> *node = value;
-
-        while (node) {
-            HashTableNode<T> *next = node->next;
-
-            size_t new_hash = hasher(node->data) % new_table.size();
-
-            node->next = new_table[new_hash];
-
-            new_table[new_hash] = node;
-
-            node = next;
-        }
-    }
+    std::vector <HashTableNode<T>> buf = std::move(table);
 
     table = std::move(new_table);
+
+    for (auto &value: buf) {
+        if (value.status == KEY) {
+            Add(value.data);
+        }
+    }
 }
 
 
