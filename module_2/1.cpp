@@ -1,12 +1,10 @@
 #include <iostream>
 #include <vector>
-#include <string>
+
 
 const size_t INITIAL_CAPACITY = 8;
 
-const size_t MAX_ALPHA = 2;
-
-const size_t EPSILON = 10e-6;
+const double MAX_ALPHA = 3.0 / 4.0;
 
 
 class StringHasher {
@@ -84,12 +82,12 @@ HashTable<T, Hasher>::~HashTable() {
 
 template<typename T, typename Hasher>
 bool HashTable<T, Hasher>::IsFull() const {
-    return std::abs(this->table.size() * MAX_ALPHA - this->size) < EPSILON;
+    return size == table.size() * MAX_ALPHA;
 }
 
 template<typename T, typename Hasher>
 bool HashTable<T, Hasher>::Add(const T &key) {
-    if (size > table.size() * MAX_ALPHA) {
+    if (IsFull()) {
         Resize();
     }
 
