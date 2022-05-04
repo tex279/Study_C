@@ -56,7 +56,7 @@ public:
 
     bool Delete(const T &key);
 
-    bool Has(const T &key);
+    bool Search(const T &key);
 
     T Extract();
 
@@ -143,7 +143,7 @@ bool HashTable<T, Hasher>::Delete(const T &key) {
 }
 
 template<typename T, typename Hasher>
-bool HashTable<T, Hasher>::Has(const T &key) {
+bool HashTable<T, Hasher>::Search(const T &key) {
     size_t hash = hasher(key) % table.size();
 
     HashTableNode<T> *node = table[hash];
@@ -201,7 +201,7 @@ void run(std::istream &input, std::ostream &output) {
             }
 
             case '?': {
-                output << (hash_table.Has(key) ? "OK" : "FAIL") << std::endl;
+                output << (hash_table.Search(key) ? "OK" : "FAIL") << std::endl;
                 break;
             }
 

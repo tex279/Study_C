@@ -19,7 +19,7 @@ public:
 size_t StringHasher::operator()(const std::string &str) {
     size_t hash = 0;
 
-    for (auto &ch : str) {
+    for (auto &ch: str) {
         hash = hash * prime + ch;
     }
 
@@ -56,7 +56,7 @@ public:
 
     bool Delete(const T &key);
 
-    bool Has(const T &key);
+    bool Search(const T &key);
 
     T Extract();
 
@@ -67,7 +67,7 @@ public:
 
 template<typename T, typename Hasher>
 HashTable<T, Hasher>::~HashTable() {
-    for (auto &value : table) {
+    for (auto &value: table) {
         HashTableNode<T> *node = value;
 
         while (node) {
@@ -143,7 +143,7 @@ bool HashTable<T, Hasher>::Delete(const T &key) {
 }
 
 template<typename T, typename Hasher>
-bool HashTable<T, Hasher>::Has(const T &key) {
+bool HashTable<T, Hasher>::Search(const T &key) {
     size_t hash = hasher(key) % table.size();
 
     HashTableNode<T> *node = table[hash];
@@ -162,7 +162,7 @@ template<typename T, typename Hasher>
 void HashTable<T, Hasher>::Resize() {
     std::vector < HashTableNode<T> * > new_table(this->table.size() * 2, nullptr);
 
-    for (auto &value : table) {
+    for (auto &value: table) {
         HashTableNode<T> *node = value;
 
         while (node) {
@@ -201,7 +201,7 @@ void run(std::istream &input, std::ostream &output) {
             }
 
             case '?': {
-                output << (hash_table.Has(key) ? "OK" : "FAIL") << std::endl;
+                output << (hash_table.Search(key) ? "OK" : "FAIL") << std::endl;
                 break;
             }
 
