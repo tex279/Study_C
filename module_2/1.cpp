@@ -95,20 +95,17 @@ public:
 
 template<typename T, typename Hasher>
 bool HashTable<T, Hasher>::IsFull() const {
-    //  std::cout << size << "!!!! !!!!" << table.size() << std::endl;
     return size >= table.size() * MAX_ALPHA;
 }
 
 template<typename T, typename Hasher>
 bool HashTable<T, Hasher>::IsFullDel() const {
-    //  std::cout << size << "!!!! !!!!" << table.size() << std::endl;
-    return size >= table.size() * (1 - MAX_ALPHA);
+    return del_size >= table.size() * (1 - MAX_ALPHA);
 }
 
 template<typename T, typename Hasher>
 bool HashTable<T, Hasher>::Add(const T &key) {
     if (IsFull()) {
-        //  std::cout << size << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << table.size() << std::endl;
         Resize(2);
     }
 
@@ -164,7 +161,6 @@ bool HashTable<T, Hasher>::Delete(const T &key) {
             ++del_size;
 
             if (IsFull()) {
-                //  std::cout << size << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << table.size() << std::endl;
                 Resize(1);
             }
 
