@@ -184,15 +184,12 @@ void HashTable<T, Hasher>::Resize(const size_t grow) {
 
     for (auto &value: table) {
         if (value.status == KEY) {
-            for (size_t i = 0; i < new_table.size(); ++i) {
-                size_t new_hash = probing(value.data, i) % new_table.size();
-
-                if (new_table[new_hash].status == NIL) {
-                    new_table[new_hash] = value;
-
-                    break;
-                }
+            size_t new_hash = {};
+            for (size_t i = 0; i < new_table.size() || new_table[new_hash].status == NIL; ++i) {
+                new_hash = probing(value.data, i) % new_table.size();
             }
+
+            new_table[new_hash] = value;
         }
     }
 
