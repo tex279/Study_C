@@ -29,7 +29,7 @@ size_t StringHasher::operator()(const std::string &str, const size_t prime) {
 
 template<typename Hasher>
 class DoubleHashProbing {
-  Hasher hasher;
+    Hasher hasher;
 public:
     size_t operator()(const std::string &str, const size_t iteration);
 };
@@ -87,7 +87,7 @@ public:
             os << value.data << " " << value.status << std::endl;
         }
 
-        os << it.size << " " << it.table.size() << std::endl;
+        os << "size - " << it.size << " capacity - " << it.table.size() << " del_size - " << std::endl;
 
         return os;
     }
@@ -160,7 +160,7 @@ bool HashTable<T, Hasher>::Delete(const T &key) {
             --size;
             ++del_size;
 
-            if (IsFull()) {
+            if (IsFullDel()) {
                 Resize(1);
             }
 
