@@ -65,13 +65,11 @@ class HashTable {
 
     size_t size;
 
-    size_t del_size;
 
     void Resize(const size_t grow);
 
 public:
     bool IsFull() const;
-    bool IsFullDel() const;
 
     bool Add(const T &key);
 
@@ -79,7 +77,7 @@ public:
 
     bool Search(const T &key);
 
-    HashTable(const size_t initial_capacity = INITIAL_CAPACITY) : table(initial_capacity), size(0), del_size(0) {};
+    HashTable(const size_t initial_capacity = INITIAL_CAPACITY) : table(initial_capacity), size(0) {};
     ~HashTable() = default;
 
     friend std::ostream& operator<<(std::ostream &os, const HashTable<T, Probing> &it)  {
@@ -87,7 +85,7 @@ public:
             os << value.data << " " << value.status << std::endl;
         }
 
-        os << "size - " << it.size << " capacity - " << it.table.size() << " del_size - " << it.del_size << std::endl;
+        os << "size - " << it.size << " capacity - " << it.table.size() << std::endl;
 
         return os;
     }
@@ -96,11 +94,6 @@ public:
 template<typename T, typename Hasher>
 bool HashTable<T, Hasher>::IsFull() const {
     return size == table.size() * MAX_ALPHA;
-}
-
-template<typename T, typename Hasher>
-bool HashTable<T, Hasher>::IsFullDel() const {
-    return del_size == table.size() * (0.33);
 }
 
 template<typename T, typename Hasher>
@@ -130,8 +123,6 @@ bool HashTable<T, Hasher>::Add(const T &key) {
             } else {
                 table[pos_DEL].data = key;
                 table[pos_DEL].status = KEY;
-
-                --del_size;
             }
 
             ++size;
@@ -140,18 +131,12 @@ bool HashTable<T, Hasher>::Add(const T &key) {
         }
     }
 
-    if (pos_DEL != -1) {
-        table[pos_DEL].data = key;
-        table[pos_DEL].status = KEY;
+    table[pos_DEL].data = key;
+    table[pos_DEL].status = KEY;
 
-        --del_size;
+    ++size;
 
-        ++size;
-
-        return true;
-    }
-
-    return false;
+    return true;
 }
 
 template<typename T, typename Hasher>
@@ -165,16 +150,9 @@ bool HashTable<T, Hasher>::Delete(const T &key) {
 
         if (table[hash].data == key) {
             table[hash].data = {};
-
             table[hash].status = DEL;
 
             --size;
-
-            ++del_size;
-
-            if (IsFullDel()) {
-                Resize(1);
-            }
 
             return true;
         }
@@ -217,8 +195,6 @@ void HashTable<T, Hasher>::Resize(const size_t grow) {
             }
         }
     }
-
-    del_size = 0;
 
     table = std::move(new_table);
 }
