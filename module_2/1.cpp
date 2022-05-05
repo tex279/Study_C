@@ -1,6 +1,15 @@
 #include <iostream>
 #include <vector>
 
+//Реализуйте структуру данных типа “множество строк” на основе динамической хеш-таблицы с открытой адресацией.
+//Хранимые строки непустые и состоят из строчных латинских букв.
+//Хеш-функция строки должна быть реализована с помощью вычисления значения многочлена методом Горнера. Начальный
+//размер таблицы должен быть равным 8-ми. Перехеширование выполняйте при добавлении элементов в случае,
+//когда коэффициент заполнения таблицы достигает 3/4.
+//Структура данных должна поддерживать операции добавления строки в множество, удаления строки из множества
+//и проверки принадлежности данной строки множеству.
+//
+//Вариант 2. Для разрешения коллизий используйте двойное хеширование.
 
 const size_t INITIAL_CAPACITY = 8;
 
@@ -184,12 +193,15 @@ void HashTable<T, Hasher>::Resize(const size_t grow) {
 
     for (auto &value: table) {
         if (value.status == KEY) {
-            size_t new_hash = {};
-            for (size_t i = 0; i < new_table.size() || new_table[new_hash].status == NIL; ++i) {
-                new_hash = probing(value.data, i) % new_table.size();
-            }
+            for (size_t i = 0; i < new_table.size(); ++i) {
+                size_t new_hash = probing(value.data, i) % new_table.size();
 
-            new_table[new_hash] = value;
+                if (new_table[new_hash].status == NIL) {
+                    new_table[new_hash] = value;
+
+                    break;
+                }
+            }
         }
     }
 
