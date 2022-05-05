@@ -22,7 +22,7 @@ https://contest.yandex.ru/contest/36255/enter
 
 ### Module 2
 
-1 - 2 - 
+1 - 2 - YES
 
 2 - 2 - 
 
