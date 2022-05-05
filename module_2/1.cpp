@@ -65,10 +65,13 @@ class HashTable {
 
     size_t size;
 
-    void Resize();
+    size_t del_size;
+
+    void Resize(const size_t grow);
 
 public:
     bool IsFull() const;
+    bool IsFullDel() const;
 
     bool Add(const T &key);
 
@@ -97,10 +100,16 @@ bool HashTable<T, Hasher>::IsFull() const {
 }
 
 template<typename T, typename Hasher>
+bool HashTable<T, Hasher>::IsFullDel() const {
+    //  std::cout << size << "!!!! !!!!" << table.size() << std::endl;
+    return size >= table.size() * (1 - MAX_ALPHA);
+}
+
+template<typename T, typename Hasher>
 bool HashTable<T, Hasher>::Add(const T &key) {
     if (IsFull()) {
         //  std::cout << size << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << table.size() << std::endl;
-        Resize();
+        Resize(2);
     }
 
     ssize_t pos_DEL = -1;
@@ -152,6 +161,12 @@ bool HashTable<T, Hasher>::Delete(const T &key) {
             table[hash].status = DEL;
 
             --size;
+            ++del_size;
+
+            if (IsFull()) {
+                //  std::cout << size << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << table.size() << std::endl;
+                Resize(1);
+            }
 
             return true;
         }
@@ -178,8 +193,8 @@ bool HashTable<T, Hasher>::Search(const T &key) {
 }
 
 template<typename T, typename Hasher>
-void HashTable<T, Hasher>::Resize() {
-    std::vector <HashTableNode<T>> new_table(this->table.size() * 2);
+void HashTable<T, Hasher>::Resize(const size_t grow) {
+    std::vector <HashTableNode<T>> new_table(this->table.size() * grow);
 
     std::vector <HashTableNode<T>> buf = std::move(table);
 
@@ -223,7 +238,7 @@ void run(std::istream &input, std::ostream &output) {
         }
     }
 
-    output << hash_table << std::endl;
+    //  output << hash_table << std::endl;
 }
 
 
