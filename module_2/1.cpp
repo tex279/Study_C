@@ -79,7 +79,7 @@ public:
 
     bool Search(const T &key);
 
-    HashTable(const size_t initial_capacity = INITIAL_CAPACITY) : table(initial_capacity), size(0) {};
+    HashTable(const size_t initial_capacity = INITIAL_CAPACITY) : table(initial_capacity), size(0), del_size(0) {};
     ~HashTable() = default;
 
     friend std::ostream& operator<<(std::ostream &os, const HashTable<T, Probing> &it)  {
@@ -87,7 +87,7 @@ public:
             os << value.data << " " << value.status << std::endl;
         }
 
-        os << "size - " << it.size << " capacity - " << it.table.size() << " del_size - " << std::endl;
+        os << "size - " << it.size << " capacity - " << it.table.size() << " del_size - " << it.del_size << std::endl;
 
         return os;
     }
@@ -95,12 +95,12 @@ public:
 
 template<typename T, typename Hasher>
 bool HashTable<T, Hasher>::IsFull() const {
-    return size >= table.size() * MAX_ALPHA;
+    return size == table.size() * MAX_ALPHA;
 }
 
 template<typename T, typename Hasher>
 bool HashTable<T, Hasher>::IsFullDel() const {
-    return del_size >= table.size() * (1 - MAX_ALPHA);
+    return del_size == table.size() * (0.33);
 }
 
 template<typename T, typename Hasher>
@@ -113,6 +113,10 @@ bool HashTable<T, Hasher>::Add(const T &key) {
     for (size_t i = 0; i < table.size(); ++i) {
         size_t hash = probing(key, i) % table.size();
 
+        if (table[hash].data == key) {
+            return false;
+        }
+
         if (pos_DEL == -1 && table[hash].status == DEL) {
             pos_DEL = hash;
         }
@@ -121,6 +125,8 @@ bool HashTable<T, Hasher>::Add(const T &key) {
             if (pos_DEL != -1) {
                 table[pos_DEL].data = key;
                 table[pos_DEL].status = KEY;
+
+                --del_size;
             } else {
                 table[hash].data = key;
                 table[hash].status = KEY;
@@ -130,15 +136,16 @@ bool HashTable<T, Hasher>::Add(const T &key) {
 
             return true;
         }
-
-        if (table[hash].data == key) {
-            return false;
-        }
     }
 
-    table[pos_DEL].data = key;
+    if (pos_DEL != -1) {
+        table[pos_DEL].data = key;
+        table[pos_DEL].status = KEY;
 
-    ++size;
+        --del_size;
+
+        ++size;
+    }
 
     return true;
 }
@@ -158,6 +165,7 @@ bool HashTable<T, Hasher>::Delete(const T &key) {
             table[hash].status = DEL;
 
             --size;
+
             ++del_size;
 
             if (IsFullDel()) {
@@ -176,12 +184,12 @@ bool HashTable<T, Hasher>::Search(const T &key) {
     for (size_t i = 0; i < table.size(); ++i) {
         size_t hash = probing(key, i) % table.size();
 
-        if (table[hash].status == NIL) {
-            return false;
-        }
-
         if (table[hash].data == key) {
             return true;
+        }
+
+        if (table[hash].status == NIL) {
+            return false;
         }
     }
 
@@ -190,17 +198,24 @@ bool HashTable<T, Hasher>::Search(const T &key) {
 
 template<typename T, typename Hasher>
 void HashTable<T, Hasher>::Resize(const size_t grow) {
-    std::vector <HashTableNode<T>> new_table(this->table.size() * grow);
+    std::vector <HashTableNode<T>> new_table(table.size() * grow);
 
-    std::vector <HashTableNode<T>> buf = std::move(table);
-
-    table = std::move(new_table);
-
-    for (auto &value: buf) {
+    for (auto &value: table) {
         if (value.status == KEY) {
-            Add(value.data);
+            for (size_t i = 0; i < new_table.size(); ++i) {
+                size_t new_hash = probing(value.data, i) % new_table.size();
+
+                if (new_table[new_hash].status == NIL) {
+                    new_table[new_hash].data = value.data;
+                    new_table[new_hash].status = KEY;
+                }
+            }
         }
     }
+
+    del_size = 0;
+
+    table = std::move(new_table);
 }
 
 
@@ -232,9 +247,8 @@ void run(std::istream &input, std::ostream &output) {
                 break;
             }
         }
+        output << hash_table << std::endl;
     }
-
-    //  output << hash_table << std::endl;
 }
 
 
