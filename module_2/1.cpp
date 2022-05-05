@@ -36,7 +36,7 @@ public:
 
 template<typename Hasher>
 size_t DoubleHashProbing<Hasher>::operator()(const std::string &str, const size_t iteration) {
-    return hasher(str, 71) + hasher(str, 43) * iteration;
+    return hasher(str, 71) + (2 * hasher(str, 137) + 1) * iteration;
 }
 
 
@@ -119,17 +119,19 @@ bool HashTable<T, Hasher>::Add(const T &key) {
 
         if (pos_DEL == -1 && table[hash].status == DEL) {
             pos_DEL = hash;
+
+            continue;
         }
 
         if (table[hash].status == NIL) {
-            if (pos_DEL != -1) {
+            if (pos_DEL == -1) {
+                table[hash].data = key;
+                table[hash].status = KEY;
+            } else {
                 table[pos_DEL].data = key;
                 table[pos_DEL].status = KEY;
 
                 --del_size;
-            } else {
-                table[hash].data = key;
-                table[hash].status = KEY;
             }
 
             ++size;
@@ -145,9 +147,11 @@ bool HashTable<T, Hasher>::Add(const T &key) {
         --del_size;
 
         ++size;
+
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 template<typename T, typename Hasher>
@@ -206,8 +210,9 @@ void HashTable<T, Hasher>::Resize(const size_t grow) {
                 size_t new_hash = probing(value.data, i) % new_table.size();
 
                 if (new_table[new_hash].status == NIL) {
-                    new_table[new_hash].data = value.data;
-                    new_table[new_hash].status = KEY;
+                    new_table[new_hash] = value;
+
+                    break;
                 }
             }
         }
@@ -247,7 +252,6 @@ void run(std::istream &input, std::ostream &output) {
                 break;
             }
         }
-        output << hash_table << std::endl;
     }
 }
 
