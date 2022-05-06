@@ -74,23 +74,22 @@ bool BinaryTree<T, CompareRule>::Add(const T &key) {
 
 template<typename T, typename CompareRule>
 bool BinaryTree<T, CompareRule>::Delete(const T &key) {
-    Node<T> **cur = &root;
+    Node<T> *cur = root;
 
-    while (*cur) {
-        Node<T> &node = **cur;
+    Node<T> *parent = nullptr;
 
-        if (node.data == key) {
-            delete node;
+    while (cur && cur->data != key) {
+        Node<T> *node = cur;
 
-
-
-            --size;
+        if (node->data == key) {
 
             return true;
-        }  if (rule(node.data, key)) {
-            cur = &node.right;
+        }  if (rule(node->data, key)) {
+            parent = cur;
+            cur = node->right;
         } else {
-            cur = &node.left;
+            parent = cur;
+            cur = node->left;
         }
     }
 
@@ -152,6 +151,12 @@ void run(std::istream &input, std::ostream &output) {
 
         tree.Add(buf);
     }
+
+    tree.Print(output);
+
+    output << std::endl;
+
+    tree.Delete(3);
 
     tree.Print(output);
 }
