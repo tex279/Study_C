@@ -141,6 +141,8 @@ bool BinaryTree<T, CompareRule>::Delete(const T &key) {
 
     delete removed;
 
+    --size;
+
     return true;
 }
 
