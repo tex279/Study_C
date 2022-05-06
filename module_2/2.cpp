@@ -79,21 +79,60 @@ bool BinaryTree<T, CompareRule>::Delete(const T &key) {
     Node<T> *parent = nullptr;
 
     while (cur && cur->data != key) {
-        Node<T> *node = cur;
+        parent = cur;
 
-        if (node->data == key) {
-
-            return true;
-        }  if (rule(node->data, key)) {
-            parent = cur;
-            cur = node->right;
+        if (rule(cur->data, key)) {
+            cur = cur->right;
         } else {
-            parent = cur;
-            cur = node->left;
+            cur = cur->left;
         }
     }
 
-    return false;
+    if (!cur) {
+        return false;
+    }
+
+    Node<T> *removed = nullptr;
+
+    if (cur->left == NULL || cur->right == NULL) {
+        Node<T> *child = nullptr;
+        removed = cur;
+
+        if (cur->left) {
+            child = cur->left;
+        } else if (cur->right) {
+            child = cur->right;
+        }
+
+        if (!parent) {
+            root = child;
+        } else if (parent->left == cur) {
+            parent->left = child;
+        } else {
+            parent->right = child;
+        }
+    } else {
+        Node<T> *most_left = cur->right;
+        Node<T> *most_left_parent = cur;
+
+        while (most_left->left != NULL) {
+            most_left_parent = most_left;
+            most_left = most_left->left;
+        }
+
+        cur->data = most_left->data;
+        removed = most_left;
+
+        if (most_left_parent->left == most_left) {
+            most_left_parent->left = NULL;
+        } else {
+            most_left_parent->right = most_left->right;
+        }
+    }
+
+    delete removed;
+
+    return true;
 }
 
 template<typename T, typename CompareRule>
@@ -119,7 +158,7 @@ void BinaryTree<T, CompareRule>::Print(std::ostream &ostream) const {
         return;
     }
 
-    std::stack <Node<T>*> s;
+    std::stack < Node<T> * > s;
 
     s.push(root);
 
