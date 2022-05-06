@@ -53,27 +53,19 @@ bool BinaryTree<T, CompareRule>::IsEmpty() const {
 
 template<typename T, typename CompareRule>
 bool BinaryTree<T, CompareRule>::Add(const T &key) {
-    Node<T> *tmp = root;
-    Node<T> *parent = nullptr;
+    Node<T> **cur = &root;
 
-    while (tmp) {
-        parent = tmp;
-        if (!rule(tmp->data, key)) {
-            tmp = tmp->left;
+    while (*cur) {
+        Node<T> &node = **cur;
+
+        if (rule(node.data, key)) {
+            cur = &node.right;
         } else {
-            tmp = tmp->right;
+            cur = &node.left;
         }
     }
 
-    Node<T> *new_node = new Node<T>(key);
-
-    if (IsEmpty()) {
-        root = new_node;
-    } else if (!rule(parent->data, key)) {
-        parent->left = new_node;
-    } else {
-        parent->right = new_node;
-    }
+    *cur = new Node<T>(key);
 
     ++size;
 
@@ -82,19 +74,23 @@ bool BinaryTree<T, CompareRule>::Add(const T &key) {
 
 template<typename T, typename CompareRule>
 bool BinaryTree<T, CompareRule>::Delete(const T &key) {
-    Node<T> *tmp = root;
-    Node<T> *parent = nullptr;
+    Node<T> **cur = &root;
 
-    while (tmp) {
-        parent = tmp;
+    while (*cur) {
+        Node<T> &node = **cur;
 
-        if (tmp->data == key) {
+        if (node.data == key) {
+            delete node;
+
+
+
+            --size;
 
             return true;
-        } else if (rule(tmp->data, key)) {
-            tmp = tmp->right;
+        }  if (rule(node.data, key)) {
+            cur = &node.right;
         } else {
-            tmp = tmp->left;
+            cur = &node.left;
         }
     }
 
