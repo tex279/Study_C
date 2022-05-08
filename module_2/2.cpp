@@ -52,8 +52,34 @@ public:
 
     BinaryTree() : root(nullptr), size(0) {};
 
-    ~BinaryTree() = default;
+    ~BinaryTree();
 };
+
+template<typename T, typename CompareRule>
+BinaryTree<T, CompareRule>::~BinaryTree() {
+    if (IsEmpty()) {
+        return;
+    }
+
+    std::stack <Node<T> *> s;
+
+    s.push(root);
+
+    while (!s.empty()) {
+        Node<T> *tmp = s.top();
+        s.pop();
+
+        if (tmp->right) {
+            s.push(tmp->right);
+        }
+
+        if (tmp->left) {
+            s.push(tmp->left);
+        }
+
+        delete tmp;
+    }
+}
 
 template<typename T, typename CompareRule>
 bool BinaryTree<T, CompareRule>::IsEmpty() const {
