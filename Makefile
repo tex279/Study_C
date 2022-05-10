@@ -4,7 +4,7 @@ all: clear build launch
 
 TARGET_DZ = 2
 
-TARGET_RK = B
+TARGET_RK = C
 
 TARGET_MODULE = module_2
 
