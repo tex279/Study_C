@@ -1,6 +1,15 @@
 #include <iostream>
 #include <stack>
 
+//    Дано число N < 106 и последовательность целых чисел из [-B^31..B^31] длиной N.
+//    Требуется построить бинарное дерево, заданное наивным порядком вставки.
+//    Т.е., при добавлении очередного числа K в дерево с корнем root, если root→Key ≤ K, то узел K добавляется
+//    в правое поддерево root; иначе в левое поддерево root.
+//    Требования: Рекурсия запрещена. Решение должно поддерживать передачу функции сравнения снаружи.
+//
+//    2_2. Выведите элементы в порядке pre-order (сверху вниз).
+
+
 template<typename T>
 struct Node {
     T data;
@@ -38,6 +47,8 @@ public:
     bool Delete(const T &key);
 
     bool Search(const T &key) const;
+
+    bool CheckOneValue() const;
 
     void Print(std::ostream &ostream) const;
 
@@ -193,6 +204,7 @@ void BinaryTree<T, CompareRule>::Print(std::ostream &ostream) const {
     while (!s.empty()) {
         Node<T> *tmp = s.top();
         s.pop();
+
         ostream << tmp->data << " ";
 
         if (tmp->right) {
@@ -205,23 +217,51 @@ void BinaryTree<T, CompareRule>::Print(std::ostream &ostream) const {
     }
 }
 
+template<typename T, typename CompareRule>
+bool BinaryTree<T, CompareRule>::CheckOneValue() const {
+    if (IsEmpty()) {
+        return false;
+    }
+
+    std::stack < Node<T> * > s;
+
+    s.push(root);
+
+    while (!s.empty()) {
+        Node<T> *tmp = s.top();
+        s.pop();
+
+        if (tmp->data != root->data) {
+            return false;
+        }
+
+        if (tmp->right) {
+            s.push(tmp->right);
+        }
+
+        if (tmp->left) {
+            s.push(tmp->left);
+        }
+    }
+
+    return true;
+}
+
 void run(std::istream &input, std::ostream &output) {
-    BinaryTree<long int> tree;
+    BinaryTree<int> tree;
 
     size_t n = 0;
 
     input >> n;
 
-    size_t buf = 0;
+    int buf = 0;
     for (size_t i = 0; i < n; ++i) {
         input >> buf;
 
         tree.Add(buf);
     }
 
-    tree.Print(output);
-
-    output << std::endl;
+    output << tree.CheckOneValue() << std::endl;
 }
 
 
