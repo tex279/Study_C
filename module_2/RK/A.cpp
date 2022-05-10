@@ -1,15 +1,6 @@
 #include <iostream>
 #include <stack>
 
-//    Дано число N < 106 и последовательность целых чисел из [-B^31..B^31] длиной N.
-//    Требуется построить бинарное дерево, заданное наивным порядком вставки.
-//    Т.е., при добавлении очередного числа K в дерево с корнем root, если root→Key ≤ K, то узел K добавляется
-//    в правое поддерево root; иначе в левое поддерево root.
-//    Требования: Рекурсия запрещена. Решение должно поддерживать передачу функции сравнения снаружи.
-//
-//    2_2. Выведите элементы в порядке pre-order (сверху вниз).
-
-
 template<typename T>
 struct Node {
     T data;
@@ -250,14 +241,8 @@ bool BinaryTree<T, CompareRule>::CheckOneValue() const {
 void run(std::istream &input, std::ostream &output) {
     BinaryTree<int> tree;
 
-    size_t n = 0;
-
-    input >> n;
-
     int buf = 0;
-    for (size_t i = 0; i < n; ++i) {
-        input >> buf;
-
+    while (input >> buf) {
         tree.Add(buf);
     }
 
