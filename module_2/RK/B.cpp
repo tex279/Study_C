@@ -247,14 +247,14 @@ size_t BinaryTree<T, CompareRule>::CheckMinHeight() const {
         return 0;
     }
 
-    size_t height = 0;
+    size_t height = 1;
 
     std::queue< Node<T> * > s;
 
     s.push(root);
 
     while (!s.empty()) {
-        Node<T> *tmp = s.top();
+        Node<T> *tmp = s.front();
         s.pop();
 
         if (!tmp->right || !tmp->left) {
