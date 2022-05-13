@@ -1,0 +1,9 @@
+insert 2
+insert 5
+insert 3
+insert 100
+insert 1000
+insert 1000
+exists 100
+delete 100
+exists 100

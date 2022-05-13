@@ -13,7 +13,17 @@ struct Node {
 };
 
 template<typename T>
+class Less {
+public:
+    bool operator()(const T &l, const T &r) const {
+        return l < r;
+    }
+};
+
+template<typename T, typename CompareRule = Less<T>>
 class AvlTree {
+    CompareRule rule;
+
     Node<T> *root;
 
     void DestroyTree(Node<T> *node);
@@ -54,8 +64,8 @@ public:
     void Delete(const T &data);
 };
 
-template<typename T>
-void AvlTree<T>::DestroyTree(Node<T> *node) {
+template<typename T, typename CompareRule>
+        void AvlTree<T, CompareRule>::DestroyTree(Node<T> *node) {
     if (node) {
         DestroyTree(node->left);
         DestroyTree(node->right);
@@ -64,15 +74,15 @@ void AvlTree<T>::DestroyTree(Node<T> *node) {
     }
 }
 
-template<typename T>
-Node<T> *AvlTree<T>::DeleteInternal(Node<T> *node, const T &data) {
+template<typename T, typename CompareRule>
+Node<T> *AvlTree<T, CompareRule>::DeleteInternal(Node<T> *node, const T &data) {
     if (!node) {
         return nullptr;
     }
 
-    if (node->data < data) {
+    if (rule(node->data, data)) {
         node->right = DeleteInternal(node->right, data);
-    } else if (node->data > data) {
+    } else if (rule(data, node->data)) {
         node->left = DeleteInternal(node->left, data);
     } else {
         Node<T> *left = node->left;
@@ -94,15 +104,17 @@ Node<T> *AvlTree<T>::DeleteInternal(Node<T> *node, const T &data) {
     return DoBalance(node);
 }
 
-template<typename T>
-Node<T> *AvlTree<T>::FindMin(Node<T> *node) {
-    while (node->left)
+template<typename T, typename CompareRule>
+Node<T> *AvlTree<T, CompareRule>::FindMin(Node<T> *node) {
+    while (node->left) {
         node = node->left;
+    }
+
     return node;
 }
 
-template<typename T>
-Node<T> *AvlTree<T>::RemoveMin(Node<T> *node) {
+template<typename T, typename CompareRule>
+Node<T> *AvlTree<T, CompareRule>::RemoveMin(Node<T> *node) {
     if (!node->left) {
         return node->right;
     }
@@ -112,33 +124,33 @@ Node<T> *AvlTree<T>::RemoveMin(Node<T> *node) {
     return DoBalance(node);
 }
 
-template<typename T>
-Node<T> *AvlTree<T>::AddInternal(Node<T> *node, const T &data) {
+template<typename T, typename CompareRule>
+Node<T> *AvlTree<T, CompareRule>::AddInternal(Node<T> *node, const T &data) {
     if (!node) {
         return new Node(data);
     }
 
-    if (node->data <= data) {
-        node->right = AddInternal(node->right, data);
-    } else {
+    if (rule(data, node->data)) {
         node->left = AddInternal(node->left, data);
+    } else {
+        node->right = AddInternal(node->right, data);
     }
 
     return DoBalance(node);
 }
 
-template<typename T>
-size_t AvlTree<T>::GetHeight(Node<T> *node) {
+template<typename T, typename CompareRule>
+size_t AvlTree<T, CompareRule>::GetHeight(Node<T> *node) {
     return node ? node->height : 0;
 }
 
-template<typename T>
-void AvlTree<T>::FixHeight(Node<T> *node) {
+template<typename T, typename CompareRule>
+void AvlTree<T, CompareRule>::FixHeight(Node<T> *node) {
     node->height = std::max(GetHeight(node->left), GetHeight(node->right)) + 1;
 }
 
-template<typename T>
-Node<T> *AvlTree<T>::RotateLeft(Node<T> *node) {
+template<typename T, typename CompareRule>
+Node<T> *AvlTree<T, CompareRule>::RotateLeft(Node<T> *node) {
     Node<T> *tmp = node->right;
     node->right = tmp->left;
     tmp->left = node;
@@ -147,8 +159,8 @@ Node<T> *AvlTree<T>::RotateLeft(Node<T> *node) {
     return tmp;
 }
 
-template<typename T>
-Node<T> *AvlTree<T>::RotateRight(Node<T> *node) {
+template<typename T, typename CompareRule>
+Node<T> *AvlTree<T, CompareRule>::RotateRight(Node<T> *node) {
     Node<T> *tmp = node->left;
     node->left = tmp->right;
     tmp->right = node;
@@ -157,13 +169,13 @@ Node<T> *AvlTree<T>::RotateRight(Node<T> *node) {
     return tmp;
 }
 
-template<typename T>
-int AvlTree<T>::GetBalance(Node<T> *node) {
+template<typename T, typename CompareRule>
+int AvlTree<T, CompareRule>::GetBalance(Node<T> *node) {
     return GetHeight(node->right) - GetHeight(node->left);
 }
 
-template<typename T>
-Node<T> *AvlTree<T>::DoBalance(Node<T> *node) {
+template<typename T, typename CompareRule>
+Node<T> *AvlTree<T, CompareRule>::DoBalance(Node<T> *node) {
     FixHeight(node);
 
     switch (GetBalance(node)) {
@@ -187,18 +199,18 @@ Node<T> *AvlTree<T>::DoBalance(Node<T> *node) {
     }
 }
 
-template<typename T>
-AvlTree<T>::~AvlTree() {
+template<typename T, typename CompareRule>
+AvlTree<T, CompareRule>::~AvlTree() {
     DestroyTree(root);
 }
 
-template<typename T>
-void AvlTree<T>::Add(const T &data) {
+template<typename T, typename CompareRule>
+void AvlTree<T, CompareRule>::Add(const T &data) {
     root = AddInternal(root, data);
 }
 
-template<typename T>
-bool AvlTree<T>::Search(const T &data) {
+template<typename T, typename CompareRule>
+bool AvlTree<T, CompareRule>::Search(const T &data) {
     Node<T> *tmp = root;
 
     while (tmp) {
@@ -214,13 +226,13 @@ bool AvlTree<T>::Search(const T &data) {
     return false;
 }
 
-template<typename T>
-void AvlTree<T>::Delete(const T &data) {
+template<typename T, typename CompareRule>
+void AvlTree<T, CompareRule>::Delete(const T &data) {
     root = DeleteInternal(root, data);
 }
 
-template<typename T>
-T AvlTree<T>::SearchNext(const T &data) {
+template<typename T, typename CompareRule>
+T AvlTree<T, CompareRule>::SearchNext(const T &data) {
     Node<T> *tmp = root;
 
     T next_min = 0;
@@ -237,8 +249,8 @@ T AvlTree<T>::SearchNext(const T &data) {
     return next_min;
 }
 
-template<typename T>
-T AvlTree<T>::SearchPrev(const T &data) {
+template<typename T, typename CompareRule>
+T AvlTree<T, CompareRule>::SearchPrev(const T &data) {
     Node<T> *tmp = root;
 
     T prev_max = 0;
@@ -256,10 +268,10 @@ T AvlTree<T>::SearchPrev(const T &data) {
 }
 
 int main() {
-    AvlTree<int> avlTree;
+    AvlTree<size_t> avlTree;
 
     std::string op;
-    int data;
+    size_t data;
     while (std::cin >> op >> data) {
         if (op == "insert") {
             avlTree.Add(data);
