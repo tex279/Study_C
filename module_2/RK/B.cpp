@@ -257,7 +257,7 @@ size_t BinaryTree<T, CompareRule>::CheckMinHeight() const {
         Node<T> *tmp = s.front();
         s.pop();
 
-        if (!tmp->right || !tmp->left) {
+        if (!tmp->right && !tmp->left) {
             return height;
         }
 
