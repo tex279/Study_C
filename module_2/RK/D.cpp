@@ -132,6 +132,8 @@ Node<T> *AvlTree<T, CompareRule>::AddInternal(Node<T> *node, const T &data) {
 
     if (rule(data, node->data)) {
         node->left = AddInternal(node->left, data);
+    } else if (data == node->data) {
+        return nullptr;
     } else {
         node->right = AddInternal(node->right, data);
     }
