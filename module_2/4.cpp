@@ -1,5 +1,12 @@
 #include <iostream>
 
+//    Дано число N и N строк. Каждая строка содержит команду добавления или удаления натуральных чисел,
+//    а также запрос на получение k-ой порядковой статистики. Команда добавления числа A задается положительным
+//    числом A, команда удаления числа A задается отрицательным числом “-A”. Запрос на
+//    получение k-ой порядковой статистики задается числом k.
+//    Требования: скорость выполнения запроса - O(log n).
+
+
 template<typename T>
 struct Node {
     T data;
@@ -26,37 +33,37 @@ template<typename T, typename CompareRule = Less<T>>
 class AvlTree {
     CompareRule rule;
 
+    size_t size;
+
     Node<T> *root;
 
     void DestroyTree(Node<T> *node);
 
     Node<T> *DeleteInternal(Node<T> *node, const T &data);
-
-    Node<T> *FindMin(Node<T> *node) const;
-
-    Node<T> *RemoveMin(Node<T> *node);
-
     Node<T> *AddInternal(Node<T> *node, const T &data);
 
-    size_t GetHeight(const Node<T> *node) const;
+    Node<T> *FindMin(Node<T> *node) const;
+    Node<T> *RemoveMin(Node<T> *node);
+    Node<T> *FindAndRemoveMin(Node<T> *node);
 
+    Node<T> *FindMax(Node<T> *node) const;
+    Node<T> *RemoveMax(Node<T> *node);
+    Node<T> *FindAndRemoveMax(Node<T> *node);
+
+
+    size_t GetHeight(const Node<T> *node) const;
     void FixHeight(Node<T> *node);
 
     Node<T> *RotateLeft(Node<T> *node);
-
     Node<T> *RotateRight(Node<T> *node);
 
     int GetBalance(const Node<T> *node) const;
-
     Node<T> *DoBalance(Node<T> *node);
 
     size_t GetCount(const Node<T> *node) const;
-
     void FixCount(Node<T> *node);
 
     T GetKStatistsNode(size_t k_stat, const Node<T> *node) const;
-
-    size_t size;
 
 public:
     AvlTree() : root(nullptr), size(0) {}
@@ -110,13 +117,19 @@ Node<T> *AvlTree<T, CompareRule>::DeleteInternal(Node<T> *node, const T &data) {
             return left;
         }
 
-        Node<T> *min = FindMin(right);
-        min->right = RemoveMin(right);
-        min->left = left;
+        Node<T> *new_node_del_pos;
+
+        if (GetHeight(left) > GetHeight(right)) {
+            new_node_del_pos = FindAndRemoveMax(left);
+            new_node_del_pos->right = right;
+        } else {
+            new_node_del_pos = FindAndRemoveMin(right);
+            new_node_del_pos->left = left;
+        }
 
         --size;
 
-        return DoBalance(min);
+        return DoBalance(new_node_del_pos);
     }
 
     return DoBalance(node);
@@ -132,6 +145,15 @@ Node<T> *AvlTree<T, CompareRule>::FindMin(Node<T> *node) const {
 }
 
 template<typename T, typename CompareRule>
+Node<T> *AvlTree<T, CompareRule>::FindMax(Node<T> *node) const {
+    while (node->right) {
+        node = node->right;
+    }
+
+    return node;
+}
+
+template<typename T, typename CompareRule>
 Node<T> *AvlTree<T, CompareRule>::RemoveMin(Node<T> *node) {
     if (!node->left) {
         return node->right;
@@ -140,6 +162,33 @@ Node<T> *AvlTree<T, CompareRule>::RemoveMin(Node<T> *node) {
     node->left = RemoveMin(node->left);
 
     return DoBalance(node);
+}
+
+template<typename T, typename CompareRule>
+Node<T> *AvlTree<T, CompareRule>::RemoveMax(Node<T> *node) {
+    if (!node->right) {
+        return node->left;
+    }
+
+    node->right = RemoveMax(node->right);
+
+    return DoBalance(node);
+}
+
+template<typename T, typename CompareRule>
+Node<T> *AvlTree<T, CompareRule>::FindAndRemoveMin(Node<T> *node) {
+    Node<T> *min = FindMin(node);
+    min->right = RemoveMin(node);
+
+    return min;
+}
+
+template<typename T, typename CompareRule>
+Node<T> *AvlTree<T, CompareRule>::FindAndRemoveMax(Node<T> *node) {
+    Node<T> *max = FindMax(node);
+    max->left = RemoveMax(node);
+
+    return max;
 }
 
 template<typename T, typename CompareRule>
@@ -308,8 +357,6 @@ void run(std::istream &input, std::ostream &output) {
         } else {
             avlTree.Delete(std::abs(tmp));
         }
-
-        //  output << std::abs(tmp) << " " << k_stat << " " << avlTree.Size() << std::endl;
 
         output << avlTree.GetKStatists(k_stat) << " ";
     }
