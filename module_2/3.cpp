@@ -2,6 +2,7 @@
 #include <vector>
 #include <cassert>
 #include <queue>
+#include <>
 
 //    Постройте B-дерево минимального порядка t и выведите его по слоям.
 //    В качестве ключа используются числа, лежащие в диапазоне 0..2^32 -1
@@ -61,6 +62,8 @@ class BTree {
 
     void DebugPrint(const Node<T> *node, size_t indent) const;
 
+    void Print(std::queue<Node<T> *> &level) const;
+
 public:
     BTree(const size_t min_degree) : t(min_degree), root(nullptr), size(0) { assert(min_degree >= 2); }
 
@@ -76,41 +79,41 @@ public:
 };
 
 template<typename T, typename CompareRule>
+void BTree<T, CompareRule>::Print(std::queue<Node<T> *> &level) const {
+    if (level.empty()) {
+        return;
+    }
+
+    std::queue<Node<T>* > new_level;
+
+    while (!level.empty()) {
+        Node<T> *tmp = level.front();
+        level.pop();
+
+        std::cout << *tmp;
+
+
+        for (auto &child: tmp->children) {
+            new_level.push(child);
+        }
+    }
+
+    std::cout << std::endl;
+
+    Print(new_level);
+}
+
+template<typename T, typename CompareRule>
 void BTree<T, CompareRule>::Print() const {
     if (!size || root->keys.empty()) {
         return;
     }
 
-    std::queue < Node<T> * > s;
+    std::queue<Node<T> *> q;
+    q.push(root);
 
-    s.push(root);
+    Print(q);
 
-    size_t i = 0;
-
-    size_t k = 0;
-
-    while (!s.empty()) {
-        Node<T> *tmp = s.front();
-        s.pop();
-
-        if (!k) {
-            k = tmp->children.size();
-        }
-
-        std::cout << *tmp;
-
-        if (i == k || i == 0) {
-            std::cout << std::endl;
-
-            k = 0;
-        }
-
-        ++i;
-
-        for (size_t i = 0; i < tmp->children.size(); ++i) {
-            s.push(tmp->children[i]);
-        }
-    }
 }
 
 template<typename T, typename CompareRule>
@@ -157,6 +160,10 @@ void BTree<T, CompareRule>::SplitChild(Node<T> *node, const size_t index) {
 
 template<typename T, typename CompareRule>
 void BTree<T, CompareRule>::DebugPrint() const {
+    if (!size || root->keys.empty()) {
+        return;
+    }
+
     DebugPrint(root, 0);
 }
 
@@ -256,7 +263,7 @@ void run(std::istream &input, std::ostream &output) {
         b_tree.Add(tmp);
     }
 
-    b_tree.DebugPrint();
+    //  b_tree.DebugPrint();
 
     b_tree.Print();
 }
