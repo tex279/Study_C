@@ -3,7 +3,6 @@
 #include <cassert>
 #include <queue>
 
-
 //    Постройте B-дерево минимального порядка t и выведите его по слоям.
 //    В качестве ключа используются числа, лежащие в диапазоне 0..2^32 -1
 
@@ -54,13 +53,13 @@ class BTree {
 
     Node<T> *root;
 
-    bool IsNodeFull(Node<T> *node);
+    bool IsNodeFull(const Node<T> *node) const;
 
-    void SplitChild(Node<T> *node, size_t index);
+    void SplitChild(Node<T> *node, const size_t index);
 
     void AddNonFull(Node<T> *node, const T &data);
 
-    void DebugPrint(Node<T> *node, size_t indent);
+    void DebugPrint(const Node<T> *node, size_t indent) const;
 
 public:
     BTree(const size_t min_degree) : t(min_degree), root(nullptr), size(0) { assert(min_degree >= 2); }
@@ -69,24 +68,44 @@ public:
 
     void Add(const T &data);
 
-    void DebugPrint();
+    void DebugPrint() const;
 
-    void Print();
+    void Print() const;
 
     size_t Size() const;
 };
 
 template<typename T, typename CompareRule>
-void BTree<T, CompareRule>::Print() {
+void BTree<T, CompareRule>::Print() const {
+    if (!size || root->keys.empty()) {
+        return;
+    }
+
     std::queue < Node<T> * > s;
 
     s.push(root);
+
+    size_t i = 0;
+
+    size_t k = 0;
 
     while (!s.empty()) {
         Node<T> *tmp = s.front();
         s.pop();
 
+        if (!k) {
+            k = tmp->children.size();
+        }
+
         std::cout << *tmp;
+
+        if (i == k || i == 0) {
+            std::cout << std::endl;
+
+            k = 0;
+        }
+
+        ++i;
 
         for (size_t i = 0; i < tmp->children.size(); ++i) {
             s.push(tmp->children[i]);
@@ -95,7 +114,7 @@ void BTree<T, CompareRule>::Print() {
 }
 
 template<typename T, typename CompareRule>
-void BTree<T, CompareRule>::SplitChild(Node<T> *node, size_t index) {
+void BTree<T, CompareRule>::SplitChild(Node<T> *node, const size_t index) {
     Node<T> *new_child = new Node<T>(node->children[index]->leaf);
     ++size;
 
@@ -121,8 +140,6 @@ void BTree<T, CompareRule>::SplitChild(Node<T> *node, size_t index) {
     node->keys[pos + 1] = mid;
 
     if (!node->children[index]->leaf) {
-        size_t count_child = node->children[index]->children.size() - 1;
-
         for (size_t i = 0; i < t; ++i) {
             new_child->children.push_back(node->children[index]->children[i + t]);
         }
@@ -139,12 +156,12 @@ void BTree<T, CompareRule>::SplitChild(Node<T> *node, size_t index) {
 }
 
 template<typename T, typename CompareRule>
-void BTree<T, CompareRule>::DebugPrint() {
+void BTree<T, CompareRule>::DebugPrint() const {
     DebugPrint(root, 0);
 }
 
 template<typename T, typename CompareRule>
-void BTree<T, CompareRule>::DebugPrint(Node<T> *node, size_t indent) {
+void BTree<T, CompareRule>::DebugPrint(const Node<T> *node, size_t indent) const {
     std::cout << std::string(indent, ' ');
     std::cout << "data: [";
 
@@ -169,7 +186,7 @@ BTree<T, CompareRule>::~BTree() {
 }
 
 template<typename T, typename CompareRule>
-bool BTree<T, CompareRule>::IsNodeFull(Node<T> *node) {
+bool BTree<T, CompareRule>::IsNodeFull(const Node<T> *node) const {
     return node->keys.size() == 2 * t - 1;
 }
 
@@ -201,7 +218,7 @@ void BTree<T, CompareRule>::AddNonFull(Node<T> *node, const T &data) {
     if (node->leaf) {
         node->keys.resize(node->keys.size() + 1);
 
-        while (pos >= 0 && data < node->keys[pos]) {
+        while (pos >= 0 &&  rule(data, node->keys[pos])) {
             node->keys[pos + 1] = node->keys[pos];
 
             --pos;
@@ -209,14 +226,14 @@ void BTree<T, CompareRule>::AddNonFull(Node<T> *node, const T &data) {
 
         node->keys[pos + 1] = data;
     } else {
-        while (pos >= 0 && data < node->keys[pos]) {
+        while (pos >= 0 &&  rule(data, node->keys[pos])) {
             --pos;
         }
 
         if (IsNodeFull(node->children[pos + 1])) {
             SplitChild(node, pos + 1);
 
-            if (data > node->keys[pos + 1]) {
+            if (rule(node->keys[pos + 1], data)) {
                 ++pos;
             }
         }
