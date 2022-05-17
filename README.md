@@ -18,6 +18,8 @@
 
 7 - 3 - YES
 
+RK - 1 - YES
+
 https://contest.yandex.ru/contest/36255/enter 
 
 ### Module 2
@@ -31,6 +33,14 @@ https://contest.yandex.ru/contest/36255/enter
 4 - 2 - YES
 
 5 - all - 
+
+RK - 1 - YES
+
+RK - 2 - YES
+
+RK - 3 - YES
+
+RK - 4 - YES/NO
 
 
 https://contest.yandex.ru/contest/37595/enter/
