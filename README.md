@@ -28,7 +28,7 @@ https://contest.yandex.ru/contest/36255/enter
 
 2 - 2 - YES
 
-3 - 2 - 
+3 - 2 - YES
 
 4 - 2 - YES
 

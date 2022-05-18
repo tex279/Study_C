@@ -155,16 +155,16 @@ void BTree<T, CompareRule>::SplitChild(Node<T> *node, const size_t index) {
 
     node->children[index]->keys.pop_back();
 
-    ssize_t pos1 = node->keys.size() - 1;
+    ssize_t pos_child = node->keys.size() - 1;
 
     node->children.resize(node->keys.size() + 1);
-    while (pos1 >= 0 && mid < node->keys[pos1]) {
-        node->children[pos1 + 1] = node->children[pos1];
+    while (pos_child >= 0 && mid < node->keys[pos_child]) {
+        node->children[pos_child + 1] = node->children[pos_child];
 
-        --pos1;
+        --pos_child;
     }
 
-    node->children[pos1 + 1] = new_child;
+    node->children[pos_child + 1] = new_child;
 }
 
 template<typename T, typename CompareRule>
