@@ -16,6 +16,10 @@ public:
 
     void WriteByte(unsigned char byte);
 
+    void Clear();
+
+    void Remove(const size_t count);
+
     const std::vector<unsigned char> &GetBuffer() const;
 
     const size_t GetBitCount() const;
@@ -23,9 +27,35 @@ public:
     friend std::ostream &operator<<(std::ostream &out, const BitWriter &bw);
 };
 
+void BitWriter::Clear() {
+    buffer.clear();
+    bit_count = 0;
+}
+
+void BitWriter::Remove(const size_t count) {
+    if (count > bit_count) {
+        Clear();
+
+        return;
+    }
+
+    for (size_t i = 0; i < count; ++i) {
+        //buffer[bit_count / 8] |= 0 << (7 - bit_count % 8);
+
+        --bit_count;
+
+        buffer[bit_count / 8] = (buffer[bit_count / 8] >> 8 - bit_count % 8) << 8 - bit_count % 8;
+    }
+
+}
+
 std::ostream &operator<<(std::ostream &out, const BitWriter &bw) {
+    if (!bw.bit_count) {
+        return out;
+    }
+
     for (auto &byte: bw.GetBuffer()) {
-        out << std::bitset<8>(byte) << "|";
+        out << std::bitset<8>(byte) << " " << bw.bit_count << "|";
     }
 
     return out;
@@ -102,19 +132,36 @@ template<typename T, typename CompareRule = Less<T>>
 class BinaryTreeHuffman {
     NodeABS<T> *root;
 
+    std::map<T, BitWriter> table_code;
+
+    BitWriter ser_tree;
+
+    std::vector<std::pair<T, size_t>> freq;
+
     CompareRule rule;
 
     size_t size;
+
+    BitWriter GetPath(NodeABS<T>* node, BitWriter v, T key) const;
 public:
     bool IsEmpty() const;
 
-    BinaryTreeHuffman() : root(nullptr), size(0) {};
+    void SetFreq();
 
+    auto GetFreq() const;
+
+    NodeABS<T>* Root() const {return root;}
+
+    void TraverseCreateSer(NodeABS<T>* node);
+    auto GetSerTree() const;
+
+    void CreateTable();
+    auto GetTableCode() const;
+
+    BinaryTreeHuffman() : root(nullptr), size(0) {};
     BinaryTreeHuffman(std::priority_queue < NodeABS<T>*, std::vector <NodeABS<T>*>, decltype(FuncCompare) > min_heap);
 
     ~BinaryTreeHuffman();
-
-    NodeABS<T>* Root() const {return root;}
 
     template<class Action = ActionDefault<T>>
     void PreOrderTree(NodeABS<T>* begin, const Action& act);
@@ -130,12 +177,67 @@ public:
 };
 
 template<typename T, typename CompareRule>
+BitWriter BinaryTreeHuffman<T, CompareRule>::GetPath(NodeABS<T>* node, BitWriter v, T key) const {
+    if (!node) {
+        return v;
+    }
+
+    if (node->data == key) {
+        return v;
+    } else if (node->left) {
+        v.WriteBit(0);
+        v = GetPath(node->left, v, key);
+    } else {
+        v.WriteBit(1);
+        v = GetPath(node->right, v, key);
+    }
+
+    return v;
+}
+
+template<typename T, typename CompareRule>
+auto BinaryTreeHuffman<T, CompareRule>::GetTableCode() const {
+    return table_code;
+}
+
+template<typename T, typename CompareRule>
+auto BinaryTreeHuffman<T, CompareRule>::GetFreq() const {
+    return freq;
+}
+
+template<typename T, typename CompareRule>
+void BinaryTreeHuffman<T, CompareRule>::CreateTable() {
+    BitWriter bw;
+    bw = GetPath(root, bw, 2);
+
+    std::cout << bw;
+}
+
+template<typename T, typename CompareRule>
+void BinaryTreeHuffman<T, CompareRule>::TraverseCreateSer(NodeABS<T>* node) {
+    if (node->data) {
+        ser_tree.WriteBit(1);
+        ser_tree.WriteByte(node->data);
+    } else {
+        TraverseCreateSer(node->left);
+        TraverseCreateSer(node->right);
+        ser_tree.WriteBit(0);
+    }
+}
+
+template<typename T, typename CompareRule>
+auto BinaryTreeHuffman<T, CompareRule>::GetSerTree() const {
+    return ser_tree;
+}
+
+template<typename T, typename CompareRule>
 BinaryTreeHuffman<T, CompareRule>::BinaryTreeHuffman(std::priority_queue < NodeABS<T>*, std::vector <NodeABS<T>*>, decltype(FuncCompare) > min_heap) {
     size_t count_iter = min_heap.size() - 1;
 
     for (size_t i = 0; i < count_iter; ++i) {
         NodeABS<unsigned char> *left = min_heap.top();
         min_heap.pop();
+
         NodeABS<unsigned char> *right = min_heap.top();
         min_heap.pop();
 
@@ -159,6 +261,34 @@ BinaryTreeHuffman<T, CompareRule>::~BinaryTreeHuffman() {
 template<typename T, typename CompareRule>
 bool BinaryTreeHuffman<T, CompareRule>::IsEmpty() const {
     return !size;
+}
+
+template<typename T, typename CompareRule>
+void BinaryTreeHuffman<T, CompareRule>::SetFreq() {
+    if (IsEmpty()) {
+        return;
+    }
+
+    std::stack < NodeABS<T> * > s;
+
+    s.push(root);
+
+    while (!s.empty()) {
+        NodeABS<T> *tmp = s.top();
+        s.pop();
+
+        if (tmp->data) {
+            freq.push_back({tmp->data,tmp->freq});
+        }
+
+        if (tmp->right) {
+            s.push(tmp->right);
+        }
+
+        if (tmp->left) {
+            s.push(tmp->left);
+        }
+    }
 }
 
 template<typename T, typename CompareRule>
@@ -294,11 +424,6 @@ void CreateHeap(auto &map, auto &min_heap) {
         NodeABS<unsigned char> *node = new NodeABS<unsigned char>(data.first, data.second);
         min_heap.push(node);
     }
-
-//    while (!min_heap.empty()) {
-//        std::cout << *min_heap.top();
-//        min_heap.pop();
-//    }
 }
 
 
@@ -315,6 +440,28 @@ void CustomEncode(auto &original, auto &compressed) {
     BinaryTreeHuffman<unsigned char> tree_huffman(min_heap);
 
     tree_huffman.PreOrderTree(tree_huffman.Root(), [](const NodeABS<unsigned char>& it) {  std::cout << it; });
+
+    tree_huffman.TraverseCreateSer(tree_huffman.Root());
+
+    auto ser_tree = tree_huffman.GetSerTree();
+
+    //  std::cout << ser_tree;
+
+    tree_huffman.SetFreq();
+    auto freq = tree_huffman.GetFreq();
+
+    for (auto &data: freq) {
+        std::cout << data.first << " " << data.second << " ";
+    }
+    std::cout << std::endl;
+
+    tree_huffman.CreateTable();
+
+    auto table = tree_huffman.GetTableCode();
+
+    for (auto &value: table) {
+        std::cout << value.first << " " << value.second << std::endl;
+    }
 }
 
 void CustomDecode(auto &compressed, auto &original) {
@@ -355,6 +502,11 @@ void run(std::istream &input, std::ostream &output) {
 
 int main() {
     run(std::cin, std::cout);
+
+//    BitWriter bw;
+//    bw.WriteByte(5);
+//
+//    std::cout << bw << std::endl;
 
     return EXIT_SUCCESS;
 }
