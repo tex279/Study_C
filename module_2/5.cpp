@@ -24,6 +24,17 @@ public:
 
     const size_t GetBitCount() const;
 
+    BitWriter &operator+(BitWriter other) {
+        for (auto &data:other.buffer) {
+            buffer.push_back(data);
+        }
+
+        other.buffer.clear();
+        bit_count += other.bit_count;
+
+        return *this;
+    }
+
     friend std::ostream &operator<<(std::ostream &out, const BitWriter &bw);
 };
 
@@ -53,8 +64,10 @@ std::ostream &operator<<(std::ostream &out, const BitWriter &bw) {
     }
 
     for (auto &byte: bw.GetBuffer()) {
-        out << std::bitset<8>(byte) << " " << bw.bit_count << "|";
+        out << std::bitset<8>(byte)  << "|";
     }
+
+    out << bw.bit_count;
 
     return out;
 }
@@ -119,13 +132,15 @@ class BinaryTreeHuffman {
     std::map<T, BitWriter> table_code;
 
     BitWriter ser_tree;
-public:
-    void Print() const;
 
     void TraverseCreateSer(NodeABS<T>* node);
-    auto GetSerTree() const;
 
     void CreateTable(NodeABS<T>* node, BitWriter bw);
+
+public:
+    void Print() const;
+    auto GetSerTree();
+
     auto GetTableCode();
 
     BinaryTreeHuffman() : root(nullptr) {};
@@ -144,7 +159,6 @@ auto BinaryTreeHuffman<T>::GetTableCode() {
 
 template<typename T>
 void BinaryTreeHuffman<T>::CreateTable(NodeABS<T>* node, BitWriter bw) {
-    std::cout << node->freq << std::endl;
     if (node->data) {
         table_code.insert({node->data, bw});
     } else {
@@ -174,7 +188,9 @@ void BinaryTreeHuffman<T>::TraverseCreateSer(NodeABS<T>* node) {
 }
 
 template<typename T>
-auto BinaryTreeHuffman<T>::GetSerTree() const {
+auto BinaryTreeHuffman<T>::GetSerTree() {
+    TraverseCreateSer(root);
+
     return ser_tree;
 }
 
@@ -270,11 +286,6 @@ void CreateHeap(auto &map, auto &min_heap) {
         NodeABS<unsigned char> *node = new NodeABS<unsigned char>(data.first, data.second);
         min_heap.push(node);
     }
-
-//    while (!min_heap.empty()) {
-//        std::cout << *min_heap.top();
-//        min_heap.pop();
-//    }
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -287,14 +298,24 @@ void CustomEncode(auto &original, auto &compressed) {
     CheckInput(original, input_buffer, min_heap);
 
     BinaryTreeHuffman<unsigned char> tree_huffman(min_heap);
-    tree_huffman.Print();
 
     auto table = tree_huffman.GetTableCode();
 
-    for (auto &data: table) {
-        std::cout << data.first << " " << data.second << std::endl;
-    }
+    auto ser = tree_huffman.GetSerTree();
 
+    BitWriter count_ABS;
+
+    count_ABS.WriteByte(table.size());
+
+
+//    tree_huffman.Print();
+//
+//    for (auto &data: table) {
+//        std::cout << data.first << " " << data.second << std::endl;
+//    }
+//    std::cout << count_ABS << std::endl;
+//
+//    std::cout << ser << std::endl;
 }
 
 void CustomDecode(auto &compressed, auto &original) {
@@ -314,7 +335,25 @@ void run(std::istream &input, std::ostream &output) {
 
 
 int main() {
-    run(std::cin, std::cout);
+    //  run(std::cin, std::cout);
+
+    BitWriter bw;
+
+    bw.WriteBit(1);
+    bw.WriteBit(0);
+    bw.WriteBit(1);
+
+    std::cout << bw << std::endl;
+
+    BitWriter bw1;
+
+    bw1.WriteByte(5);
+
+    std::cout << bw1 << std::endl;
+
+    BitWriter res = bw + bw1;
+
+    std::cout << res << std::endl;
 
     return EXIT_SUCCESS;
 }
