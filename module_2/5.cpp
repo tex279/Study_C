@@ -177,25 +177,6 @@ public:
 };
 
 template<typename T, typename CompareRule>
-BitWriter BinaryTreeHuffman<T, CompareRule>::GetPath(NodeABS<T>* node, BitWriter v, T key) const {
-    if (!node) {
-        return v;
-    }
-
-    if (node->data == key) {
-        return v;
-    } else if (node->left) {
-        v.WriteBit(0);
-        v = GetPath(node->left, v, key);
-    } else {
-        v.WriteBit(1);
-        v = GetPath(node->right, v, key);
-    }
-
-    return v;
-}
-
-template<typename T, typename CompareRule>
 auto BinaryTreeHuffman<T, CompareRule>::GetTableCode() const {
     return table_code;
 }
@@ -208,7 +189,7 @@ auto BinaryTreeHuffman<T, CompareRule>::GetFreq() const {
 template<typename T, typename CompareRule>
 void BinaryTreeHuffman<T, CompareRule>::CreateTable() {
     BitWriter bw;
-    bw = GetPath(root, bw, 2);
+    bw = GetPath(root, bw, 5);
 
     std::cout << bw;
 }
