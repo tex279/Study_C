@@ -2,7 +2,6 @@
 #include <vector>
 #include <cassert>
 #include <queue>
-#include <>
 
 //    Постройте B-дерево минимального порядка t и выведите его по слоям.
 //    В качестве ключа используются числа, лежащие в диапазоне 0..2^32 -1
@@ -76,6 +75,8 @@ public:
     void Print() const;
 
     size_t Size() const;
+
+    friend void testBTree();
 };
 
 template<typename T, typename CompareRule>
@@ -144,9 +145,8 @@ void BTree<T, CompareRule>::SplitChild(Node<T> *node, const size_t index) {
 
     if (!node->children[index]->leaf) {
         for (size_t i = 0; i < t; ++i) {
-            new_child->children.push_back(node->children[index]->children[i + t]);
+            new_child->children.push_back(node->children[index]->children[i +  t ]);
         }
-
 
         for (size_t i = 0; i < t; ++i) {
             node->children[index]->children.pop_back();
@@ -155,7 +155,16 @@ void BTree<T, CompareRule>::SplitChild(Node<T> *node, const size_t index) {
 
     node->children[index]->keys.pop_back();
 
-    node->children.push_back(new_child);
+    ssize_t pos1 = node->keys.size() - 1;
+
+    node->children.resize(node->keys.size() + 1);
+    while (pos1 >= 0 && mid < node->keys[pos1]) {
+        node->children[pos1 + 1] = node->children[pos1];
+
+        --pos1;
+    }
+
+    node->children[pos1 + 1] = new_child;
 }
 
 template<typename T, typename CompareRule>
@@ -250,6 +259,56 @@ void BTree<T, CompareRule>::AddNonFull(Node<T> *node, const T &data) {
 }
 
 
+void testBTree()
+{
+    BTree<char> tree(3);
+
+    tree.root = new Node<char>(false);
+    tree.root->keys = {'G', 'M', 'P', 'X'};
+
+    {
+        auto child = new Node<char>(true);
+        child->keys = {'A', 'C', 'D', 'E'};
+        tree.root->children.push_back(child);
+    }
+
+    {
+        auto child = new Node<char>(true);
+        child->keys = {'J', 'K'};
+        tree.root->children.push_back(child);
+    }
+    {
+        auto child =  new Node<char>(true);
+        child->keys = {'N', 'O'};
+        tree.root->children.push_back(child);
+    }
+    {
+        auto child =  new Node<char>(true);
+        child->keys = {'R', 'S', 'T', 'U', 'V'};
+        tree.root->children.push_back(child);
+    }
+    {
+        auto child = new Node<char>(true);
+        child->keys = {'Y', 'Z'};
+        tree.root->children.push_back(child);
+    }
+
+    std::cout << "Initial tree:" << std::endl;
+    tree.DebugPrint();
+    std::cout << std::endl;
+
+    std::string insertKeys = "BQLF";
+    // посимвольно добавляем в дерево ключи
+    for (auto c: insertKeys)
+    {
+        tree.Add(c);
+        std::cout << "After inserting " << c << ":" << std::endl;
+        tree.DebugPrint();
+        std::cout << std::endl;
+    }
+}
+
+
 void run(std::istream &input, std::ostream &output) {
     size_t n;
 
@@ -270,6 +329,8 @@ void run(std::istream &input, std::ostream &output) {
 
 int main() {
     run(std::cin, std::cout);
+
+//    testBTree();
 
     return EXIT_SUCCESS;
 }
