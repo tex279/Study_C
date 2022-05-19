@@ -34,7 +34,7 @@ BitWriter BitWriter::operator+(const BitWriter &other) {
 
     size_t free_pos = 8 - bit_count % 8;
 
-    std::cout << free_pos << std::endl;
+//    std::cout << free_pos << std::endl;
 
     for (auto &data:buffer) {
         sum.buffer.push_back(data);
@@ -50,19 +50,25 @@ BitWriter BitWriter::operator+(const BitWriter &other) {
 
     for (size_t j = 0; j < other.buffer.size(); ++j) {
         //  std::cout << std::bitset<8>(sum.buffer[buffer.size() + j - 1]) << std::endl;
-        std::cout << std::bitset<8>(sum.buffer[buffer.size() + j]) << std::endl;
+
+//        std::cout << std::bitset<8>(sum.buffer[buffer.size() + j]) << std::endl;
+
         for (size_t i = 0; i < free_pos; ++i) {
-            if ((sum.buffer[buffer.size() + j] >> (free_pos - i)) & 1) {
-                std::cout << "1" << std::endl;
-                sum.buffer[buffer.size() + j - 1] |= (1 << (free_pos - i - 1));
-                std::cout << std::bitset<8>(sum.buffer[buffer.size() + j - 1]) << " " << free_pos - i << std::endl;
+            if ((sum.buffer[buffer.size() + j] >> (7 - i)) & 1) {
+//                std::cout << "1" << std::endl;
+
+                sum.buffer[buffer.size() + j - 1] |= 1 << (7 - bit_count % 8 - i);
+//
+//                std::cout << std::bitset<8>(sum.buffer[buffer.size() + j - 1]) << " " << 7 - bit_count % 8 - i << std::endl;
             }
         }
 
-        //  sum.buffer[buffer.size() + j] = sum.buffer[buffer.size() + j] << (free_pos);
+        sum.buffer[buffer.size() + j] = sum.buffer[buffer.size() + j] << (free_pos);
     }
 
-    if (sum.buffer.size() > sum.bit_count / 8) {
+//    buffer[bit_count / 8] |= 1 << (7 - bit_count % 8);
+
+    if (8 - bit_count % 8 >= other.bit_count % 8) {
         sum.buffer.pop_back();
     }
 
@@ -371,11 +377,16 @@ int main() {
     BitWriter bw;
 
     bw.WriteBit(1);
+    bw.WriteBit(0);
+    bw.WriteBit(1);
+    bw.WriteByte(0);
+    bw.WriteBit(1);
 
     std::cout << bw << std::endl;
 
     BitWriter bw1;
 
+    bw1.WriteByte(0);
     bw1.WriteBit(1);
     bw1.WriteBit(1);
     bw1.WriteBit(1);
@@ -387,6 +398,16 @@ int main() {
     std::cout << bw1 << std::endl;
 
     BitWriter res = bw + bw1;
+
+    std::cout << res << std::endl;
+
+    BitWriter bw2;
+
+    bw2.WriteBit(1);
+    bw2.WriteBit(0);
+    bw2.WriteBit(1);
+
+    res = res + bw2;
 
     std::cout << res << std::endl;
 
