@@ -24,55 +24,49 @@ public:
 
     const size_t GetBitCount() const;
 
-    BitWriter operator+(const BitWriter &other);
+    BitWriter &operator+=(const BitWriter &other);
 
     friend std::ostream &operator<<(std::ostream &out, const BitWriter &bw);
 };
 
-BitWriter BitWriter::operator+(const BitWriter &other) {
-    BitWriter sum;
-
+BitWriter &BitWriter::operator+=(const BitWriter &other) {
     size_t free_pos = 8 - bit_count % 8;
 
 //    std::cout << free_pos << std::endl;
 
-    for (auto &data:buffer) {
-        sum.buffer.push_back(data);
+    for (auto &data: other.buffer) {
+        buffer.push_back(data);
     }
 
-    sum.bit_count += bit_count;
+    std::cout << *this << std::endl;
 
-    for (auto &data:other.buffer) {
-        sum.buffer.push_back(data);
-    }
-
-    sum.bit_count += other.bit_count;
+    bit_count += other.bit_count;
 
     if (free_pos != 8) {
         for (size_t j = 0; j < other.buffer.size(); ++j) {
             //  std::cout << std::bitset<8>(sum.buffer[buffer.size() + j - 1]) << std::endl;
 
-            //        std::cout << std::bitset<8>(sum.buffer[buffer.size() + j]) << std::endl;
+                    std::cout << std::bitset<8>(buffer[buffer.size() + j]) << std::endl;
 
             for (size_t i = 0; i < free_pos; ++i) {
-                if ((sum.buffer[buffer.size() + j] >> (7 - i)) & 1) {
-                    //                std::cout << "1" << std::endl;
+                if ((buffer[buffer.size() + j] >> (7 - i)) & 1) {
+                                    std::cout << "1" << std::endl;
 
-                    sum.buffer[buffer.size() + j - 1] |= 1 << (7 - bit_count % 8 - i);
+                    buffer[buffer.size() + j - 1] |= 1 << (7 - bit_count % 8 - i);
                     //
-                    //                std::cout << std::bitset<8>(sum.buffer[buffer.size() + j - 1]) << " " << 7 - bit_count % 8 - i << std::endl;
+                                    std::cout << std::bitset<8>(buffer[buffer.size() + j - 1]) << " " << 7 - bit_count % 8 - i << std::endl;
                 }
             }
 
-            sum.buffer[buffer.size() + j] = sum.buffer[buffer.size() + j] << (free_pos);
+            buffer[buffer.size() + j] = buffer[buffer.size() + j] << (free_pos);
         }
 
         if (8 - bit_count % 8 > other.bit_count % 8) {
-            sum.buffer.pop_back();
+            buffer.pop_back();
         }
     }
 
-    return sum;
+    return *this;
 }
 
 void BitWriter::Clear() {
@@ -101,7 +95,7 @@ std::ostream &operator<<(std::ostream &out, const BitWriter &bw) {
     }
 
     for (auto &byte: bw.GetBuffer()) {
-        out << std::bitset<8>(byte)  << "|";
+        out << std::bitset<8>(byte) << "|";
     }
 
     out << bw.bit_count;
@@ -166,22 +160,26 @@ template<typename T>
 class BinaryTreeHuffman {
     NodeABS<T> *root;
 
-    std::map<T, BitWriter> table_code;
+    std::map <T, BitWriter> table_code;
 
     BitWriter ser_tree;
 
-    void TraverseCreateSer(NodeABS<T>* node);
+    void TraverseCreateSer(NodeABS<T> *node);
 
-    void CreateTable(NodeABS<T>* node, BitWriter bw);
+    void CreateTable(NodeABS<T> *node, BitWriter bw);
 
 public:
     void Print() const;
+
     auto GetSerTree();
 
     auto GetTableCode();
 
     BinaryTreeHuffman() : root(nullptr) {};
-    BinaryTreeHuffman(std::priority_queue < NodeABS<T>*, std::vector <NodeABS<T>*>, decltype(FuncCompare) > min_heap);
+
+    BinaryTreeHuffman(std::priority_queue<NodeABS<T> *, std::vector < NodeABS<T> * >, decltype(FuncCompare)
+
+    > min_heap);
 
     ~BinaryTreeHuffman();
 };
@@ -195,7 +193,7 @@ auto BinaryTreeHuffman<T>::GetTableCode() {
 }
 
 template<typename T>
-void BinaryTreeHuffman<T>::CreateTable(NodeABS<T>* node, BitWriter bw) {
+void BinaryTreeHuffman<T>::CreateTable(NodeABS<T> *node, BitWriter bw) {
     if (node->data) {
         table_code.insert({node->data, bw});
     } else {
@@ -213,7 +211,7 @@ void BinaryTreeHuffman<T>::CreateTable(NodeABS<T>* node, BitWriter bw) {
 }
 
 template<typename T>
-void BinaryTreeHuffman<T>::TraverseCreateSer(NodeABS<T>* node) {
+void BinaryTreeHuffman<T>::TraverseCreateSer(NodeABS<T> *node) {
     if (node->data) {
         ser_tree.WriteBit(1);
         ser_tree.WriteByte(node->data);
@@ -232,7 +230,8 @@ auto BinaryTreeHuffman<T>::GetSerTree() {
 }
 
 template<typename T>
-BinaryTreeHuffman<T>::BinaryTreeHuffman(std::priority_queue < NodeABS<T>*, std::vector <NodeABS<T>*>, decltype(FuncCompare) > min_heap) {
+BinaryTreeHuffman<T>::BinaryTreeHuffman(std::priority_queue < NodeABS<T> * , std::vector < NodeABS<T> * > ,
+                                        decltype(FuncCompare) > min_heap) {
     while (min_heap.size() > 1) {
         NodeABS<unsigned char> *left = min_heap.top();
         min_heap.pop();
@@ -330,7 +329,8 @@ void CreateHeap(auto &map, auto &min_heap) {
 void CustomEncode(auto &original, auto &compressed) {
     std::vector<unsigned char> input_buffer;
 
-    std::priority_queue < NodeABS<unsigned char>*, std::vector <NodeABS<unsigned char>*>, decltype(FuncCompare) > min_heap;
+    std::priority_queue < NodeABS<unsigned char> * , std::vector < NodeABS<unsigned char> * >, decltype(FuncCompare) >
+                                                                                               min_heap;
 
     CheckInput(original, input_buffer, min_heap);
 
@@ -338,20 +338,33 @@ void CustomEncode(auto &original, auto &compressed) {
 
     auto table = tree_huffman.GetTableCode();
 
-    auto ser = tree_huffman.GetSerTree();
+    for (auto &data: table) {
+        std::cout << data.first << " " << data.second << std::endl;
+    }
 
-    BitWriter count_ABS;
+    BitWriter result;
 
-    count_ABS.WriteByte(table.size());
+    result.WriteByte(table.size());
 
-    std::cout << count_ABS << std::endl;
-    std::cout << ser << std::endl;
+    result += tree_huffman.GetSerTree();
 
-    count_ABS = count_ABS + ser;
-    std::cout << count_ABS << std::endl;
+    BitWriter code_data;
 
+    for (auto &data: input_buffer) {
+        auto needed_node = table.find(data);
+        code_data += needed_node->second;
+        //  std::cout << needed_node->second << std::endl;
+    }
+
+    std::cout << code_data << std::endl;
 
 //    tree_huffman.Print();
+//
+//    std::cout << result << std::endl;
+//    std::cout << ser << std::endl;
+//
+//    result += ser;
+//    std::cout << result << std::endl;
 //
 //    for (auto &data: table) {
 //        std::cout << data.first << " " << data.second << std::endl;
@@ -378,42 +391,35 @@ void run(std::istream &input, std::ostream &output) {
 
 
 int main() {
-        run(std::cin, std::cout);
+//    run(std::cin, std::cout);
 
-//    BitWriter bw;
-//
-//    bw.WriteByte(126);
-//
-//    std::cout << bw << std::endl;
-//
-//    BitWriter bw1;
-//
-//    bw1.WriteBit(1);
-//    bw1.WriteByte(0);
-//    bw1.WriteBit(1);
-//    bw1.WriteBit(1);
-//    bw1.WriteBit(1);
-//    bw1.WriteByte(200);
-//    bw1.WriteBit(1);
-//    bw1.WriteBit(0);
-//    bw1.WriteBit(0);
-//    bw1.WriteBit(1);
-//
-//    std::cout << bw1 << std::endl;
-//
-//    BitWriter res = bw + bw1;
-//
-//    std::cout << res << std::endl;
+    BitWriter bw;
+
+    bw.WriteBit(0);
+
+    std::cout << bw << std::endl;
+
+    BitWriter bw1;
+
+    bw1.WriteBit(1);
+    bw1.WriteBit(1);
+    bw1.WriteBit(0);
+
+    std::cout << bw1 << std::endl;
+
+    bw += bw1;
+
+    std::cout << bw << std::endl;
 
 //    BitWriter bw2;
 //
 //    bw2.WriteBit(1);
-//    bw2.WriteBit(0);
+//    bw2.WriteBit(1);
 //    bw2.WriteBit(1);
 //
-//    res = res + bw2;
+//    bw += bw2;
 //
-//    std::cout << res << std::endl;
+//    std::cout << bw << std::endl;
 
     return EXIT_SUCCESS;
 }
