@@ -1,3 +1,5 @@
+//#include "Huffman.h"
+
 #include <iostream>
 #include <vector>
 #include <bitset>
@@ -18,6 +20,8 @@ public:
 
     void Remove(const size_t count);
 
+    size_t GetFreeBits() const;
+
     const std::vector<unsigned char> &GetBuffer() const;
 
     const size_t GetBitCount() const;
@@ -26,6 +30,15 @@ public:
 
     friend std::ostream &operator<<(std::ostream &out, const BitWriter &bw);
 };
+
+size_t BitWriter::GetFreeBits() const {
+    size_t free_bit = 8 - bit_count % 8;
+    if (free_bit == 8) {
+        return 0;
+    } else {
+        return free_bit;
+    }
+}
 
 BitWriter &BitWriter::operator+=(const BitWriter &other) {
     size_t free_pos = 8 - bit_count % 8;
@@ -160,8 +173,15 @@ public:
 
     BinaryTreeHuffman(std::priority_queue<NodeABS<T> *, std::vector < NodeABS<T> * >, decltype(FuncCompare)> min_heap);
 
+    BinaryTreeHuffman(const std::vector<T> &compressed);
+
     ~BinaryTreeHuffman();
 };
+
+template<typename T>
+BinaryTreeHuffman<T>::BinaryTreeHuffman(const std::vector<T> &compressed) {
+
+}
 
 template<typename T>
 size_t BinaryTreeHuffman<T>::GetCountCode() const {
@@ -367,13 +387,18 @@ void run(std::istream &input, std::ostream &output) {
 
 
 int main() {
-    run(std::cin, std::cout);
+//    run(std::cin, std::cout);
 
-//    BitWriter bw;
-//
-//    bw.WriteBit(0);
-//
-//    std::cout << bw << std::endl;
+    BitWriter bw;
+
+    bw.WriteByte(0);
+    std::cout << bw.GetFreeBits() << std::endl;
+    std::cout << bw << std::endl;
+    bw.WriteBit(1);
+    std::cout << bw.GetFreeBits() << std::endl;
+    std::cout << bw << std::endl;
+
+    std::cout << bw << std::endl;
 //
 
 //    BitWriter bw1;
