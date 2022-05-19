@@ -34,37 +34,43 @@ BitWriter &BitWriter::operator+=(const BitWriter &other) {
 
 //    std::cout << free_pos << std::endl;
 
+    size_t start_size = buffer.size();
+
     for (auto &data: other.buffer) {
         buffer.push_back(data);
     }
 
-    std::cout << *this << std::endl;
+//    std::cout << *this << std::endl;
 
-    bit_count += other.bit_count;
 
     if (free_pos != 8) {
         for (size_t j = 0; j < other.buffer.size(); ++j) {
-            //  std::cout << std::bitset<8>(sum.buffer[buffer.size() + j - 1]) << std::endl;
-
-                    std::cout << std::bitset<8>(buffer[buffer.size() + j]) << std::endl;
+//            std::cout << std::bitset<8>(buffer[start_size + j - 1]) << std::endl;
+//
+//            std::cout << std::bitset<8>(buffer[start_size + j]) << std::endl;
 
             for (size_t i = 0; i < free_pos; ++i) {
-                if ((buffer[buffer.size() + j] >> (7 - i)) & 1) {
-                                    std::cout << "1" << std::endl;
+                if ((buffer[start_size + j] >> (7 - i)) & 1) {
 
-                    buffer[buffer.size() + j - 1] |= 1 << (7 - bit_count % 8 - i);
-                    //
-                                    std::cout << std::bitset<8>(buffer[buffer.size() + j - 1]) << " " << 7 - bit_count % 8 - i << std::endl;
+//                    std::cout << "1" << std::endl;
+
+                    buffer[start_size + j - 1] |= 1 << (7 - bit_count % 8 - i);
+
+//                    std::cout << std::bitset<8>(buffer[start_size + j - 1]) << " " << 7 - bit_count % 8 - i << std::endl;
                 }
             }
+
+//            std::cout << *this << std::endl;
 
             buffer[buffer.size() + j] = buffer[buffer.size() + j] << (free_pos);
         }
 
-        if (8 - bit_count % 8 > other.bit_count % 8) {
+        if (8 - bit_count % 8 >= other.bit_count % 8) {
             buffer.pop_back();
         }
     }
+
+    bit_count += other.bit_count;
 
     return *this;
 }
@@ -353,10 +359,10 @@ void CustomEncode(auto &original, auto &compressed) {
     for (auto &data: input_buffer) {
         auto needed_node = table.find(data);
         code_data += needed_node->second;
-        //  std::cout << needed_node->second << std::endl;
+        std::cout << code_data << std::endl;
     }
 
-    std::cout << code_data << std::endl;
+   //   std::cout << code_data << std::endl;
 
 //    tree_huffman.Print();
 //
@@ -391,25 +397,25 @@ void run(std::istream &input, std::ostream &output) {
 
 
 int main() {
-//    run(std::cin, std::cout);
+    run(std::cin, std::cout);
 
-    BitWriter bw;
-
-    bw.WriteBit(0);
-
-    std::cout << bw << std::endl;
-
-    BitWriter bw1;
-
-    bw1.WriteBit(1);
-    bw1.WriteBit(1);
-    bw1.WriteBit(0);
-
-    std::cout << bw1 << std::endl;
-
-    bw += bw1;
-
-    std::cout << bw << std::endl;
+//    BitWriter bw;
+//
+//    bw.WriteBit(0);
+//
+//    std::cout << bw << std::endl;
+//
+//    BitWriter bw1;
+//
+//    bw1.WriteBit(1);
+//    bw1.WriteBit(1);
+//    bw1.WriteBit(0);
+//
+//    std::cout << bw1 << std::endl;
+//
+//    bw += bw1;
+//
+//    std::cout << bw << std::endl;
 
 //    BitWriter bw2;
 //
