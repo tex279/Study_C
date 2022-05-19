@@ -54,7 +54,8 @@ BitWriter BitWriter::operator+(const BitWriter &other) {
         for (size_t i = 0; i < free_pos; ++i) {
             if ((sum.buffer[buffer.size() + j] >> (free_pos - i)) & 1) {
                 std::cout << "1" << std::endl;
-                sum.buffer[buffer.size() + j - 1] | (1 << (i + free_pos));
+                sum.buffer[buffer.size() + j - 1] |= (1 << (free_pos - i - 1));
+                std::cout << std::bitset<8>(sum.buffer[buffer.size() + j - 1]) << " " << free_pos - i << std::endl;
             }
         }
 
