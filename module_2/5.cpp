@@ -48,28 +48,28 @@ BitWriter BitWriter::operator+(const BitWriter &other) {
 
     sum.bit_count += other.bit_count;
 
-    for (size_t j = 0; j < other.buffer.size(); ++j) {
-        //  std::cout << std::bitset<8>(sum.buffer[buffer.size() + j - 1]) << std::endl;
+    if (free_pos != 8) {
+        for (size_t j = 0; j < other.buffer.size(); ++j) {
+            //  std::cout << std::bitset<8>(sum.buffer[buffer.size() + j - 1]) << std::endl;
 
-//        std::cout << std::bitset<8>(sum.buffer[buffer.size() + j]) << std::endl;
+            //        std::cout << std::bitset<8>(sum.buffer[buffer.size() + j]) << std::endl;
 
-        for (size_t i = 0; i < free_pos; ++i) {
-            if ((sum.buffer[buffer.size() + j] >> (7 - i)) & 1) {
-//                std::cout << "1" << std::endl;
+            for (size_t i = 0; i < free_pos; ++i) {
+                if ((sum.buffer[buffer.size() + j] >> (7 - i)) & 1) {
+                    //                std::cout << "1" << std::endl;
 
-                sum.buffer[buffer.size() + j - 1] |= 1 << (7 - bit_count % 8 - i);
-//
-//                std::cout << std::bitset<8>(sum.buffer[buffer.size() + j - 1]) << " " << 7 - bit_count % 8 - i << std::endl;
+                    sum.buffer[buffer.size() + j - 1] |= 1 << (7 - bit_count % 8 - i);
+                    //
+                    //                std::cout << std::bitset<8>(sum.buffer[buffer.size() + j - 1]) << " " << 7 - bit_count % 8 - i << std::endl;
+                }
             }
+
+            sum.buffer[buffer.size() + j] = sum.buffer[buffer.size() + j] << (free_pos);
         }
 
-        sum.buffer[buffer.size() + j] = sum.buffer[buffer.size() + j] << (free_pos);
-    }
-
-//    buffer[bit_count / 8] |= 1 << (7 - bit_count % 8);
-
-    if (8 - bit_count % 8 >= other.bit_count % 8) {
-        sum.buffer.pop_back();
+        if (8 - bit_count % 8 > other.bit_count % 8) {
+            sum.buffer.pop_back();
+        }
     }
 
     return sum;
@@ -344,6 +344,12 @@ void CustomEncode(auto &original, auto &compressed) {
 
     count_ABS.WriteByte(table.size());
 
+    std::cout << count_ABS << std::endl;
+    std::cout << ser << std::endl;
+
+    count_ABS = count_ABS + ser;
+    std::cout << count_ABS << std::endl;
+
 
 //    tree_huffman.Print();
 //
@@ -372,44 +378,42 @@ void run(std::istream &input, std::ostream &output) {
 
 
 int main() {
-    //  run(std::cin, std::cout);
+        run(std::cin, std::cout);
 
-    BitWriter bw;
+//    BitWriter bw;
+//
+//    bw.WriteByte(126);
+//
+//    std::cout << bw << std::endl;
+//
+//    BitWriter bw1;
+//
+//    bw1.WriteBit(1);
+//    bw1.WriteByte(0);
+//    bw1.WriteBit(1);
+//    bw1.WriteBit(1);
+//    bw1.WriteBit(1);
+//    bw1.WriteByte(200);
+//    bw1.WriteBit(1);
+//    bw1.WriteBit(0);
+//    bw1.WriteBit(0);
+//    bw1.WriteBit(1);
+//
+//    std::cout << bw1 << std::endl;
+//
+//    BitWriter res = bw + bw1;
+//
+//    std::cout << res << std::endl;
 
-    bw.WriteBit(1);
-    bw.WriteBit(0);
-    bw.WriteBit(1);
-    bw.WriteByte(0);
-    bw.WriteBit(1);
-
-    std::cout << bw << std::endl;
-
-    BitWriter bw1;
-
-    bw1.WriteByte(0);
-    bw1.WriteBit(1);
-    bw1.WriteBit(1);
-    bw1.WriteBit(1);
-    bw1.WriteBit(1);
-    bw1.WriteBit(0);
-    bw1.WriteBit(0);
-    bw1.WriteBit(1);
-
-    std::cout << bw1 << std::endl;
-
-    BitWriter res = bw + bw1;
-
-    std::cout << res << std::endl;
-
-    BitWriter bw2;
-
-    bw2.WriteBit(1);
-    bw2.WriteBit(0);
-    bw2.WriteBit(1);
-
-    res = res + bw2;
-
-    std::cout << res << std::endl;
+//    BitWriter bw2;
+//
+//    bw2.WriteBit(1);
+//    bw2.WriteBit(0);
+//    bw2.WriteBit(1);
+//
+//    res = res + bw2;
+//
+//    std::cout << res << std::endl;
 
     return EXIT_SUCCESS;
 }
