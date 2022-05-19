@@ -52,35 +52,25 @@ std::vector<unsigned char> BitReader::GetDecodeData(const size_t start_pos, Node
 
     NodeABS<unsigned char> *tmp = root;
 
-    std::cout << *tmp << std::endl;
-
-    std::cout << "Start" << std::endl;
-
     while (true) {
-        std::cout << "Iter" << std::endl;
+        std::cout << *root << std::endl;
 
-        if (i == free_bit || i % 8 == buffer.size() - 1) {
+        if (i == free_bit && i % 8 == buffer.size() - 1) {
             break;
         }
 
         if (tmp->data) {
             decode.push_back(tmp->data);
 
-            std::cout << tmp->data << std::endl;
-
             tmp = root;
-
-            std::cout << *tmp << std::endl;
-        }
-
-        if ((buffer[i / 8] >> (7 - i % 8)) & 1) {
+        } else if ((buffer[i / 8] >> (7 - i % 8)) & 1) {
             tmp = tmp->right;
         } else {
             tmp = tmp->left;
         }
-    }
 
-    std::cout << "End" << std::endl;
+        ++i;
+    }
 
     return decode;
 }
@@ -535,14 +525,14 @@ void run(std::istream &input, std::ostream &output) {
 
 int main() {
 
-    std::cout << (size_t)'B' << std::endl;
-    std::cout << (size_t)'b' << std::endl;
-    std::cout << std::bitset<8>((size_t)'B') << std::endl;
-    std::cout << std::bitset<8>((size_t)'b') << std::endl;
-    std::cout << (size_t)'2' << std::endl;
-    std::cout << (size_t)'r' << std::endl;
-    std::cout << std::bitset<8>((size_t)'2') << std::endl;
-    std::cout << std::bitset<8>((size_t)'r') << std::endl;
+    std::cout << (size_t) 'B' << std::endl;
+    std::cout << (size_t) 'b' << std::endl;
+    std::cout << std::bitset<8>((size_t) 'B') << std::endl;
+    std::cout << std::bitset<8>((size_t) 'b') << std::endl;
+    std::cout << (size_t) '2' << std::endl;
+    std::cout << (size_t) 'r' << std::endl;
+    std::cout << std::bitset<8>((size_t) '2') << std::endl;
+    std::cout << std::bitset<8>((size_t) 'r') << std::endl;
     run(std::cin, std::cout);
 
 
