@@ -352,17 +352,29 @@ void CustomEncode(auto &original, auto &compressed) {
 
     result.WriteByte(table.size());
 
-    result += tree_huffman.GetSerTree();
+    std::cout << result << std::endl;
+
+    BitWriter ser = tree_huffman.GetSerTree();
+
+    std::cout << ser << std::endl;
+
+    result += ser;
+
+    std::cout << result << std::endl;
 
     BitWriter code_data;
 
     for (auto &data: input_buffer) {
         auto needed_node = table.find(data);
         code_data += needed_node->second;
-        std::cout << code_data << std::endl;
+        //  std::cout << code_data << std::endl;
     }
 
-   //   std::cout << code_data << std::endl;
+      std::cout << code_data << std::endl;
+
+    result += code_data;
+
+    std::cout << result << std::endl;
 
 //    tree_huffman.Print();
 //
