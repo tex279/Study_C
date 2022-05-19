@@ -45,48 +45,26 @@ public:
 
 
 NodeABS<unsigned char> *BitReader::GetTree() const {
-//    for (size_t i = 0; i < free_pos; ++i) {
-//        if ((buffer[start_size + j] >> (7 - i)) & 1) {
-//            buffer[start_size + j - 1] |= 1 << (7 - bit_count % 8 - i);
-//        }
-//    }
-//
-//    buffer[buffer.size() + j] = buffer[buffer.size() + j] << (free_pos);
-
     std::cout << *this << std::endl;
 
     std::stack < NodeABS<unsigned char> * > s;
 
     size_t i = 8 * 2;
 
-//    std::cout << i << std::endl;
-//    std::cout << i / 8 << std::endl;
-
     size_t count_read_abs = 0;
     while (count_read_abs < count_ABS || s.size() > 1) {
-//        std::cout << i << std::endl;
-//        std::cout << std::bitset<8>(buffer[i / 8]) << "|" << std::endl;
-//        std::cout << 8 - i % 8 << std::endl;
-
         if ((buffer[i / 8] >> (7 - i % 8)) & 1) {
-            std::cout << "NEW" << std::endl;
-
             ++i;
 
             NodeABS<unsigned char> *new_node = new NodeABS<unsigned char>({});
 
             for (size_t j = 0; j < 8; ++j) {
                 if ((buffer[i / 8] >> (7 - i % 8)) & 1) {
-//                    std::cout << "NEW +" << std::endl;
                     new_node->data |= 1 << (7 - j % 8);
                 }
 
                 ++i;
-
-                std::cout << std::bitset<8>( new_node->data) << "|" << std::endl;
             }
-
-            std::cout << new_node->data << std::endl;
 
             s.push(new_node);
 
@@ -100,8 +78,6 @@ NodeABS<unsigned char> *BitReader::GetTree() const {
             NodeABS<unsigned char> *left = s.top();
             s.pop();
 
-            std::cout << "COMBO ON " << *right << " " << *left << std::endl;
-
             NodeABS<unsigned char> *new_node = new NodeABS<unsigned char>({});
 
             new_node->left = left;
@@ -110,8 +86,6 @@ NodeABS<unsigned char> *BitReader::GetTree() const {
             s.push(new_node);
         }
     }
-
-    std::cout << "RES" << std::endl;
 
     return s.top();
 }
@@ -454,15 +428,15 @@ void CustomEncode(auto &original, auto &compressed) {
 
     auto table = tree_huffman_encode.GetTableCode();
 
-    for (auto &data: table) {
-        std::cout << data.first << " " << data.second << std::endl;
-    }
+//    for (auto &data: table) {
+//        std::cout << data.first << " " << data.second << std::endl;
+//    }
 
     BitWriter begin;
 
     begin.WriteByte(table.size());
 
-    std::cout << tree_huffman_encode.GetSerTree() << std::endl;
+//    std::cout << tree_huffman_encode.GetSerTree() << std::endl;
 
     begin += tree_huffman_encode.GetSerTree();
 
