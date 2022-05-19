@@ -32,7 +32,9 @@ public:
 BitWriter BitWriter::operator+(const BitWriter &other) {
     BitWriter sum;
 
-    size_t free_pos = bit_count % 8;
+    size_t free_pos = 8 - bit_count % 8;
+
+    std::cout << free_pos << std::endl;
 
     for (auto &data:buffer) {
         sum.buffer.push_back(data);
@@ -46,9 +48,17 @@ BitWriter BitWriter::operator+(const BitWriter &other) {
 
     sum.bit_count += other.bit_count;
 
-    for (size_t i = 0; i < other.buffer.size(); ++i) {
-        sum.buffer[buffer.size() - 1 + i] |= ((buffer[buffer.size() + i] << (8 - free_pos)) & 1);
-        sum.buffer[buffer.size() + i] = sum.buffer[buffer.size() + i] << (8 - free_pos);
+    for (size_t j = 0; j < other.buffer.size(); ++j) {
+        //  std::cout << std::bitset<8>(sum.buffer[buffer.size() + j - 1]) << std::endl;
+        std::cout << std::bitset<8>(sum.buffer[buffer.size() + j]) << std::endl;
+        for (size_t i = 0; i < free_pos; ++i) {
+            if ((sum.buffer[buffer.size() + j] >> (free_pos - i)) & 1) {
+                std::cout << "1" << std::endl;
+                sum.buffer[buffer.size() + j - 1] | (1 << (i + free_pos));
+            }
+        }
+
+        //  sum.buffer[buffer.size() + j] = sum.buffer[buffer.size() + j] << (free_pos);
     }
 
     if (sum.buffer.size() > sum.bit_count / 8) {
@@ -360,15 +370,17 @@ int main() {
     BitWriter bw;
 
     bw.WriteBit(1);
-    bw.WriteBit(0);
-    bw.WriteBit(1);
-    bw.WriteBit(1);
 
     std::cout << bw << std::endl;
 
     BitWriter bw1;
 
-    bw1.WriteByte(5);
+    bw1.WriteBit(1);
+    bw1.WriteBit(1);
+    bw1.WriteBit(1);
+    bw1.WriteBit(1);
+    bw1.WriteBit(0);
+    bw1.WriteBit(0);
     bw1.WriteBit(1);
 
     std::cout << bw1 << std::endl;
