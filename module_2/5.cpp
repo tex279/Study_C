@@ -16,8 +16,6 @@ public:
 
     void WriteByte(unsigned char byte);
 
-    void Clear();
-
     void Remove(const size_t count);
 
     const std::vector<unsigned char> &GetBuffer() const;
@@ -32,35 +30,19 @@ public:
 BitWriter &BitWriter::operator+=(const BitWriter &other) {
     size_t free_pos = 8 - bit_count % 8;
 
-//    std::cout << free_pos << std::endl;
-
     size_t start_size = buffer.size();
 
     for (auto &data: other.buffer) {
         buffer.push_back(data);
     }
 
-//    std::cout << *this << std::endl;
-
-
     if (free_pos != 8) {
         for (size_t j = 0; j < other.buffer.size(); ++j) {
-//            std::cout << std::bitset<8>(buffer[start_size + j - 1]) << std::endl;
-//
-//            std::cout << std::bitset<8>(buffer[start_size + j]) << std::endl;
-
             for (size_t i = 0; i < free_pos; ++i) {
                 if ((buffer[start_size + j] >> (7 - i)) & 1) {
-
-//                    std::cout << "1" << std::endl;
-
                     buffer[start_size + j - 1] |= 1 << (7 - bit_count % 8 - i);
-
-//                    std::cout << std::bitset<8>(buffer[start_size + j - 1]) << " " << 7 - bit_count % 8 - i << std::endl;
                 }
             }
-
-//            std::cout << *this << std::endl;
 
             buffer[buffer.size() + j] = buffer[buffer.size() + j] << (free_pos);
         }
@@ -75,18 +57,7 @@ BitWriter &BitWriter::operator+=(const BitWriter &other) {
     return *this;
 }
 
-void BitWriter::Clear() {
-    buffer.clear();
-    bit_count = 0;
-}
-
 void BitWriter::Remove(const size_t count) {
-    if (count > bit_count) {
-        Clear();
-
-        return;
-    }
-
     for (size_t i = 0; i < count; ++i) {
         --bit_count;
 
@@ -170,6 +141,8 @@ class BinaryTreeHuffman {
 
     BitWriter ser_tree;
 
+    size_t count_code;
+
     void TraverseCreateSer(NodeABS<T> *node);
 
     void CreateTable(NodeABS<T> *node, BitWriter bw);
@@ -177,18 +150,23 @@ class BinaryTreeHuffman {
 public:
     void Print() const;
 
+    size_t GetCountCode() const;
+
     auto GetSerTree();
 
     auto GetTableCode();
 
-    BinaryTreeHuffman() : root(nullptr) {};
+    BinaryTreeHuffman() : root(nullptr), count_code(0) {};
 
-    BinaryTreeHuffman(std::priority_queue<NodeABS<T> *, std::vector < NodeABS<T> * >, decltype(FuncCompare)
-
-    > min_heap);
+    BinaryTreeHuffman(std::priority_queue<NodeABS<T> *, std::vector < NodeABS<T> * >, decltype(FuncCompare)> min_heap);
 
     ~BinaryTreeHuffman();
 };
+
+template<typename T>
+size_t BinaryTreeHuffman<T>::GetCountCode() const {
+    return count_code;
+}
 
 template<typename T>
 auto BinaryTreeHuffman<T>::GetTableCode() {
@@ -202,6 +180,10 @@ template<typename T>
 void BinaryTreeHuffman<T>::CreateTable(NodeABS<T> *node, BitWriter bw) {
     if (node->data) {
         table_code.insert({node->data, bw});
+
+        count_code += node->freq * bw.GetBitCount();
+
+        std::cout << node->freq << " " <<  bw.GetBitCount() << " " << node->freq * bw.GetBitCount() << " " << count_code << std::endl;
     } else {
         if (node->left) {
             bw.WriteBit(0);
@@ -236,8 +218,7 @@ auto BinaryTreeHuffman<T>::GetSerTree() {
 }
 
 template<typename T>
-BinaryTreeHuffman<T>::BinaryTreeHuffman(std::priority_queue < NodeABS<T> * , std::vector < NodeABS<T> * > ,
-                                        decltype(FuncCompare) > min_heap) {
+BinaryTreeHuffman<T>::BinaryTreeHuffman(std::priority_queue < NodeABS<T> * , std::vector < NodeABS<T> * > ,decltype(FuncCompare) > min_heap) {
     while (min_heap.size() > 1) {
         NodeABS<unsigned char> *left = min_heap.top();
         min_heap.pop();
@@ -255,6 +236,8 @@ BinaryTreeHuffman<T>::BinaryTreeHuffman(std::priority_queue < NodeABS<T> * , std
 
     root = min_heap.top();
     min_heap.pop();
+
+    count_code = 0;
 }
 
 template<typename T>
@@ -335,8 +318,7 @@ void CreateHeap(auto &map, auto &min_heap) {
 void CustomEncode(auto &original, auto &compressed) {
     std::vector<unsigned char> input_buffer;
 
-    std::priority_queue < NodeABS<unsigned char> * , std::vector < NodeABS<unsigned char> * >, decltype(FuncCompare) >
-                                                                                               min_heap;
+    std::priority_queue < NodeABS<unsigned char> * , std::vector < NodeABS<unsigned char> * >, decltype(FuncCompare) >min_heap;
 
     CheckInput(original, input_buffer, min_heap);
 
@@ -344,52 +326,22 @@ void CustomEncode(auto &original, auto &compressed) {
 
     auto table = tree_huffman.GetTableCode();
 
-    for (auto &data: table) {
-        std::cout << data.first << " " << data.second << std::endl;
-    }
-
     BitWriter result;
 
     result.WriteByte(table.size());
 
-    std::cout << result << std::endl;
-
-    BitWriter ser = tree_huffman.GetSerTree();
-
-    std::cout << ser << std::endl;
-
-    result += ser;
-
-    std::cout << result << std::endl;
-
-    BitWriter code_data;
+    result += tree_huffman.GetSerTree();;
 
     for (auto &data: input_buffer) {
         auto needed_node = table.find(data);
-        code_data += needed_node->second;
-        //  std::cout << code_data << std::endl;
+        result += needed_node->second;
     }
 
-      std::cout << code_data << std::endl;
-
-    result += code_data;
+    compressed = result.GetBuffer();
 
     std::cout << result << std::endl;
 
-//    tree_huffman.Print();
-//
-//    std::cout << result << std::endl;
-//    std::cout << ser << std::endl;
-//
-//    result += ser;
-//    std::cout << result << std::endl;
-//
-//    for (auto &data: table) {
-//        std::cout << data.first << " " << data.second << std::endl;
-//    }
-//    std::cout << count_ABS << std::endl;
-//
-//    std::cout << ser << std::endl;
+    std::cout << tree_huffman.GetCountCode() << std::endl;
 }
 
 void CustomDecode(auto &compressed, auto &original) {
@@ -397,7 +349,9 @@ void CustomDecode(auto &compressed, auto &original) {
 
 void run(std::istream &input, std::ostream &output) {
     unsigned char tmp;
+
     std::vector<unsigned char> input_v;
+
     while (input >> tmp) {
         input_v.push_back(tmp);
     }
@@ -405,6 +359,10 @@ void run(std::istream &input, std::ostream &output) {
     std::vector<unsigned char> compressed;
 
     CustomEncode(input_v, compressed);
+
+    std::vector<unsigned char> expected_data;
+
+    CustomDecode(compressed, expected_data);
 }
 
 
