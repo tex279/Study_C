@@ -7,10 +7,137 @@
 #include <map>
 #include <stack>
 
+template<typename T = unsigned char>
+struct NodeABS {
+    T data;
+    size_t freq;
+
+    NodeABS *left;
+    NodeABS *right;
+
+    NodeABS(const unsigned char &data, size_t freq = 1) : data(data), freq(freq), left(nullptr), right(nullptr) {}
+
+    friend std::ostream &operator<<(std::ostream &os, const NodeABS &it) {
+        return os << it.data << " " << it.freq << std::endl;
+    }
+};
+
+class BitReader {
+    std::vector<unsigned char> buffer;
+
+    size_t free_bit;
+
+    size_t count_ABS;
+public:
+    BitReader(std::vector<unsigned char> buffer) : buffer(buffer) {
+        free_bit = buffer[0];
+        count_ABS = buffer[1];
+    }
+
+    size_t GetFreeBits() const;
+
+    NodeABS<unsigned char> *GetTree() const;
+
+    const std::vector<unsigned char> &GetBuffer() const;
+
+    friend std::ostream &operator<<(std::ostream &out, const BitReader &br);
+};
+
+
+NodeABS<unsigned char> *BitReader::GetTree() const {
+//    for (size_t i = 0; i < free_pos; ++i) {
+//        if ((buffer[start_size + j] >> (7 - i)) & 1) {
+//            buffer[start_size + j - 1] |= 1 << (7 - bit_count % 8 - i);
+//        }
+//    }
+//
+//    buffer[buffer.size() + j] = buffer[buffer.size() + j] << (free_pos);
+
+    std::cout << *this << std::endl;
+
+    std::stack < NodeABS<unsigned char> * > s;
+
+    size_t i = 8 * 2 + 1;
+
+//    std::cout << i << std::endl;
+//    std::cout << i / 8 << std::endl;
+
+    size_t count_read_abs = 0;
+    while (count_read_abs < count_ABS || s.size() > 1) {
+//        std::cout << i << std::endl;
+//        std::cout << std::bitset<8>(buffer[i / 8]) << "|" << std::endl;
+//        std::cout << 8 - i % 8 << std::endl;
+
+        if ((buffer[i / 8] >> (8 - i % 8)) & 1) {
+            std::cout << "NEW" << std::endl;
+
+            ++i;
+
+            NodeABS<unsigned char> *new_node = new NodeABS<unsigned char>({});
+
+            for (size_t j = 0; j < 8; ++j) {
+                if ((buffer[i / 8] >> (8 - i % 8)) & 1) {
+//                    std::cout << "NEW +" << std::endl;
+                    new_node->data |= 1 << (7 - j % 8);
+                }
+
+                ++i;
+
+                std::cout << std::bitset<8>( new_node->data) << "|" << std::endl;
+            }
+
+            std::cout << new_node->data << std::endl;
+
+            s.push(new_node);
+
+            ++count_read_abs;
+        } else {
+            ++i;
+
+            NodeABS<unsigned char> *right = s.top();
+            s.pop();
+
+            NodeABS<unsigned char> *left = s.top();
+            s.pop();
+
+            std::cout << "COMBO ON " << *right << " " << *left << std::endl;
+
+            NodeABS<unsigned char> *new_node = new NodeABS<unsigned char>({});
+
+            new_node->left = left;
+            new_node->right = right;
+
+            s.push(new_node);
+        }
+    }
+
+    std::cout << "RES" << std::endl;
+
+    return s.top();
+}
+
+const std::vector<unsigned char> &BitReader::GetBuffer() const {
+    return buffer;
+}
+
+size_t BitReader::GetFreeBits() const {
+    return free_bit;
+}
+
+std::ostream &operator<<(std::ostream &out, const BitReader &br) {
+    for (auto &byte: br.GetBuffer()) {
+        out << std::bitset<8>(byte) << "|";
+    }
+
+    out << "Count bytes " << br.GetBuffer().size();
+
+    return out;
+}
+
 class BitWriter {
     std::vector<unsigned char> buffer;
-    size_t bit_count;
 
+    size_t bit_count;
 public:
     BitWriter() : bit_count(0) {}
 
@@ -127,21 +254,6 @@ void BitWriter::WriteByte(unsigned char byte) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-template<typename T = unsigned char>
-struct NodeABS {
-    T data;
-    size_t freq;
-
-    NodeABS *left;
-    NodeABS *right;
-
-    NodeABS(const unsigned char &data, size_t freq = 1) : data(data), freq(freq), left(nullptr), right(nullptr) {}
-
-    friend std::ostream &operator<<(std::ostream &os, const NodeABS &it) {
-        return os << it.data << " " << it.freq << std::endl;
-    }
-};
-
 auto FuncCompare = [](NodeABS<unsigned char> *first, NodeABS<unsigned char> *second) -> bool {
     return first->freq > second->freq;
 };
@@ -154,7 +266,7 @@ class BinaryTreeHuffman {
 
     BitWriter ser_tree;
 
-    size_t count_code;
+    size_t free_pos_bits;
 
     void TraverseCreateSer(NodeABS<T> *node);
 
@@ -163,29 +275,26 @@ class BinaryTreeHuffman {
 public:
     void Print() const;
 
-    size_t GetCountCode() const;
-
     auto GetSerTree();
 
     auto GetTableCode();
 
-    BinaryTreeHuffman() : root(nullptr), count_code(0) {};
+    BinaryTreeHuffman() : root(nullptr) {};
 
-    BinaryTreeHuffman(std::priority_queue<NodeABS<T> *, std::vector < NodeABS<T> * >, decltype(FuncCompare)> min_heap);
+    BinaryTreeHuffman(std::priority_queue<NodeABS<T> *, std::vector < NodeABS<T> * >, decltype(FuncCompare)
 
-    BinaryTreeHuffman(const std::vector<T> &compressed);
+    > min_heap);
+
+    BinaryTreeHuffman(BitReader &compressed);
 
     ~BinaryTreeHuffman();
 };
 
 template<typename T>
-BinaryTreeHuffman<T>::BinaryTreeHuffman(const std::vector<T> &compressed) {
+BinaryTreeHuffman<T>::BinaryTreeHuffman(BitReader &compressed) {
+    root = compressed.GetTree();
 
-}
-
-template<typename T>
-size_t BinaryTreeHuffman<T>::GetCountCode() const {
-    return count_code;
+    Print();
 }
 
 template<typename T>
@@ -200,10 +309,6 @@ template<typename T>
 void BinaryTreeHuffman<T>::CreateTable(NodeABS<T> *node, BitWriter bw) {
     if (node->data) {
         table_code.insert({node->data, bw});
-
-        count_code += node->freq * bw.GetBitCount();
-
-        std::cout << node->freq << " " <<  bw.GetBitCount() << " " << node->freq * bw.GetBitCount() << " " << count_code << std::endl;
     } else {
         if (node->left) {
             bw.WriteBit(0);
@@ -238,7 +343,8 @@ auto BinaryTreeHuffman<T>::GetSerTree() {
 }
 
 template<typename T>
-BinaryTreeHuffman<T>::BinaryTreeHuffman(std::priority_queue < NodeABS<T> * , std::vector < NodeABS<T> * > ,decltype(FuncCompare) > min_heap) {
+BinaryTreeHuffman<T>::BinaryTreeHuffman(std::priority_queue < NodeABS<T> * , std::vector < NodeABS<T> * > ,
+                                        decltype(FuncCompare) > min_heap) {
     while (min_heap.size() > 1) {
         NodeABS<unsigned char> *left = min_heap.top();
         min_heap.pop();
@@ -256,12 +362,14 @@ BinaryTreeHuffman<T>::BinaryTreeHuffman(std::priority_queue < NodeABS<T> * , std
 
     root = min_heap.top();
     min_heap.pop();
-
-    count_code = 0;
 }
 
 template<typename T>
 BinaryTreeHuffman<T>::~BinaryTreeHuffman() {
+    if (!root) {
+        return;
+    }
+
     std::stack < NodeABS<T> * > s;
 
     s.push(root);
@@ -304,8 +412,6 @@ void BinaryTreeHuffman<T>::Print() const {
     }
 }
 
-
-
 //----------------------------------------------------------------------------------------------------------------------
 
 void CheckInput(auto &input, auto &input_buffer, auto &min_heap) {
@@ -338,33 +444,48 @@ void CreateHeap(auto &map, auto &min_heap) {
 void CustomEncode(auto &original, auto &compressed) {
     std::vector<unsigned char> input_buffer;
 
-    std::priority_queue < NodeABS<unsigned char> * , std::vector < NodeABS<unsigned char> * >, decltype(FuncCompare) >min_heap;
+    std::priority_queue < NodeABS<unsigned char> * , std::vector < NodeABS<unsigned char> * >, decltype(FuncCompare) >
+                                                                                               min_heap;
 
     CheckInput(original, input_buffer, min_heap);
 
-    BinaryTreeHuffman<unsigned char> tree_huffman(min_heap);
+    BinaryTreeHuffman<unsigned char> tree_huffman_encode(min_heap);
+    tree_huffman_encode.Print();
 
-    auto table = tree_huffman.GetTableCode();
+    auto table = tree_huffman_encode.GetTableCode();
 
-    BitWriter result;
+    for (auto &data: table) {
+        std::cout << data.first << " " << data.second << std::endl;
+    }
 
-    result.WriteByte(table.size());
+    BitWriter begin;
 
-    result += tree_huffman.GetSerTree();;
+    begin.WriteByte(table.size());
+
+    std::cout << tree_huffman_encode.GetSerTree() << std::endl;
+
+    begin += tree_huffman_encode.GetSerTree();
 
     for (auto &data: input_buffer) {
         auto needed_node = table.find(data);
-        result += needed_node->second;
+        begin += needed_node->second;
     }
+
+    BitWriter result;
+
+    result.WriteByte(begin.GetFreeBits());
+
+    result += begin;
 
     compressed = result.GetBuffer();
 
     std::cout << result << std::endl;
-
-    std::cout << tree_huffman.GetCountCode() << std::endl;
 }
 
 void CustomDecode(auto &compressed, auto &original) {
+    BitReader br(compressed);
+
+    BinaryTreeHuffman<unsigned char> tree_huffman_decode(br);
 }
 
 void run(std::istream &input, std::ostream &output) {
@@ -387,18 +508,28 @@ void run(std::istream &input, std::ostream &output) {
 
 
 int main() {
-//    run(std::cin, std::cout);
 
-    BitWriter bw;
+    std::cout << (size_t)'B' << std::endl;
+    std::cout << (size_t)'b' << std::endl;
+    std::cout << std::bitset<8>((size_t)'B') << std::endl;
+    std::cout << std::bitset<8>((size_t)'b') << std::endl;
+    std::cout << (size_t)'2' << std::endl;
+    std::cout << (size_t)'r' << std::endl;
+    std::cout << std::bitset<8>((size_t)'2') << std::endl;
+    std::cout << std::bitset<8>((size_t)'r') << std::endl;
+    run(std::cin, std::cout);
 
-    bw.WriteByte(0);
-    std::cout << bw.GetFreeBits() << std::endl;
-    std::cout << bw << std::endl;
-    bw.WriteBit(1);
-    std::cout << bw.GetFreeBits() << std::endl;
-    std::cout << bw << std::endl;
 
-    std::cout << bw << std::endl;
+//    BitWriter bw;
+//
+//    bw.WriteByte(0);
+//    std::cout << bw.GetFreeBits() << std::endl;
+//    std::cout << bw << std::endl;
+//    bw.WriteBit(1);
+//    std::cout << bw.GetFreeBits() << std::endl;
+//    std::cout << bw << std::endl;
+//
+//    std::cout << bw << std::endl;
 //
 
 //    BitWriter bw1;
