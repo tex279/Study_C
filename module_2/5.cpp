@@ -24,19 +24,39 @@ public:
 
     const size_t GetBitCount() const;
 
-    BitWriter &operator+(BitWriter other) {
-        for (auto &data:other.buffer) {
-            buffer.push_back(data);
-        }
-
-        other.buffer.clear();
-        bit_count += other.bit_count;
-
-        return *this;
-    }
+    BitWriter operator+(const BitWriter &other);
 
     friend std::ostream &operator<<(std::ostream &out, const BitWriter &bw);
 };
+
+BitWriter BitWriter::operator+(const BitWriter &other) {
+    BitWriter sum;
+
+    size_t free_pos = bit_count % 8;
+
+    for (auto &data:buffer) {
+        sum.buffer.push_back(data);
+    }
+
+    sum.bit_count += bit_count;
+
+    for (auto &data:other.buffer) {
+        sum.buffer.push_back(data);
+    }
+
+    sum.bit_count += other.bit_count;
+
+    for (size_t i = 0; i < other.buffer.size(); ++i) {
+        sum.buffer[buffer.size() - 1 + i] |= ((buffer[buffer.size() + i] << (8 - free_pos)) & 1);
+        sum.buffer[buffer.size() + i] = sum.buffer[buffer.size() + i] << (8 - free_pos);
+    }
+
+    if (sum.buffer.size() > sum.bit_count / 8) {
+        sum.buffer.pop_back();
+    }
+
+    return sum;
+}
 
 void BitWriter::Clear() {
     buffer.clear();
@@ -342,12 +362,14 @@ int main() {
     bw.WriteBit(1);
     bw.WriteBit(0);
     bw.WriteBit(1);
+    bw.WriteBit(1);
 
     std::cout << bw << std::endl;
 
     BitWriter bw1;
 
     bw1.WriteByte(5);
+    bw1.WriteBit(1);
 
     std::cout << bw1 << std::endl;
 
