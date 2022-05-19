@@ -55,7 +55,7 @@ std::vector<unsigned char> BitReader::GetDecodeData(const size_t start_pos, Node
     while (true) {
         std::cout << *root << std::endl;
 
-        if (i == free_bit && i % 8 == buffer.size() - 1) {
+        if (i == free_bit && i / 8 == buffer.size() - 1) {
             break;
         }
 
@@ -480,12 +480,21 @@ void CustomEncode(auto &original, auto &compressed) {
 
 //    std::cout << tree_huffman_encode.GetSerTree() << std::endl;
 
-    begin += tree_huffman_encode.GetSerTree();
+    auto ser = tree_huffman_encode.GetSerTree();
+
+    begin += ser;
+
+    BitWriter code;
 
     for (auto &data: input_buffer) {
         auto needed_node = table.find(data);
         begin += needed_node->second;
+        code += needed_node->second;
     }
+
+    std::cout << "CODE " << code << std::endl;
+    std::cout << "SER " << ser << std::endl;
+    std::cout << "Table size + SER + CODE " << begin << std::endl;
 
     BitWriter result;
 
