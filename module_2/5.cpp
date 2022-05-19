@@ -57,7 +57,7 @@ NodeABS<unsigned char> *BitReader::GetTree() const {
 
     std::stack < NodeABS<unsigned char> * > s;
 
-    size_t i = 8 * 2 + 1;
+    size_t i = 8 * 2;
 
 //    std::cout << i << std::endl;
 //    std::cout << i / 8 << std::endl;
@@ -68,7 +68,7 @@ NodeABS<unsigned char> *BitReader::GetTree() const {
 //        std::cout << std::bitset<8>(buffer[i / 8]) << "|" << std::endl;
 //        std::cout << 8 - i % 8 << std::endl;
 
-        if ((buffer[i / 8] >> (8 - i % 8)) & 1) {
+        if ((buffer[i / 8] >> (7 - i % 8)) & 1) {
             std::cout << "NEW" << std::endl;
 
             ++i;
@@ -76,7 +76,7 @@ NodeABS<unsigned char> *BitReader::GetTree() const {
             NodeABS<unsigned char> *new_node = new NodeABS<unsigned char>({});
 
             for (size_t j = 0; j < 8; ++j) {
-                if ((buffer[i / 8] >> (8 - i % 8)) & 1) {
+                if ((buffer[i / 8] >> (7 - i % 8)) & 1) {
 //                    std::cout << "NEW +" << std::endl;
                     new_node->data |= 1 << (7 - j % 8);
                 }
