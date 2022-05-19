@@ -36,15 +36,57 @@ public:
 
     size_t GetFreeBits() const;
 
-    NodeABS<unsigned char> *GetTree() const;
+    size_t GetTree(NodeABS<unsigned char> &root) const;
+
+    std::vector<unsigned char> GetDecodeData(const size_t start_pos, NodeABS<unsigned char> *root) const;
 
     const std::vector<unsigned char> &GetBuffer() const;
 
     friend std::ostream &operator<<(std::ostream &out, const BitReader &br);
 };
 
+std::vector<unsigned char> BitReader::GetDecodeData(const size_t start_pos, NodeABS<unsigned char> *root) const {
+    std::vector<unsigned char> decode;
 
-NodeABS<unsigned char> *BitReader::GetTree() const {
+    size_t i = start_pos;
+
+    NodeABS<unsigned char> *tmp = root;
+
+    std::cout << *tmp << std::endl;
+
+    std::cout << "Start" << std::endl;
+
+    while (true) {
+        std::cout << "Iter" << std::endl;
+
+        if (i == free_bit || i % 8 == buffer.size() - 1) {
+            break;
+        }
+
+        if (tmp->data) {
+            decode.push_back(tmp->data);
+
+            std::cout << tmp->data << std::endl;
+
+            tmp = root;
+
+            std::cout << *tmp << std::endl;
+        }
+
+        if ((buffer[i / 8] >> (7 - i % 8)) & 1) {
+            tmp = tmp->right;
+        } else {
+            tmp = tmp->left;
+        }
+    }
+
+    std::cout << "End" << std::endl;
+
+    return decode;
+}
+
+
+size_t BitReader::GetTree(NodeABS<unsigned char> &root) const {
     std::cout << *this << std::endl;
 
     std::stack < NodeABS<unsigned char> * > s;
@@ -87,7 +129,9 @@ NodeABS<unsigned char> *BitReader::GetTree() const {
         }
     }
 
-    return s.top();
+    root = *s.top();
+
+    return i;
 }
 
 const std::vector<unsigned char> &BitReader::GetBuffer() const {
@@ -266,9 +310,17 @@ public:
 
 template<typename T>
 BinaryTreeHuffman<T>::BinaryTreeHuffman(BitReader &compressed) {
-    root = compressed.GetTree();
+    size_t pos_begin_decode = compressed.GetTree(*root);
 
     Print();
+
+    auto res = compressed.GetDecodeData(pos_begin_decode, root);
+
+    for (auto &data: res) {
+        std::cout << data << " ";
+    }
+
+    std::cout << std::endl;
 }
 
 template<typename T>
