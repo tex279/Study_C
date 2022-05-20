@@ -62,7 +62,7 @@ void BitReader::GetDecodeDataZeroFreeBit(const size_t start_pos, NodeABS<byte> *
     while (true) {
         NodeABS<byte> &node = **cur;
 
-        if (node.data) {
+        if (!node.right && !node.left) {
             decode.push_back(node.data);
 
             cur = &root;
@@ -90,7 +90,9 @@ void BitReader::GetDecodeDataNonNullFreeBit(const size_t start_pos, NodeABS<byte
 
     size_t i = start_pos;
 
+
     while (true) {
+        //  std::cout << "RES" << std::endl;
         NodeABS<byte> &node = **cur;
 
         if (!node.right && !node.left) {
@@ -121,6 +123,7 @@ size_t BitReader::GetTree(NodeABS<byte> *&root) const {
         root = nullptr;
         return 0;
     }
+
 
     std::stack < NodeABS<byte> * > s;
 
@@ -163,6 +166,8 @@ size_t BitReader::GetTree(NodeABS<byte> *&root) const {
     }
 
     root = s.top();
+
+    std::cout << "RES" << std::endl;
 
     return i;
 }
@@ -593,10 +598,10 @@ void CustomEncode(auto &original, auto &compressed) {
 //    for (auto &data: table) {
 //        std::cout << data.first << " " << data.second << std::endl;
 //    }
-//    std::cout << "TABLE SIZE - " << table.size() << std::endl;
+    std::cout << "TABLE SIZE - " << table.size() << std::endl;
 //    std::cout << "SER - " << tree_huffman_encode.GetSerTree() << std::endl;
 //    std::cout << "CODE - " << code << std::endl;
-//    std::cout << "FREE BITS - " << begin.GetFreeBits() << std::endl;
+    std::cout << "FREE BITS - " << begin.GetFreeBits() << std::endl;
 //    std::cout << result << std::endl;
 }
 
@@ -604,6 +609,7 @@ void CustomDecode(auto &compressed, auto &original) {
     BitReader br(compressed);
 
     BinaryTreeHuffman<byte> tree_huffman_decode(br);
+
 
     if (!tree_huffman_decode.GetRoot()) {
         for (size_t i = 1; i < compressed.size(); ++i) {
