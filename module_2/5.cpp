@@ -92,7 +92,6 @@ void BitReader::GetDecodeDataNonNullFreeBit(const size_t start_pos, NodeABS<byte
 
 
     while (true) {
-        //  std::cout << "RES" << std::endl;
         NodeABS<byte> &node = **cur;
 
         if (!node.right && !node.left) {
@@ -166,8 +165,6 @@ size_t BitReader::GetTree(NodeABS<byte> *&root) const {
     }
 
     root = s.top();
-
-    std::cout << "RES" << std::endl;
 
     return i;
 }
@@ -665,40 +662,8 @@ void run(std::istream &input, std::ostream &output) {
     AnalysisCompress(input_v, compressed, expected_data);
 }
 
-void run_test(std::istream &input, std::ostream &output) {
-    byte tmp;
-
-    std::vector <byte> input_v;
-
-    for (size_t i = 0; i < 256; ++i) {
-        input_v.push_back(i);
-    }
-
-    for (size_t i = 0; i < 1000; ++i) {
-        input_v.push_back(0);
-    }
-
-    if (input_v.empty()) {
-        std::cout << "Null input" << std::endl;
-
-        return;
-    }
-
-    std::vector <byte> compressed;
-
-    CustomEncode(input_v, compressed);
-
-    std::vector <byte> expected_data;
-
-    CustomDecode(compressed, expected_data);
-
-    AnalysisCompress(input_v, compressed, expected_data);
-}
-
-
 int main() {
       run(std::cin, std::cout);
-    //  run_test(std::cin, std::cout);
 
     return EXIT_SUCCESS;
 }
