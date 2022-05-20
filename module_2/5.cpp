@@ -93,7 +93,7 @@ void BitReader::GetDecodeDataNonNullFreeBit(const size_t start_pos, NodeABS<byte
     while (true) {
         NodeABS<byte> &node = **cur;
 
-        if (node.data) {
+        if (!node.right && !node.left) {
             decode.push_back(node.data);
 
             cur = &root;
@@ -126,18 +126,9 @@ size_t BitReader::GetTree(NodeABS<byte> *&root) const {
 
     size_t i = 8 * 2;
 
-//    std::cout << "START " << i << std::endl;
-//
-//    std::cout << s.size() << std::endl;
-
     size_t count_read_abs = 0;
     while (count_read_abs < count_ABS || s.size() > 1) {
-//        std::cout << "ITER " << i << " " << count_read_abs << " " << s.size() << " " << 7 - i % 8  << " " << i / 8 << std::endl;
-//
-//        std::cout << std::bitset<8>(buffer[i / 8]) << " " << ((buffer[i / 8] >> (7 - i % 8)) & 1) << std::endl;
-
         if ((buffer[i / 8] >> (7 - i % 8)) & 1) {
-//            std::cout << "PROCESS" << std::endl;
             ++i;
 
             NodeABS<byte> *new_node = new NodeABS<byte>({});
@@ -168,12 +159,8 @@ size_t BitReader::GetTree(NodeABS<byte> *&root) const {
             new_node->right = right;
 
             s.push(new_node);
-
-//            std::cout << "PROCESS" << std::endl;
         }
     }
-
-    std::cout << "!!!!!!!!!!!!!!!!!!!!Res!!!!!!!!!!!!!!!!" << std::endl;
 
     root = s.top();
 
@@ -315,7 +302,9 @@ void BitWriter::WriteByte(byte byte) {
         buffer.push_back(byte);
     } else {
         size_t offset = bit_count % 8;
+
         buffer[bit_count / 8] |= byte >> offset;
+
         buffer.push_back(byte << (8 - offset));
     }
 
@@ -600,21 +589,15 @@ void CustomEncode(auto &original, auto &compressed) {
 
 //    std::cout << "TREE" << std::endl;
 //    tree_huffman_encode.Print();
-
 //    std::cout << "TABLE" << std::endl;
 //    for (auto &data: table) {
 //        std::cout << data.first << " " << data.second << std::endl;
 //    }
-
 //    std::cout << "TABLE SIZE - " << table.size() << std::endl;
-//
-//
 //    std::cout << "SER - " << tree_huffman_encode.GetSerTree() << std::endl;
-    //    std::cout << "CODE - " << code << std::endl;
-    //    std::cout << "FREE BITS - " << begin.GetFreeBits() << std::endl;
-    //    std::cout << result << std::endl;
-
-
+//    std::cout << "CODE - " << code << std::endl;
+//    std::cout << "FREE BITS - " << begin.GetFreeBits() << std::endl;
+//    std::cout << result << std::endl;
 }
 
 void CustomDecode(auto &compressed, auto &original) {
