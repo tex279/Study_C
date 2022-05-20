@@ -34,49 +34,51 @@ public:
         count_ABS = buffer[1];
     }
 
+    BitReader() = default;
+
     size_t GetFreeBits() const;
 
-    size_t GetTree(NodeABS<unsigned char> &root) const;
+    size_t GetTree(NodeABS<unsigned char>* &root) const;
 
-    std::vector<unsigned char> GetDecodeData(const size_t start_pos, NodeABS<unsigned char> *root) const;
+    void GetDecodeData(const size_t start_pos, NodeABS<unsigned char> *root, std::vector<unsigned char> &decode) const;
 
     const std::vector<unsigned char> &GetBuffer() const;
 
     friend std::ostream &operator<<(std::ostream &out, const BitReader &br);
 };
 
-std::vector<unsigned char> BitReader::GetDecodeData(const size_t start_pos, NodeABS<unsigned char> *root) const {
-    std::vector<unsigned char> decode;
+void BitReader::GetDecodeData(const size_t start_pos, NodeABS<unsigned char> *root, std::vector<unsigned char> &decode) const {
+    NodeABS<unsigned char> **cur = &root;
 
     size_t i = start_pos;
 
-    NodeABS<unsigned char> *tmp = root;
-
     while (true) {
-        std::cout << *root << std::endl;
+        NodeABS<unsigned char> &node = **cur;
 
-        if (i == free_bit && i / 8 == buffer.size() - 1) {
+        if (node.data) {
+            decode.push_back(node.data);
+
+            cur = &root;
+
+            continue;
+        }
+
+        if (i % 8 == free_bit && i / 8 == buffer.size()) {
             break;
         }
 
-        if (tmp->data) {
-            decode.push_back(tmp->data);
-
-            tmp = root;
-        } else if ((buffer[i / 8] >> (7 - i % 8)) & 1) {
-            tmp = tmp->right;
+        if ((buffer[i / 8] >> (7 - i % 8)) & 1) {
+            cur = &node.right;
+            ++i;
         } else {
-            tmp = tmp->left;
+            cur = &node.left;
+            ++i;
         }
-
-        ++i;
     }
-
-    return decode;
 }
 
 
-size_t BitReader::GetTree(NodeABS<unsigned char> &root) const {
+size_t BitReader::GetTree(NodeABS<unsigned char>* &root) const {
     std::cout << *this << std::endl;
 
     std::stack < NodeABS<unsigned char> * > s;
@@ -119,7 +121,7 @@ size_t BitReader::GetTree(NodeABS<unsigned char> &root) const {
         }
     }
 
-    root = *s.top();
+    root = s.top();
 
     return i;
 }
@@ -274,18 +276,29 @@ class BinaryTreeHuffman {
 
     BitWriter ser_tree;
 
+    BitReader decode;
+    size_t pos_start;
+
     size_t free_pos_bits;
+
+    std::vector<T> res;
+
+    bool flag;
 
     void TraverseCreateSer(NodeABS<T> *node);
 
     void CreateTable(NodeABS<T> *node, BitWriter bw);
 
 public:
+    auto GetRoot() const { return  root; }
+
     void Print() const;
 
     auto GetSerTree();
 
     auto GetTableCode();
+
+    auto GetDecode();
 
     BinaryTreeHuffman() : root(nullptr) {};
 
@@ -299,18 +312,19 @@ public:
 };
 
 template<typename T>
+auto BinaryTreeHuffman<T>::GetDecode() {
+    decode.GetDecodeData(pos_start, root, res);
+
+    return res;
+}
+
+template<typename T>
 BinaryTreeHuffman<T>::BinaryTreeHuffman(BitReader &compressed) {
-    size_t pos_begin_decode = compressed.GetTree(*root);
+    pos_start = compressed.GetTree(root);
 
-    Print();
+    decode = compressed;
 
-    auto res = compressed.GetDecodeData(pos_begin_decode, root);
-
-    for (auto &data: res) {
-        std::cout << data << " ";
-    }
-
-    std::cout << std::endl;
+    flag = true;
 }
 
 template<typename T>
@@ -382,7 +396,7 @@ BinaryTreeHuffman<T>::BinaryTreeHuffman(std::priority_queue < NodeABS<T> * , std
 
 template<typename T>
 BinaryTreeHuffman<T>::~BinaryTreeHuffman() {
-    if (!root) {
+    if (!root || flag) {
         return;
     }
 
@@ -470,9 +484,9 @@ void CustomEncode(auto &original, auto &compressed) {
 
     auto table = tree_huffman_encode.GetTableCode();
 
-//    for (auto &data: table) {
-//        std::cout << data.first << " " << data.second << std::endl;
-//    }
+    for (auto &data: table) {
+        std::cout << data.first << " " << data.second << std::endl;
+    }
 
     BitWriter begin;
 
@@ -490,7 +504,21 @@ void CustomEncode(auto &original, auto &compressed) {
         auto needed_node = table.find(data);
         begin += needed_node->second;
         code += needed_node->second;
+
+        std::cout << code << " " << needed_node->first << std::endl;
     }
+
+    //--------------
+//    BitReader br(code.GetBuffer());
+//
+//    auto res = br.GetDecodeData(0, tree_huffman_encode.GetRoot());
+//
+//    for (auto &data: res) {
+//        std::cout << data;
+//    }
+//
+//    std::cout << std::endl;
+    //--------------
 
     std::cout << "CODE " << code << std::endl;
     std::cout << "SER " << ser << std::endl;
@@ -511,6 +539,16 @@ void CustomDecode(auto &compressed, auto &original) {
     BitReader br(compressed);
 
     BinaryTreeHuffman<unsigned char> tree_huffman_decode(br);
+
+    tree_huffman_decode.Print();
+
+    auto res = tree_huffman_decode.GetDecode();
+
+    for (auto &data: res) {
+        std::cout << data;
+    }
+
+    std::cout << std::endl;
 }
 
 void run(std::istream &input, std::ostream &output) {
@@ -533,15 +571,6 @@ void run(std::istream &input, std::ostream &output) {
 
 
 int main() {
-
-    std::cout << (size_t) 'B' << std::endl;
-    std::cout << (size_t) 'b' << std::endl;
-    std::cout << std::bitset<8>((size_t) 'B') << std::endl;
-    std::cout << std::bitset<8>((size_t) 'b') << std::endl;
-    std::cout << (size_t) '2' << std::endl;
-    std::cout << (size_t) 'r' << std::endl;
-    std::cout << std::bitset<8>((size_t) '2') << std::endl;
-    std::cout << std::bitset<8>((size_t) 'r') << std::endl;
     run(std::cin, std::cout);
 
 
