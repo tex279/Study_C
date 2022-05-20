@@ -522,13 +522,11 @@ void CustomEncode(auto &original, auto &compressed) {
 
     BinaryTreeHuffman<unsigned char> tree_huffman_encode(min_heap);
 
-    tree_huffman_encode.Print();
-
     auto table = tree_huffman_encode.GetTableCode();
 
-    for(auto &data: table) {
-        std::cout << data.first << " " << data.second << std::endl;
-    }
+//    for(auto &data: table) {
+//        std::cout << data.first << " " << data.second << std::endl;
+//    }
 
     BitWriter begin;
 
@@ -605,13 +603,7 @@ void run(std::istream &input, std::ostream &output) {
 
 
 int main() {
-      run(std::cin, std::cout);
-
-    //  std::priority_queue < NodeABS<unsigned char> * , std::vector < NodeABS<unsigned char> * >, decltype(FuncCompare) >min_heap;
-
-//    More<unsigned char> more;
-//
-//    std::priority_queue < NodeABS<unsigned char> * , std::vector < NodeABS<unsigned char> * >, decltype(more) >min_heap;
+    run(std::cin, std::cout);
 
     return EXIT_SUCCESS;
 }
