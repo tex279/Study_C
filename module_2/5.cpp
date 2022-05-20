@@ -537,7 +537,8 @@ int CustomEncode(auto &original, auto &compressed) {
     CheckInput(original, input_buffer, min_heap);
 
     BinaryTreeHuffman<byte> tree_huffman_encode(min_heap);
-//    tree_huffman_encode.Print();
+    std::cout << "TREE" << std::endl;
+    tree_huffman_encode.Print();
 
     auto table = tree_huffman_encode.GetTableCode();
 
@@ -546,19 +547,20 @@ int CustomEncode(auto &original, auto &compressed) {
         return -1;
     }
 
-//    for (auto &data: table) {
-//        std::cout << data.first << " " << data.second << std::endl;
-//    }
+    std::cout << "TABLE" << std::endl;
+    for (auto &data: table) {
+        std::cout << data.first << " " << data.second << std::endl;
+    }
 
     BitWriter begin;
 
     begin.WriteByte(table.size());
 
-//    std::cout << table.size() << std::endl;
+    std::cout << "TABLE SIZE - " << table.size() << std::endl;
 
     begin += tree_huffman_encode.GetSerTree();
 
-//    std::cout << tree_huffman_encode.GetSerTree() << std::endl;
+    std::cout << "SER - " << tree_huffman_encode.GetSerTree() << std::endl;
 
     BitWriter code;
 
@@ -569,19 +571,19 @@ int CustomEncode(auto &original, auto &compressed) {
         code += needed_node->second;
     }
 
-//    std::cout << code << std::endl;
+    std::cout << "CODE - " << code << std::endl;
 
     BitWriter result;
 
     result.WriteByte(begin.GetFreeBits());
 
-//    std::cout << begin.GetFreeBits() << std::endl;
+    std::cout << "FREE BITS - " << begin.GetFreeBits() << std::endl;
 
     result += begin;
 
     compressed = result.GetBuffer();
 
-//    std::cout << result << std::endl;
+    std::cout << result << std::endl;
 
     if (compressed.size() > original.size()) {
         compressed = original;
