@@ -53,8 +53,7 @@ public:
     friend std::ostream &operator<<(std::ostream &out, const BitReader &br);
 };
 
-void BitReader::GetDecodeDataZeroFreeBit(const size_t start_pos, NodeABS<byte> *root,
-                                         std::vector <byte> &decode) const {
+void BitReader::GetDecodeDataZeroFreeBit(const size_t start_pos, NodeABS<byte> *root, std::vector <byte> &decode) const {
     NodeABS<byte> **cur = &root;
 
     size_t i = start_pos;
@@ -76,20 +75,19 @@ void BitReader::GetDecodeDataZeroFreeBit(const size_t start_pos, NodeABS<byte> *
 
         if ((buffer[i / 8] >> (7 - i % 8)) & 1) {
             cur = &node.right;
-            ++i;
         } else {
             cur = &node.left;
-            ++i;
         }
+
+        ++i;
     }
 }
 
-void BitReader::GetDecodeDataNonNullFreeBit(const size_t start_pos, NodeABS<byte> *root,
-                                            std::vector <byte> &decode) const {
+void
+BitReader::GetDecodeDataNonNullFreeBit(const size_t start_pos, NodeABS<byte> *root, std::vector <byte> &decode) const {
     NodeABS<byte> **cur = &root;
 
     size_t i = start_pos;
-
 
     while (true) {
         NodeABS<byte> &node = **cur;
@@ -108,11 +106,11 @@ void BitReader::GetDecodeDataNonNullFreeBit(const size_t start_pos, NodeABS<byte
 
         if ((buffer[i / 8] >> (7 - i % 8)) & 1) {
             cur = &node.right;
-            ++i;
         } else {
             cur = &node.left;
-            ++i;
         }
+
+        ++i;
     }
 }
 
@@ -122,7 +120,6 @@ size_t BitReader::GetTree(NodeABS<byte> *&root) const {
         root = nullptr;
         return 0;
     }
-
 
     std::stack < NodeABS<byte> * > s;
 
@@ -357,9 +354,7 @@ public:
 
     BinaryTreeHuffman() : root(nullptr) {};
 
-    BinaryTreeHuffman(std::priority_queue<NodeABS<T> *, std::vector < NodeABS<T> * >, decltype(more)
-
-    > min_heap);
+    BinaryTreeHuffman(std::priority_queue<NodeABS<T> *, std::vector < NodeABS<T> * >, decltype(more)> min_heap);
 
     BinaryTreeHuffman(BitReader &compressed);
 
@@ -663,7 +658,7 @@ void run(std::istream &input, std::ostream &output) {
 }
 
 int main() {
-      run(std::cin, std::cout);
+    run(std::cin, std::cout);
 
     return EXIT_SUCCESS;
 }
