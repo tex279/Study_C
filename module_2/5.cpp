@@ -550,7 +550,11 @@ void CustomEncode(auto &original, auto &compressed) {
 
     BitWriter begin;
 
-    begin.WriteByte(table.size() - 1);
+    if (table.size() < 256) {
+        begin.WriteByte(table.size());
+    } else {
+        begin.WriteByte(table.size() - 1);
+    }
 
     begin += tree_huffman_encode.GetSerTree();
 
