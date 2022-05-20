@@ -523,7 +523,7 @@ void CreateHeap(auto &map, auto &min_heap) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-void CustomEncode(auto &original, auto &compressed) {
+int CustomEncode(auto &original, auto &compressed) {
     std::vector <byte> input_buffer;
 
     std::priority_queue < NodeABS<byte> * , std::vector < NodeABS<byte> * >, decltype(more) >min_heap;
@@ -531,14 +531,24 @@ void CustomEncode(auto &original, auto &compressed) {
     CheckInput(original, input_buffer, min_heap);
 
     BinaryTreeHuffman<byte> tree_huffman_encode(min_heap);
+    tree_huffman_encode.Print();
 
     auto table = tree_huffman_encode.GetTableCode();
+
+    if (table.empty()) {
+        compressed = original;
+        return -1;
+    }
+
+    for (auto &data: table) {
+        std::cout << data.first << " " << data.second << std::endl;
+    }
 
     BitWriter begin;
 
     begin.WriteByte(table.size());
 
-    begin += tree_huffman_encode.GetSerTree();;
+    begin += tree_huffman_encode.GetSerTree();
 
     for (auto &data: input_buffer) {
         auto needed_node = table.find(data);
@@ -556,6 +566,8 @@ void CustomEncode(auto &original, auto &compressed) {
     if (compressed.size() > original.size()) {
         compressed = original;
     }
+
+    return EXIT_SUCCESS;
 }
 
 void CustomDecode(auto &compressed, auto &original) {
@@ -590,15 +602,23 @@ void run(std::istream &input, std::ostream &output) {
         input_v.push_back(tmp);
     }
 
+    if (input_v.empty()) {
+        std::cout << "Null input" << std::endl;
+
+        return;
+    }
+
     std::vector <byte> compressed;
 
-    CustomEncode(input_v, compressed);
+    if (!CustomEncode(input_v, compressed)) {
+        std::vector <byte> expected_data;
 
-    std::vector <byte> expected_data;
+        CustomDecode(compressed, expected_data);
 
-    CustomDecode(compressed, expected_data);
-
-    AnalysisCompress(input_v, compressed, expected_data);
+        AnalysisCompress(input_v, compressed, expected_data);
+    } else {
+        std::cout << "Compression ratio - 1" << std::endl;
+    }
 }
 
 
