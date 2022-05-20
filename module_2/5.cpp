@@ -117,15 +117,27 @@ void BitReader::GetDecodeDataNonNullFreeBit(const size_t start_pos, NodeABS<byte
 
 
 size_t BitReader::GetTree(NodeABS<byte> *&root) const {
+    if (free_bit == 255) {
+        root = nullptr;
+        return 0;
+    }
+
     std::stack < NodeABS<byte> * > s;
 
     size_t i = 8 * 2;
 
-    std::cout << "Res" << std::endl;
+//    std::cout << "START " << i << std::endl;
+//
+//    std::cout << s.size() << std::endl;
 
     size_t count_read_abs = 0;
     while (count_read_abs < count_ABS || s.size() > 1) {
+//        std::cout << "ITER " << i << " " << count_read_abs << " " << s.size() << " " << 7 - i % 8  << " " << i / 8 << std::endl;
+//
+//        std::cout << std::bitset<8>(buffer[i / 8]) << " " << ((buffer[i / 8] >> (7 - i % 8)) & 1) << std::endl;
+
         if ((buffer[i / 8] >> (7 - i % 8)) & 1) {
+            std::cout << "PROCESS" << std::endl;
             ++i;
 
             NodeABS<byte> *new_node = new NodeABS<byte>({});
@@ -156,10 +168,12 @@ size_t BitReader::GetTree(NodeABS<byte> *&root) const {
             new_node->right = right;
 
             s.push(new_node);
+
+            std::cout << "PROCESS" << std::endl;
         }
     }
 
-    std::cout << "Res" << std::endl;
+    std::cout << "!!!!!!!!!!!!!!!!!!!!Res!!!!!!!!!!!!!!!!" << std::endl;
 
     root = s.top();
 
@@ -352,7 +366,9 @@ public:
 
     BinaryTreeHuffman() : root(nullptr) {};
 
-    BinaryTreeHuffman(std::priority_queue<NodeABS<T> *, std::vector < NodeABS<T> * >, decltype(more)> min_heap);
+    BinaryTreeHuffman(std::priority_queue<NodeABS<T> *, std::vector < NodeABS<T> * >, decltype(more)
+
+    > min_heap);
 
     BinaryTreeHuffman(BitReader &compressed);
 
@@ -430,7 +446,8 @@ auto BinaryTreeHuffman<T>::GetSerTree() {
 }
 
 template<typename T>
-BinaryTreeHuffman<T>::BinaryTreeHuffman(std::priority_queue < NodeABS<T> * , std::vector < NodeABS<T> * >, decltype(more) > min_heap) {
+BinaryTreeHuffman<T>::BinaryTreeHuffman(std::priority_queue < NodeABS<T> * , std::vector < NodeABS<T> * > ,
+                                        decltype(more) > min_heap) {
     while (min_heap.size() > 1) {
         NodeABS<T> *left = min_heap.top();
         min_heap.pop();
@@ -529,38 +546,27 @@ void CreateHeap(auto &map, auto &min_heap) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
-int CustomEncode(auto &original, auto &compressed) {
+void CustomEncode(auto &original, auto &compressed) {
     std::vector <byte> input_buffer;
 
-    std::priority_queue < NodeABS<byte> * , std::vector < NodeABS<byte> * >, decltype(more) >min_heap;
+    std::priority_queue < NodeABS<byte> * , std::vector < NodeABS<byte> * >, decltype(more) > min_heap;
 
     CheckInput(original, input_buffer, min_heap);
 
     BinaryTreeHuffman<byte> tree_huffman_encode(min_heap);
-    std::cout << "TREE" << std::endl;
-    tree_huffman_encode.Print();
 
     auto table = tree_huffman_encode.GetTableCode();
 
     if (table.empty()) {
         compressed = original;
-        return -1;
-    }
-
-    std::cout << "TABLE" << std::endl;
-    for (auto &data: table) {
-        std::cout << data.first << " " << data.second << std::endl;
+        return;
     }
 
     BitWriter begin;
 
     begin.WriteByte(table.size());
 
-    std::cout << "TABLE SIZE - " << table.size() << std::endl;
-
     begin += tree_huffman_encode.GetSerTree();
-
-    std::cout << "SER - " << tree_huffman_encode.GetSerTree() << std::endl;
 
     BitWriter code;
 
@@ -571,31 +577,60 @@ int CustomEncode(auto &original, auto &compressed) {
         code += needed_node->second;
     }
 
-    std::cout << "CODE - " << code << std::endl;
-
     BitWriter result;
 
     result.WriteByte(begin.GetFreeBits());
-
-    std::cout << "FREE BITS - " << begin.GetFreeBits() << std::endl;
 
     result += begin;
 
     compressed = result.GetBuffer();
 
-    std::cout << result << std::endl;
-
     if (compressed.size() > original.size()) {
-        compressed = original;
+
+        std::vector <byte> null_compress;
+
+        null_compress.push_back(255);
+
+        for (auto &data: original) {
+            null_compress.push_back(data);
+        }
+
+        compressed = null_compress;
     }
 
-    return EXIT_SUCCESS;
+//    std::cout << "TREE" << std::endl;
+//    tree_huffman_encode.Print();
+
+//    std::cout << "TABLE" << std::endl;
+//    for (auto &data: table) {
+//        std::cout << data.first << " " << data.second << std::endl;
+//    }
+
+//    std::cout << "TABLE SIZE - " << table.size() << std::endl;
+//
+//
+//    std::cout << "SER - " << tree_huffman_encode.GetSerTree() << std::endl;
+    //    std::cout << "CODE - " << code << std::endl;
+    //    std::cout << "FREE BITS - " << begin.GetFreeBits() << std::endl;
+    //    std::cout << result << std::endl;
+
+
 }
 
 void CustomDecode(auto &compressed, auto &original) {
     BitReader br(compressed);
 
     BinaryTreeHuffman<byte> tree_huffman_decode(br);
+
+    if (!tree_huffman_decode.GetRoot()) {
+        for (size_t i = 1; i < compressed.size(); ++i) {
+            original.push_back(compressed[i]);
+        }
+
+        compressed.erase(compressed.begin());
+
+        return;
+    }
 
     auto res = tree_huffman_decode.GetDecode();
 
@@ -604,7 +639,7 @@ void CustomDecode(auto &compressed, auto &original) {
 
 void AnalysisCompress(auto input_data, auto &compressed, auto &expected_data) {
     std::cout << "Size before compress: " << input_data.size() << " bytes" << std::endl;
-    std::cout << "After compress: " << compressed.size() <<  " bytes"  << std::endl;
+    std::cout << "After compress: " << compressed.size() << " bytes" << std::endl;
 
     std::cout << "Compression ratio - " << (double) compressed.size() / (double) input_data.size() << std::endl;
 
@@ -632,15 +667,13 @@ void run(std::istream &input, std::ostream &output) {
 
     std::vector <byte> compressed;
 
-    if (!CustomEncode(input_v, compressed)) {
-        std::vector <byte> expected_data;
+    CustomEncode(input_v, compressed);
 
-        CustomDecode(compressed, expected_data);
+    std::vector <byte> expected_data;
 
-        AnalysisCompress(input_v, compressed, expected_data);
-    } else {
-        std::cout << "Compression ratio - 1" << std::endl;
-    }
+    CustomDecode(compressed, expected_data);
+
+    AnalysisCompress(input_v, compressed, expected_data);
 }
 
 
