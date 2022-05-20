@@ -121,6 +121,8 @@ size_t BitReader::GetTree(NodeABS<byte> *&root) const {
 
     size_t i = 8 * 2;
 
+    std::cout << "Res" << std::endl;
+
     size_t count_read_abs = 0;
     while (count_read_abs < count_ABS || s.size() > 1) {
         if ((buffer[i / 8] >> (7 - i % 8)) & 1) {
@@ -383,7 +385,7 @@ auto BinaryTreeHuffman<T>::GetTableCode() {
 
 template<typename T>
 void BinaryTreeHuffman<T>::CreateTable(NodeABS<T> *node, BitWriter bw) {
-    if (node->data) {
+    if (!node->left && !node->left) {
         table_code.insert({node->data, bw});
     } else {
         if (node->left) {
@@ -418,7 +420,9 @@ void BinaryTreeHuffman<T>::TraverseCreateSer(NodeABS<T> *node) {
 
 template<typename T>
 auto BinaryTreeHuffman<T>::GetSerTree() {
-    TraverseCreateSer(root);
+    if (ser_tree.GetBuffer().empty()) {
+        TraverseCreateSer(root);
+    }
 
     return ser_tree;
 }
