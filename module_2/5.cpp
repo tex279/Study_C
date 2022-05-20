@@ -229,8 +229,10 @@ BitWriter &BitWriter::operator+=(const BitWriter &other) {
             buffer[start_size + j] = buffer[start_size + j] << (free_pos);
         }
 
-        if (8 - bit_count % 8 >= other.bit_count % 8) {
-            buffer.pop_back();
+        if (other.bit_count < 8) {
+            if (8 - bit_count % 8 >= other.bit_count % 8) {
+                buffer.pop_back();
+            }
         }
     }
 
@@ -516,9 +518,9 @@ void CustomEncode(auto &original, auto &compressed) {
 
     auto table = tree_huffman_encode.GetTableCode();
 
-//    for (auto &data: table) {
-//        std::cout << data.first << " " << data.second << std::endl;
-//    }
+    for (auto &data: table) {
+        std::cout << data.first << " " << data.second << std::endl;
+    }
 
     BitWriter begin;
 
@@ -537,8 +539,6 @@ void CustomEncode(auto &original, auto &compressed) {
         auto needed_node = table.find(data);
         begin += needed_node->second;
 
-        code += needed_node->second;
-
 //        if (i % 11 == 0) {
 //            std::cout << "CHANK" << std::endl;
 //        }
@@ -548,9 +548,13 @@ void CustomEncode(auto &original, auto &compressed) {
 //        }
 //
 //
-//        std::cout << code << " - " << needed_node->first << std::endl;
-//
-//        i++;
+
+        if (i < 12) {
+            code += needed_node->second;
+            std::cout << code << " - " << needed_node->first << " " << needed_node->second << std::endl;
+        }
+
+        i++;
     }
 
     BitWriter result;
@@ -583,7 +587,7 @@ void run(std::istream &input, std::ostream &output) {
 
     std::vector<unsigned char> input_v;
 
-    while (input >> tmp) {
+    while (input >> std::noskipws >> tmp) {
         input_v.push_back(tmp);
     }
 
@@ -595,15 +599,19 @@ void run(std::istream &input, std::ostream &output) {
 
     CustomDecode(compressed, expected_data);
 
-//    for (auto &data: input_v) {
-//        std::cout << data;
-//    }
-//    std::cout << std::endl;
-//
-//    for (auto &data: expected_data) {
-//        std::cout << data;
-//    }
-//    std::cout << std::endl;
+    std::cout << "----------------------------------------------------------------------" << std::endl;
+
+    for (auto &data: input_v) {
+        std::cout << data;
+    }
+    std::cout << std::endl;
+    std::cout << "----------------------------------------------------------------------" << std::endl;
+
+    for (auto &data: expected_data) {
+        std::cout << data;
+    }
+    std::cout << std::endl;
+    std::cout << "----------------------------------------------------------------------" << std::endl;
 
     std::cout << "Before " << input_v.size() << std::endl;
     std::cout << "After " << compressed.size() << std::endl;
