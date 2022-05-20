@@ -40,21 +40,50 @@ public:
 
     size_t GetTree(NodeABS<unsigned char>* &root) const;
 
-    void GetDecodeData(const size_t start_pos, NodeABS<unsigned char> *root, std::vector<unsigned char> &decode) const;
+    void GetDecodeDataZeroFreeBit(const size_t start_pos, NodeABS<unsigned char> *root, std::vector<unsigned char> &decode) const;
+
+    void GetDecodeDataNonNullFreeBit(const size_t start_pos, NodeABS<unsigned char> *root, std::vector<unsigned char> &decode) const;
 
     const std::vector<unsigned char> &GetBuffer() const;
 
     friend std::ostream &operator<<(std::ostream &out, const BitReader &br);
 };
 
-void BitReader::GetDecodeData(const size_t start_pos, NodeABS<unsigned char> *root, std::vector<unsigned char> &decode) const {
+void BitReader::GetDecodeDataZeroFreeBit(const size_t start_pos, NodeABS<unsigned char> *root, std::vector<unsigned char> &decode) const {
     NodeABS<unsigned char> **cur = &root;
 
     size_t i = start_pos;
 
-    std::cout << free_bit << std::endl;
+    while (true) {
+        NodeABS<unsigned char> &node = **cur;
 
-    //  std::cout << *this << std::endl;
+        if (node.data) {
+            decode.push_back(node.data);
+
+            cur = &root;
+
+            continue;
+        }
+
+        if (i % 8 == free_bit && i / 8 == buffer.size()) {
+            std::cout << i << " " << i % 8 << " " << 8 - free_bit << std::endl;
+            break;
+        }
+
+        if ((buffer[i / 8] >> (7 - i % 8)) & 1) {
+            cur = &node.right;
+            ++i;
+        } else {
+            cur = &node.left;
+            ++i;
+        }
+    }
+}
+
+void BitReader::GetDecodeDataNonNullFreeBit(const size_t start_pos, NodeABS<unsigned char> *root, std::vector<unsigned char> &decode) const {
+    NodeABS<unsigned char> **cur = &root;
+
+    size_t i = start_pos;
 
     while (true) {
         NodeABS<unsigned char> &node = **cur;
@@ -314,7 +343,12 @@ public:
 
 template<typename T>
 auto BinaryTreeHuffman<T>::GetDecode() {
-    decode.GetDecodeData(pos_start, root, res);
+    if (decode.GetFreeBits() == 0) {
+        std::cout << "NULL" << std::endl;
+        decode.GetDecodeDataZeroFreeBit(pos_start, root, res);
+    } else {
+        decode.GetDecodeDataNonNullFreeBit(pos_start, root, res);
+    }
 
     return res;
 }
