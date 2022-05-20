@@ -558,7 +558,7 @@ void CustomEncode(auto &original, auto &compressed) {
 
     BitWriter begin;
 
-    begin.WriteByte(table.size());
+    begin.WriteByte(table.size() - 1);
 
     begin += tree_huffman_encode.GetSerTree();
 
@@ -598,10 +598,10 @@ void CustomEncode(auto &original, auto &compressed) {
 //    for (auto &data: table) {
 //        std::cout << data.first << " " << data.second << std::endl;
 //    }
-    std::cout << "TABLE SIZE - " << table.size() << std::endl;
+//    std::cout << "TABLE SIZE - " << table.size() << std::endl;
 //    std::cout << "SER - " << tree_huffman_encode.GetSerTree() << std::endl;
 //    std::cout << "CODE - " << code << std::endl;
-    std::cout << "FREE BITS - " << begin.GetFreeBits() << std::endl;
+//    std::cout << "FREE BITS - " << begin.GetFreeBits() << std::endl;
 //    std::cout << result << std::endl;
 }
 
@@ -697,8 +697,8 @@ void run_test(std::istream &input, std::ostream &output) {
 
 
 int main() {
-    //  run(std::cin, std::cout);
-    run_test(std::cin, std::cout);
+      run(std::cin, std::cout);
+    //  run_test(std::cin, std::cout);
 
     return EXIT_SUCCESS;
 }
