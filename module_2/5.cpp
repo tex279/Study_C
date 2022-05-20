@@ -52,6 +52,10 @@ void BitReader::GetDecodeData(const size_t start_pos, NodeABS<unsigned char> *ro
 
     size_t i = start_pos;
 
+    std::cout << free_bit << std::endl;
+
+    //  std::cout << *this << std::endl;
+
     while (true) {
         NodeABS<unsigned char> &node = **cur;
 
@@ -63,7 +67,8 @@ void BitReader::GetDecodeData(const size_t start_pos, NodeABS<unsigned char> *ro
             continue;
         }
 
-        if (i % 8 == free_bit && i / 8 == buffer.size()) {
+        if (i % 8 == 8 - free_bit && i / 8 == buffer.size() - 1) {
+            std::cout << i << " " << i % 8 << " " << 8 - free_bit << std::endl;
             break;
         }
 
@@ -79,8 +84,6 @@ void BitReader::GetDecodeData(const size_t start_pos, NodeABS<unsigned char> *ro
 
 
 size_t BitReader::GetTree(NodeABS<unsigned char>* &root) const {
-    std::cout << *this << std::endl;
-
     std::stack < NodeABS<unsigned char> * > s;
 
     size_t i = 8 * 2;
@@ -194,7 +197,7 @@ BitWriter &BitWriter::operator+=(const BitWriter &other) {
                 }
             }
 
-            buffer[buffer.size() + j] = buffer[buffer.size() + j] << (free_pos);
+            buffer[start_size + j] = buffer[start_size + j] << (free_pos);
         }
 
         if (8 - bit_count % 8 >= other.bit_count % 8) {
@@ -283,8 +286,6 @@ class BinaryTreeHuffman {
 
     std::vector<T> res;
 
-    bool flag;
-
     void TraverseCreateSer(NodeABS<T> *node);
 
     void CreateTable(NodeABS<T> *node, BitWriter bw);
@@ -323,8 +324,6 @@ BinaryTreeHuffman<T>::BinaryTreeHuffman(BitReader &compressed) {
     pos_start = compressed.GetTree(root);
 
     decode = compressed;
-
-    flag = true;
 }
 
 template<typename T>
@@ -396,7 +395,7 @@ BinaryTreeHuffman<T>::BinaryTreeHuffman(std::priority_queue < NodeABS<T> * , std
 
 template<typename T>
 BinaryTreeHuffman<T>::~BinaryTreeHuffman() {
-    if (!root || flag) {
+    if (!root) {
         return;
     }
 
@@ -474,8 +473,7 @@ void CreateHeap(auto &map, auto &min_heap) {
 void CustomEncode(auto &original, auto &compressed) {
     std::vector<unsigned char> input_buffer;
 
-    std::priority_queue < NodeABS<unsigned char> * , std::vector < NodeABS<unsigned char> * >, decltype(FuncCompare) >
-                                                                                               min_heap;
+    std::priority_queue < NodeABS<unsigned char> * , std::vector < NodeABS<unsigned char> * >, decltype(FuncCompare) >min_heap;
 
     CheckInput(original, input_buffer, min_heap);
 
@@ -492,37 +490,34 @@ void CustomEncode(auto &original, auto &compressed) {
 
     begin.WriteByte(table.size());
 
-//    std::cout << tree_huffman_encode.GetSerTree() << std::endl;
+    BitWriter ser;
 
-    auto ser = tree_huffman_encode.GetSerTree();
+    ser = tree_huffman_encode.GetSerTree();
 
     begin += ser;
 
     BitWriter code;
 
+    size_t i = 0;
     for (auto &data: input_buffer) {
         auto needed_node = table.find(data);
         begin += needed_node->second;
+
         code += needed_node->second;
 
-        std::cout << code << " " << needed_node->first << std::endl;
+//        if (i % 11 == 0) {
+//            std::cout << "CHANK" << std::endl;
+//        }
+//
+//        if (i > 32 - 7) {
+//            std::cout << "WRONG" << std::endl;
+//        }
+//
+//
+//        std::cout << code << " - " << needed_node->first << std::endl;
+//
+//        i++;
     }
-
-    //--------------
-//    BitReader br(code.GetBuffer());
-//
-//    auto res = br.GetDecodeData(0, tree_huffman_encode.GetRoot());
-//
-//    for (auto &data: res) {
-//        std::cout << data;
-//    }
-//
-//    std::cout << std::endl;
-    //--------------
-
-    std::cout << "CODE " << code << std::endl;
-    std::cout << "SER " << ser << std::endl;
-    std::cout << "Table size + SER + CODE " << begin << std::endl;
 
     BitWriter result;
 
@@ -530,9 +525,11 @@ void CustomEncode(auto &original, auto &compressed) {
 
     result += begin;
 
-    compressed = result.GetBuffer();
-
+    std::cout << code << std::endl;
+    std::cout << ser << std::endl;
     std::cout << result << std::endl;
+
+    compressed = result.GetBuffer();
 }
 
 void CustomDecode(auto &compressed, auto &original) {
@@ -544,11 +541,7 @@ void CustomDecode(auto &compressed, auto &original) {
 
     auto res = tree_huffman_decode.GetDecode();
 
-    for (auto &data: res) {
-        std::cout << data;
-    }
-
-    std::cout << std::endl;
+    original = res;
 }
 
 void run(std::istream &input, std::ostream &output) {
@@ -567,44 +560,54 @@ void run(std::istream &input, std::ostream &output) {
     std::vector<unsigned char> expected_data;
 
     CustomDecode(compressed, expected_data);
+
+    for (auto &data: input_v) {
+        std::cout << data;
+    }
+    std::cout << std::endl;
+
+    for (auto &data: expected_data) {
+        std::cout << data;
+    }
+    std::cout << std::endl;
+
+    std::cout << "Before " << input_v.size() << std::endl;
+    std::cout << "After " << compressed.size() << std::endl;
+
+    std::cout << "КОЕФ " << (double )compressed.size() / (double )input_v.size() << std::endl;
+
+    if (input_v == expected_data) {
+        std::cout << "SUCCESS" << std::endl;
+    } else {
+        std::cout << "FALSE" << std::endl;
+    }
 }
 
 
 int main() {
     run(std::cin, std::cout);
 
-
 //    BitWriter bw;
 //
-//    bw.WriteByte(0);
-//    std::cout << bw.GetFreeBits() << std::endl;
-//    std::cout << bw << std::endl;
 //    bw.WriteBit(1);
-//    std::cout << bw.GetFreeBits() << std::endl;
-//    std::cout << bw << std::endl;
+//    bw.WriteBit(1);
+//    bw.WriteBit(1);
+//    bw.WriteBit(1);
+//    bw.WriteBit(1);
+//    bw.WriteBit(0);
 //
 //    std::cout << bw << std::endl;
 //
-
 //    BitWriter bw1;
 //
 //    bw1.WriteBit(1);
-//    bw1.WriteBit(1);
 //    bw1.WriteBit(0);
+//    bw1.WriteBit(0);
+//    bw1.WriteBit(1);
 //
 //    std::cout << bw1 << std::endl;
 //
 //    bw += bw1;
-//
-//    std::cout << bw << std::endl;
-
-//    BitWriter bw2;
-//
-//    bw2.WriteBit(1);
-//    bw2.WriteBit(1);
-//    bw2.WriteBit(1);
-//
-//    bw += bw2;
 //
 //    std::cout << bw << std::endl;
 
