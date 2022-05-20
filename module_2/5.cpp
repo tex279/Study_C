@@ -66,7 +66,7 @@ void BitReader::GetDecodeDataZeroFreeBit(const size_t start_pos, NodeABS<unsigne
         }
 
         if (i % 8 == free_bit && i / 8 == buffer.size()) {
-            std::cout << i << " " << i % 8 << " " << 8 - free_bit << std::endl;
+//            std::cout << i << " " << i % 8 << " " << 8 - free_bit << std::endl;
             break;
         }
 
@@ -97,7 +97,7 @@ void BitReader::GetDecodeDataNonNullFreeBit(const size_t start_pos, NodeABS<unsi
         }
 
         if (i % 8 == 8 - free_bit && i / 8 == buffer.size() - 1) {
-            std::cout << i << " " << i % 8 << " " << 8 - free_bit << std::endl;
+//            std::cout << i << " " << i % 8 << " " << 8 - free_bit << std::endl;
             break;
         }
 
@@ -512,13 +512,13 @@ void CustomEncode(auto &original, auto &compressed) {
     CheckInput(original, input_buffer, min_heap);
 
     BinaryTreeHuffman<unsigned char> tree_huffman_encode(min_heap);
-    tree_huffman_encode.Print();
+//    tree_huffman_encode.Print();
 
     auto table = tree_huffman_encode.GetTableCode();
 
-    for (auto &data: table) {
-        std::cout << data.first << " " << data.second << std::endl;
-    }
+//    for (auto &data: table) {
+//        std::cout << data.first << " " << data.second << std::endl;
+//    }
 
     BitWriter begin;
 
@@ -559,9 +559,9 @@ void CustomEncode(auto &original, auto &compressed) {
 
     result += begin;
 
-    std::cout << code << std::endl;
-    std::cout << ser << std::endl;
-    std::cout << result << std::endl;
+//    std::cout << code << std::endl;
+//    std::cout << ser << std::endl;
+//    std::cout << result << std::endl;
 
     compressed = result.GetBuffer();
 }
@@ -571,7 +571,7 @@ void CustomDecode(auto &compressed, auto &original) {
 
     BinaryTreeHuffman<unsigned char> tree_huffman_decode(br);
 
-    tree_huffman_decode.Print();
+//    tree_huffman_decode.Print();
 
     auto res = tree_huffman_decode.GetDecode();
 
@@ -595,15 +595,15 @@ void run(std::istream &input, std::ostream &output) {
 
     CustomDecode(compressed, expected_data);
 
-    for (auto &data: input_v) {
-        std::cout << data;
-    }
-    std::cout << std::endl;
-
-    for (auto &data: expected_data) {
-        std::cout << data;
-    }
-    std::cout << std::endl;
+//    for (auto &data: input_v) {
+//        std::cout << data;
+//    }
+//    std::cout << std::endl;
+//
+//    for (auto &data: expected_data) {
+//        std::cout << data;
+//    }
+//    std::cout << std::endl;
 
     std::cout << "Before " << input_v.size() << std::endl;
     std::cout << "After " << compressed.size() << std::endl;
