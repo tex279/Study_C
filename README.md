@@ -32,7 +32,7 @@ https://contest.yandex.ru/contest/36255/enter
 
 4 - 2 - YES
 
-5 - all - 
+5 - all - YES/NO
 
 RK - 1 - YES
 
