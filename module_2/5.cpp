@@ -75,11 +75,11 @@ void BitReader::GetDecodeDataZeroFreeBit(const size_t start_pos, NodeABS<byte> *
 
         if ((buffer[i / 8] >> (7 - i % 8)) & 1) {
             cur = &node.right;
+            ++i;
         } else {
             cur = &node.left;
+            ++i;
         }
-
-        ++i;
     }
 }
 
