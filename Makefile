@@ -12,7 +12,7 @@ build_dz:
 	g++ --std=gnu++20  $(TARGET_MODULE)/$(TARGET_DZ).cpp -o task
 
 build_rk:
-	g++ --std=gnu++20 -Wall -Wextra -Werror -Wpedantic $(TARGET_MODULE)/RK/$(TARGET_RK).cpp -o task
+	g++ -g --std=gnu++20 -Wall -Wextra -Werror -Wpedantic $(TARGET_MODULE)/RK/$(TARGET_RK).cpp -o task
 
 check:
 	./run_linters.sh

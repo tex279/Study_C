@@ -66,7 +66,6 @@ void BitReader::GetDecodeDataZeroFreeBit(const size_t start_pos, NodeABS<unsigne
         }
 
         if (i % 8 == free_bit && i / 8 == buffer.size()) {
-//            std::cout << i << " " << i % 8 << " " << 8 - free_bit << std::endl;
             break;
         }
 
@@ -97,7 +96,6 @@ void BitReader::GetDecodeDataNonNullFreeBit(const size_t start_pos, NodeABS<unsi
         }
 
         if (i % 8 == 8 - free_bit && i / 8 == buffer.size() - 1) {
-//            std::cout << i << " " << i % 8 << " " << 8 - free_bit << std::endl;
             break;
         }
 
@@ -298,6 +296,16 @@ void BitWriter::WriteByte(unsigned char byte) {
 
 //----------------------------------------------------------------------------------------------------------------------
 
+template<typename T>
+class More {
+public:
+    bool operator()(const NodeABS<T> *first, const NodeABS<T> *second) const {
+        return first->freq > second->freq;
+    }
+};
+
+const More<unsigned char> more;
+
 auto FuncCompare = [](NodeABS<unsigned char> *first, NodeABS<unsigned char> *second) -> bool {
     return first->freq > second->freq;
 };
@@ -334,7 +342,7 @@ public:
 
     BinaryTreeHuffman() : root(nullptr) {};
 
-    BinaryTreeHuffman(std::priority_queue<NodeABS<T> *, std::vector < NodeABS<T> * >, decltype(FuncCompare)
+    BinaryTreeHuffman(std::priority_queue<NodeABS<T> *, std::vector < NodeABS<T> * >, decltype(more)
 
     > min_heap);
 
@@ -346,7 +354,6 @@ public:
 template<typename T>
 auto BinaryTreeHuffman<T>::GetDecode() {
     if (decode.GetFreeBits() == 0) {
-        std::cout << "NULL" << std::endl;
         decode.GetDecodeDataZeroFreeBit(pos_start, root, res);
     } else {
         decode.GetDecodeDataNonNullFreeBit(pos_start, root, res);
@@ -390,7 +397,7 @@ void BinaryTreeHuffman<T>::CreateTable(NodeABS<T> *node, BitWriter bw) {
 
 template<typename T>
 void BinaryTreeHuffman<T>::TraverseCreateSer(NodeABS<T> *node) {
-    if (node->data) {
+    if (!node->left && !node->right) {
         ser_tree.WriteBit(1);
         ser_tree.WriteByte(node->data);
     } else {
@@ -409,7 +416,7 @@ auto BinaryTreeHuffman<T>::GetSerTree() {
 
 template<typename T>
 BinaryTreeHuffman<T>::BinaryTreeHuffman(std::priority_queue < NodeABS<T> * , std::vector < NodeABS<T> * > ,
-                                        decltype(FuncCompare) > min_heap) {
+                                        decltype(more) > min_heap) {
     while (min_heap.size() > 1) {
         NodeABS<unsigned char> *left = min_heap.top();
         min_heap.pop();
@@ -509,16 +516,17 @@ void CreateHeap(auto &map, auto &min_heap) {
 void CustomEncode(auto &original, auto &compressed) {
     std::vector<unsigned char> input_buffer;
 
-    std::priority_queue < NodeABS<unsigned char> * , std::vector < NodeABS<unsigned char> * >, decltype(FuncCompare) >min_heap;
+    std::priority_queue < NodeABS<unsigned char> * , std::vector < NodeABS<unsigned char> * >, decltype(more) >min_heap;
 
     CheckInput(original, input_buffer, min_heap);
 
     BinaryTreeHuffman<unsigned char> tree_huffman_encode(min_heap);
-//    tree_huffman_encode.Print();
+
+    tree_huffman_encode.Print();
 
     auto table = tree_huffman_encode.GetTableCode();
 
-    for (auto &data: table) {
+    for(auto &data: table) {
         std::cout << data.first << " " << data.second << std::endl;
     }
 
@@ -526,35 +534,11 @@ void CustomEncode(auto &original, auto &compressed) {
 
     begin.WriteByte(table.size());
 
-    BitWriter ser;
+    begin += tree_huffman_encode.GetSerTree();;
 
-    ser = tree_huffman_encode.GetSerTree();
-
-    begin += ser;
-
-    BitWriter code;
-
-    size_t i = 0;
     for (auto &data: input_buffer) {
         auto needed_node = table.find(data);
         begin += needed_node->second;
-
-//        if (i % 11 == 0) {
-//            std::cout << "CHANK" << std::endl;
-//        }
-//
-//        if (i > 32 - 7) {
-//            std::cout << "WRONG" << std::endl;
-//        }
-//
-//
-
-        if (i < 12) {
-            code += needed_node->second;
-            std::cout << code << " - " << needed_node->first << " " << needed_node->second << std::endl;
-        }
-
-        i++;
     }
 
     BitWriter result;
@@ -563,10 +547,6 @@ void CustomEncode(auto &original, auto &compressed) {
 
     result += begin;
 
-//    std::cout << code << std::endl;
-//    std::cout << ser << std::endl;
-//    std::cout << result << std::endl;
-
     compressed = result.GetBuffer();
 }
 
@@ -574,8 +554,6 @@ void CustomDecode(auto &compressed, auto &original) {
     BitReader br(compressed);
 
     BinaryTreeHuffman<unsigned char> tree_huffman_decode(br);
-
-//    tree_huffman_decode.Print();
 
     auto res = tree_huffman_decode.GetDecode();
 
@@ -599,19 +577,19 @@ void run(std::istream &input, std::ostream &output) {
 
     CustomDecode(compressed, expected_data);
 
-    std::cout << "----------------------------------------------------------------------" << std::endl;
-
-    for (auto &data: input_v) {
-        std::cout << data;
-    }
-    std::cout << std::endl;
-    std::cout << "----------------------------------------------------------------------" << std::endl;
-
-    for (auto &data: expected_data) {
-        std::cout << data;
-    }
-    std::cout << std::endl;
-    std::cout << "----------------------------------------------------------------------" << std::endl;
+//    std::cout << "----------------------------------------------------------------------" << std::endl;
+//
+//    for (auto &data: input_v) {
+//        std::cout << data;
+//    }
+//    std::cout << std::endl;
+//    std::cout << "----------------------------------------------------------------------" << std::endl;
+//
+//    for (auto &data: expected_data) {
+//        std::cout << data;
+//    }
+//    std::cout << std::endl;
+//    std::cout << "----------------------------------------------------------------------" << std::endl;
 
     std::cout << "Before " << input_v.size() << std::endl;
     std::cout << "After " << compressed.size() << std::endl;
@@ -627,31 +605,13 @@ void run(std::istream &input, std::ostream &output) {
 
 
 int main() {
-    run(std::cin, std::cout);
+      run(std::cin, std::cout);
 
-//    BitWriter bw;
+    //  std::priority_queue < NodeABS<unsigned char> * , std::vector < NodeABS<unsigned char> * >, decltype(FuncCompare) >min_heap;
+
+//    More<unsigned char> more;
 //
-//    bw.WriteBit(1);
-//    bw.WriteBit(1);
-//    bw.WriteBit(1);
-//    bw.WriteBit(1);
-//    bw.WriteBit(1);
-//    bw.WriteBit(0);
-//
-//    std::cout << bw << std::endl;
-//
-//    BitWriter bw1;
-//
-//    bw1.WriteBit(1);
-//    bw1.WriteBit(0);
-//    bw1.WriteBit(0);
-//    bw1.WriteBit(1);
-//
-//    std::cout << bw1 << std::endl;
-//
-//    bw += bw1;
-//
-//    std::cout << bw << std::endl;
+//    std::priority_queue < NodeABS<unsigned char> * , std::vector < NodeABS<unsigned char> * >, decltype(more) >min_heap;
 
     return EXIT_SUCCESS;
 }
