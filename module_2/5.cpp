@@ -1,5 +1,3 @@
-//#include "Huffman.h"
-
 #include <iostream>
 #include <vector>
 #include <bitset>
@@ -7,7 +5,9 @@
 #include <map>
 #include <stack>
 
-template<typename T = unsigned char>
+using byte = u_int8_t;
+
+template<typename T = byte>
 struct NodeABS {
     T data;
     size_t freq;
@@ -15,21 +15,23 @@ struct NodeABS {
     NodeABS *left;
     NodeABS *right;
 
-    NodeABS(const unsigned char &data, size_t freq = 1) : data(data), freq(freq), left(nullptr), right(nullptr) {}
+    NodeABS(const T &data, size_t freq = 1) : data(data), freq(freq), left(nullptr), right(nullptr) {}
 
     friend std::ostream &operator<<(std::ostream &os, const NodeABS &it) {
         return os << it.data << " " << it.freq << std::endl;
     }
 };
 
+//----------------------------------------------------------------------------------------------------------------------
+
 class BitReader {
-    std::vector<unsigned char> buffer;
+    std::vector <byte> buffer;
 
     size_t free_bit;
 
     size_t count_ABS;
 public:
-    BitReader(std::vector<unsigned char> buffer) : buffer(buffer) {
+    BitReader(std::vector <byte> buffer) : buffer(buffer) {
         free_bit = buffer[0];
         count_ABS = buffer[1];
     }
@@ -38,24 +40,27 @@ public:
 
     size_t GetFreeBits() const;
 
-    size_t GetTree(NodeABS<unsigned char>* &root) const;
+    size_t GetTree(NodeABS<byte> *&root) const;
 
-    void GetDecodeDataZeroFreeBit(const size_t start_pos, NodeABS<unsigned char> *root, std::vector<unsigned char> &decode) const;
+    void GetDecodeDataZeroFreeBit(const size_t start_pos, NodeABS<byte> *root,
+                                  std::vector <byte> &decode) const;
 
-    void GetDecodeDataNonNullFreeBit(const size_t start_pos, NodeABS<unsigned char> *root, std::vector<unsigned char> &decode) const;
+    void GetDecodeDataNonNullFreeBit(const size_t start_pos, NodeABS<byte> *root,
+                                     std::vector <byte> &decode) const;
 
-    const std::vector<unsigned char> &GetBuffer() const;
+    const std::vector <byte> &GetBuffer() const;
 
     friend std::ostream &operator<<(std::ostream &out, const BitReader &br);
 };
 
-void BitReader::GetDecodeDataZeroFreeBit(const size_t start_pos, NodeABS<unsigned char> *root, std::vector<unsigned char> &decode) const {
-    NodeABS<unsigned char> **cur = &root;
+void BitReader::GetDecodeDataZeroFreeBit(const size_t start_pos, NodeABS<byte> *root,
+                                         std::vector <byte> &decode) const {
+    NodeABS<byte> **cur = &root;
 
     size_t i = start_pos;
 
     while (true) {
-        NodeABS<unsigned char> &node = **cur;
+        NodeABS<byte> &node = **cur;
 
         if (node.data) {
             decode.push_back(node.data);
@@ -79,13 +84,14 @@ void BitReader::GetDecodeDataZeroFreeBit(const size_t start_pos, NodeABS<unsigne
     }
 }
 
-void BitReader::GetDecodeDataNonNullFreeBit(const size_t start_pos, NodeABS<unsigned char> *root, std::vector<unsigned char> &decode) const {
-    NodeABS<unsigned char> **cur = &root;
+void BitReader::GetDecodeDataNonNullFreeBit(const size_t start_pos, NodeABS<byte> *root,
+                                            std::vector <byte> &decode) const {
+    NodeABS<byte> **cur = &root;
 
     size_t i = start_pos;
 
     while (true) {
-        NodeABS<unsigned char> &node = **cur;
+        NodeABS<byte> &node = **cur;
 
         if (node.data) {
             decode.push_back(node.data);
@@ -110,8 +116,8 @@ void BitReader::GetDecodeDataNonNullFreeBit(const size_t start_pos, NodeABS<unsi
 }
 
 
-size_t BitReader::GetTree(NodeABS<unsigned char>* &root) const {
-    std::stack < NodeABS<unsigned char> * > s;
+size_t BitReader::GetTree(NodeABS<byte> *&root) const {
+    std::stack < NodeABS<byte> * > s;
 
     size_t i = 8 * 2;
 
@@ -120,7 +126,7 @@ size_t BitReader::GetTree(NodeABS<unsigned char>* &root) const {
         if ((buffer[i / 8] >> (7 - i % 8)) & 1) {
             ++i;
 
-            NodeABS<unsigned char> *new_node = new NodeABS<unsigned char>({});
+            NodeABS<byte> *new_node = new NodeABS<byte>({});
 
             for (size_t j = 0; j < 8; ++j) {
                 if ((buffer[i / 8] >> (7 - i % 8)) & 1) {
@@ -136,13 +142,13 @@ size_t BitReader::GetTree(NodeABS<unsigned char>* &root) const {
         } else {
             ++i;
 
-            NodeABS<unsigned char> *right = s.top();
+            NodeABS<byte> *right = s.top();
             s.pop();
 
-            NodeABS<unsigned char> *left = s.top();
+            NodeABS<byte> *left = s.top();
             s.pop();
 
-            NodeABS<unsigned char> *new_node = new NodeABS<unsigned char>({});
+            NodeABS<byte> *new_node = new NodeABS<byte>({});
 
             new_node->left = left;
             new_node->right = right;
@@ -156,7 +162,7 @@ size_t BitReader::GetTree(NodeABS<unsigned char>* &root) const {
     return i;
 }
 
-const std::vector<unsigned char> &BitReader::GetBuffer() const {
+const std::vector <byte> &BitReader::GetBuffer() const {
     return buffer;
 }
 
@@ -174,22 +180,24 @@ std::ostream &operator<<(std::ostream &out, const BitReader &br) {
     return out;
 }
 
+//----------------------------------------------------------------------------------------------------------------------
+
 class BitWriter {
-    std::vector<unsigned char> buffer;
+    std::vector <byte> buffer;
 
     size_t bit_count;
 public:
     BitWriter() : bit_count(0) {}
 
-    void WriteBit(unsigned char bit);
+    void WriteBit(byte bit);
 
-    void WriteByte(unsigned char byte);
+    void WriteByte(byte byte);
 
     void Remove(const size_t count);
 
     size_t GetFreeBits() const;
 
-    const std::vector<unsigned char> &GetBuffer() const;
+    const std::vector <byte> &GetBuffer() const;
 
     const size_t GetBitCount() const;
 
@@ -266,11 +274,11 @@ const size_t BitWriter::GetBitCount() const {
     return bit_count;
 }
 
-const std::vector<unsigned char> &BitWriter::GetBuffer() const {
+const std::vector <byte> &BitWriter::GetBuffer() const {
     return buffer;
 }
 
-void BitWriter::WriteBit(unsigned char bit) {
+void BitWriter::WriteBit(byte bit) {
     if (bit_count == buffer.size() * 8) {
         buffer.push_back(0);
     }
@@ -282,7 +290,7 @@ void BitWriter::WriteBit(unsigned char bit) {
     ++bit_count;
 }
 
-void BitWriter::WriteByte(unsigned char byte) {
+void BitWriter::WriteByte(byte byte) {
     if (bit_count % 8 == 0) {
         buffer.push_back(byte);
     } else {
@@ -306,10 +314,6 @@ public:
 
 const More<unsigned char> more;
 
-auto FuncCompare = [](NodeABS<unsigned char> *first, NodeABS<unsigned char> *second) -> bool {
-    return first->freq > second->freq;
-};
-
 template<typename T>
 class BinaryTreeHuffman {
     NodeABS<T> *root;
@@ -323,14 +327,14 @@ class BinaryTreeHuffman {
 
     size_t free_pos_bits;
 
-    std::vector<T> res;
+    std::vector <T> res;
 
     void TraverseCreateSer(NodeABS<T> *node);
 
     void CreateTable(NodeABS<T> *node, BitWriter bw);
 
 public:
-    auto GetRoot() const { return  root; }
+    auto GetRoot() const { return root; }
 
     void Print() const;
 
@@ -418,13 +422,13 @@ template<typename T>
 BinaryTreeHuffman<T>::BinaryTreeHuffman(std::priority_queue < NodeABS<T> * , std::vector < NodeABS<T> * > ,
                                         decltype(more) > min_heap) {
     while (min_heap.size() > 1) {
-        NodeABS<unsigned char> *left = min_heap.top();
+        NodeABS<T> *left = min_heap.top();
         min_heap.pop();
 
-        NodeABS<unsigned char> *right = min_heap.top();
+        NodeABS<T> *right = min_heap.top();
         min_heap.pop();
 
-        NodeABS<unsigned char> *new_node = new NodeABS<unsigned char>({}, left->freq + right->freq);
+        NodeABS<T> *new_node = new NodeABS<byte>({}, left->freq + right->freq);
 
         new_node->left = left;
         new_node->right = right;
@@ -487,7 +491,7 @@ void BinaryTreeHuffman<T>::Print() const {
 //----------------------------------------------------------------------------------------------------------------------
 
 void CheckInput(auto &input, auto &input_buffer, auto &min_heap) {
-    std::map<unsigned char, size_t> mapABS;
+    std::map <byte, size_t> mapABS;
 
     for (auto data: input) {
         auto needed_node = mapABS.find(data);
@@ -506,7 +510,7 @@ void CheckInput(auto &input, auto &input_buffer, auto &min_heap) {
 
 void CreateHeap(auto &map, auto &min_heap) {
     for (auto &data: map) {
-        NodeABS<unsigned char> *node = new NodeABS<unsigned char>(data.first, data.second);
+        NodeABS<byte> *node = new NodeABS<byte>(data.first, data.second);
         min_heap.push(node);
     }
 }
@@ -514,13 +518,14 @@ void CreateHeap(auto &map, auto &min_heap) {
 //----------------------------------------------------------------------------------------------------------------------
 
 void CustomEncode(auto &original, auto &compressed) {
-    std::vector<unsigned char> input_buffer;
+    std::vector <byte> input_buffer;
 
-    std::priority_queue < NodeABS<unsigned char> * , std::vector < NodeABS<unsigned char> * >, decltype(more) >min_heap;
+    std::priority_queue < NodeABS<byte> * , std::vector < NodeABS<byte> * >, decltype(more) >
+                                                                             min_heap;
 
     CheckInput(original, input_buffer, min_heap);
 
-    BinaryTreeHuffman<unsigned char> tree_huffman_encode(min_heap);
+    BinaryTreeHuffman<byte> tree_huffman_encode(min_heap);
 
     auto table = tree_huffman_encode.GetTableCode();
 
@@ -551,7 +556,7 @@ void CustomEncode(auto &original, auto &compressed) {
 void CustomDecode(auto &compressed, auto &original) {
     BitReader br(compressed);
 
-    BinaryTreeHuffman<unsigned char> tree_huffman_decode(br);
+    BinaryTreeHuffman<byte> tree_huffman_decode(br);
 
     auto res = tree_huffman_decode.GetDecode();
 
@@ -559,19 +564,19 @@ void CustomDecode(auto &compressed, auto &original) {
 }
 
 void run(std::istream &input, std::ostream &output) {
-    unsigned char tmp;
+    byte tmp;
 
-    std::vector<unsigned char> input_v;
+    std::vector <byte> input_v;
 
     while (input >> std::noskipws >> tmp) {
         input_v.push_back(tmp);
     }
 
-    std::vector<unsigned char> compressed;
+    std::vector <byte> compressed;
 
     CustomEncode(input_v, compressed);
 
-    std::vector<unsigned char> expected_data;
+    std::vector <byte> expected_data;
 
     CustomDecode(compressed, expected_data);
 
@@ -592,7 +597,7 @@ void run(std::istream &input, std::ostream &output) {
     std::cout << "Before " << input_v.size() << std::endl;
     std::cout << "After " << compressed.size() << std::endl;
 
-    std::cout << "КОЕФ " << (double )compressed.size() / (double )input_v.size() << std::endl;
+    std::cout << "КОЕФ " << (double) compressed.size() / (double) input_v.size() << std::endl;
 
     if (input_v == expected_data) {
         std::cout << "SUCCESS" << std::endl;
