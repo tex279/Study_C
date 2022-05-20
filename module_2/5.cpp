@@ -229,8 +229,8 @@ BitWriter &BitWriter::operator+=(const BitWriter &other) {
             buffer[start_size + j] = buffer[start_size + j] << (free_pos);
         }
 
-        if (other.bit_count < 8) {
-            if (8 - bit_count % 8 >= other.bit_count % 8) {
+        if (8 - other.bit_count % 8 < 8 && 8 - bit_count % 8 < 8) {
+            if (free_pos >= other.bit_count % 8) {
                 buffer.pop_back();
             }
         }
