@@ -137,7 +137,7 @@ size_t BitReader::GetTree(NodeABS<byte> *&root) const {
 //        std::cout << std::bitset<8>(buffer[i / 8]) << " " << ((buffer[i / 8] >> (7 - i % 8)) & 1) << std::endl;
 
         if ((buffer[i / 8] >> (7 - i % 8)) & 1) {
-            std::cout << "PROCESS" << std::endl;
+//            std::cout << "PROCESS" << std::endl;
             ++i;
 
             NodeABS<byte> *new_node = new NodeABS<byte>({});
@@ -169,7 +169,7 @@ size_t BitReader::GetTree(NodeABS<byte> *&root) const {
 
             s.push(new_node);
 
-            std::cout << "PROCESS" << std::endl;
+//            std::cout << "PROCESS" << std::endl;
         }
     }
 
