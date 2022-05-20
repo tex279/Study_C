@@ -216,7 +216,9 @@ size_t BitWriter::GetFreeBits() const {
 }
 
 BitWriter &BitWriter::operator+=(const BitWriter &other) {
-    size_t free_pos = 8 - bit_count % 8;
+    size_t free_pos_left = 8 - bit_count % 8;
+
+    size_t free_pos_right = 8 - other.bit_count % 8;
 
     size_t start_size = buffer.size();
 
@@ -224,19 +226,19 @@ BitWriter &BitWriter::operator+=(const BitWriter &other) {
         buffer.push_back(data);
     }
 
-    if (free_pos != 8) {
+    if (free_pos_left != 8) {
         for (size_t j = 0; j < other.buffer.size(); ++j) {
-            for (size_t i = 0; i < free_pos; ++i) {
+            for (size_t i = 0; i < free_pos_left; ++i) {
                 if ((buffer[start_size + j] >> (7 - i)) & 1) {
                     buffer[start_size + j - 1] |= 1 << (7 - bit_count % 8 - i);
                 }
             }
 
-            buffer[start_size + j] = buffer[start_size + j] << (free_pos);
+            buffer[start_size + j] = buffer[start_size + j] << (free_pos_left);
         }
 
-        if (8 - other.bit_count % 8 < 8 && 8 - bit_count % 8 < 8) {
-            if (free_pos >= other.bit_count % 8) {
+        if (free_pos_left % 8 < 8 && free_pos_right < 8) {
+            if (free_pos_left >= other.bit_count % 8) {
                 buffer.pop_back();
             }
         }
@@ -346,9 +348,7 @@ public:
 
     BinaryTreeHuffman() : root(nullptr) {};
 
-    BinaryTreeHuffman(std::priority_queue<NodeABS<T> *, std::vector < NodeABS<T> * >, decltype(more)
-
-    > min_heap);
+    BinaryTreeHuffman(std::priority_queue<NodeABS<T> *, std::vector < NodeABS<T> * >, decltype(more)> min_heap);
 
     BinaryTreeHuffman(BitReader &compressed);
 
@@ -388,7 +388,9 @@ void BinaryTreeHuffman<T>::CreateTable(NodeABS<T> *node, BitWriter bw) {
     } else {
         if (node->left) {
             bw.WriteBit(0);
+
             CreateTable(node->left, bw);
+
             bw.Remove(1);
         }
 
@@ -403,10 +405,13 @@ template<typename T>
 void BinaryTreeHuffman<T>::TraverseCreateSer(NodeABS<T> *node) {
     if (!node->left && !node->right) {
         ser_tree.WriteBit(1);
+
         ser_tree.WriteByte(node->data);
     } else {
         TraverseCreateSer(node->left);
+
         TraverseCreateSer(node->right);
+
         ser_tree.WriteBit(0);
     }
 }
@@ -419,8 +424,7 @@ auto BinaryTreeHuffman<T>::GetSerTree() {
 }
 
 template<typename T>
-BinaryTreeHuffman<T>::BinaryTreeHuffman(std::priority_queue < NodeABS<T> * , std::vector < NodeABS<T> * > ,
-                                        decltype(more) > min_heap) {
+BinaryTreeHuffman<T>::BinaryTreeHuffman(std::priority_queue < NodeABS<T> * , std::vector < NodeABS<T> * >, decltype(more) > min_heap) {
     while (min_heap.size() > 1) {
         NodeABS<T> *left = min_heap.top();
         min_heap.pop();
@@ -437,6 +441,7 @@ BinaryTreeHuffman<T>::BinaryTreeHuffman(std::priority_queue < NodeABS<T> * , std
     }
 
     root = min_heap.top();
+
     min_heap.pop();
 }
 
@@ -511,6 +516,7 @@ void CheckInput(auto &input, auto &input_buffer, auto &min_heap) {
 void CreateHeap(auto &map, auto &min_heap) {
     for (auto &data: map) {
         NodeABS<byte> *node = new NodeABS<byte>(data.first, data.second);
+
         min_heap.push(node);
     }
 }
@@ -520,18 +526,13 @@ void CreateHeap(auto &map, auto &min_heap) {
 void CustomEncode(auto &original, auto &compressed) {
     std::vector <byte> input_buffer;
 
-    std::priority_queue < NodeABS<byte> * , std::vector < NodeABS<byte> * >, decltype(more) >
-                                                                             min_heap;
+    std::priority_queue < NodeABS<byte> * , std::vector < NodeABS<byte> * >, decltype(more) >min_heap;
 
     CheckInput(original, input_buffer, min_heap);
 
     BinaryTreeHuffman<byte> tree_huffman_encode(min_heap);
 
     auto table = tree_huffman_encode.GetTableCode();
-
-//    for(auto &data: table) {
-//        std::cout << data.first << " " << data.second << std::endl;
-//    }
 
     BitWriter begin;
 
@@ -551,6 +552,10 @@ void CustomEncode(auto &original, auto &compressed) {
     result += begin;
 
     compressed = result.GetBuffer();
+
+    if (compressed.size() > original.size()) {
+        compressed = original;
+    }
 }
 
 void CustomDecode(auto &compressed, auto &original) {
@@ -561,6 +566,19 @@ void CustomDecode(auto &compressed, auto &original) {
     auto res = tree_huffman_decode.GetDecode();
 
     original = res;
+}
+
+void AnalysisCompress(auto input_data, auto &compressed, auto &expected_data) {
+    std::cout << "Size before compress: " << input_data.size() << " bytes" << std::endl;
+    std::cout << "After compress: " << compressed.size() <<  " bytes"  << std::endl;
+
+    std::cout << "Compression ratio - " << (double) compressed.size() / (double) input_data.size() << std::endl;
+
+    if (input_data == expected_data) {
+        std::cout << "SUCCESS" << std::endl;
+    } else {
+        std::cout << "FALSE" << std::endl;
+    }
 }
 
 void run(std::istream &input, std::ostream &output) {
@@ -580,30 +598,7 @@ void run(std::istream &input, std::ostream &output) {
 
     CustomDecode(compressed, expected_data);
 
-//    std::cout << "----------------------------------------------------------------------" << std::endl;
-//
-//    for (auto &data: input_v) {
-//        std::cout << data;
-//    }
-//    std::cout << std::endl;
-//    std::cout << "----------------------------------------------------------------------" << std::endl;
-//
-//    for (auto &data: expected_data) {
-//        std::cout << data;
-//    }
-//    std::cout << std::endl;
-//    std::cout << "----------------------------------------------------------------------" << std::endl;
-
-    std::cout << "Before " << input_v.size() << std::endl;
-    std::cout << "After " << compressed.size() << std::endl;
-
-    std::cout << "КОЕФ " << (double) compressed.size() / (double) input_v.size() << std::endl;
-
-    if (input_v == expected_data) {
-        std::cout << "SUCCESS" << std::endl;
-    } else {
-        std::cout << "FALSE" << std::endl;
-    }
+    AnalysisCompress(input_v, compressed, expected_data);
 }
 
 
