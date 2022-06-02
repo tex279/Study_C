@@ -7,7 +7,7 @@
 struct ListGraph: public IGraph {
     ~ListGraph() {}
 
-    ListGraph(const size_t size): adjacency_lists(size) {}
+    ListGraph(const size_t size);
 
     ListGraph(const IGraph &graph);
 
