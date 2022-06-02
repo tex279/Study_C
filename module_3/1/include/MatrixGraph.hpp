@@ -18,5 +18,5 @@ struct MatrixGraph: public IGraph {
     std::vector<int> GetPrevVertices(int vertex) const override;
 
 private:
-    std::vector<std::vector<int>> adjacency_matrix;
+    std::vector<std::vector<bool>> adjacency_matrix;
 };

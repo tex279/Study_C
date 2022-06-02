@@ -3,7 +3,7 @@
 #include "MatrixGraph.hpp"
 
 MatrixGraph::MatrixGraph(const size_t size)
-        : adjacency_matrix(size, std::vector<int>(size, false)) {}
+        : adjacency_matrix(size, std::vector<bool>(size, false)) {}
 
 MatrixGraph::MatrixGraph(const IGraph &graph) : MatrixGraph(graph.VerticesCount()) {
     for (size_t i = 0; i < adjacency_matrix.size(); ++i) {
