@@ -1,21 +1,18 @@
-.PHONY: all build clear launch build_int
+.PHONY: all build_dz build_rk launch build_module_3
 
-all: clear build launch
+all: build launch
 
-TARGET_DZ = 5
+TARGET_DZ = 2
 
 TARGET_RK = D
 
-TARGET_MODULE = module_2
+TARGET_MODULE = module_3
 
 build_dz:
 	g++ --std=gnu++20  $(TARGET_MODULE)/$(TARGET_DZ).cpp -o task
 
 build_rk:
 	g++ -g --std=gnu++20 -Wall -Wextra -Werror -Wpedantic $(TARGET_MODULE)/RK/$(TARGET_RK).cpp -o task
-
-check:
-	./run_linters.sh
 
 launch:
 	./task
