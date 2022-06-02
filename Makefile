@@ -19,3 +19,11 @@ check:
 
 launch:
 	./task
+
+HDRS_DIR = module_3/1/include
+
+SRCS = \
+       module_3/1/*.cpp
+
+build_module_3:
+	g++ --std=gnu++20  -Wpedantic -Wall -Wextra -Werror -I $(HDRS_DIR) $(SRCS) module_2/1/*.cpp -o task
