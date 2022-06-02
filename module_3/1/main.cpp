@@ -18,24 +18,33 @@ void run(const IGraph &graph, const std::string &message) {
 }
 
 int main() {
-    ListGraph graph(7);
-    graph.AddEdge(0, 1);
-    graph.AddEdge(0, 5);
-    graph.AddEdge(1, 2);
-    graph.AddEdge(1, 3);
-    graph.AddEdge(1, 5);
-    graph.AddEdge(1, 6);
-    graph.AddEdge(3, 2);
-    graph.AddEdge(3, 4);
-    graph.AddEdge(3, 6);
-    graph.AddEdge(5, 4);
-    graph.AddEdge(5, 6);
-    graph.AddEdge(6, 4);
+    ListGraph list_graph_1(7);
+    list_graph_1.AddEdge(0, 1);
+    list_graph_1.AddEdge(0, 5);
+    list_graph_1.AddEdge(1, 2);
+    list_graph_1.AddEdge(1, 3);
+    list_graph_1.AddEdge(1, 5);
+    list_graph_1.AddEdge(1, 6);
+    list_graph_1.AddEdge(3, 2);
+    list_graph_1.AddEdge(3, 4);
+    list_graph_1.AddEdge(3, 6);
+    list_graph_1.AddEdge(5, 4);
+    list_graph_1.AddEdge(5, 6);
+    list_graph_1.AddEdge(6, 4);
 
-    run(graph, "ListGraph");
+    run(list_graph_1, "ListGraph");
 
-    ListGraph graph2(graph);
-    run(graph, "Copy ListGraph");
+    ListGraph list_graph_2(list_graph_1);
+
+    run(list_graph_2, "Copy ListGraph");
+
+    MatrixGraph matrix_graph_1(list_graph_2);
+
+    run(matrix_graph_1, "MatrixGraph");
+
+    MatrixGraph matrix_graph_2(matrix_graph_1);
+
+    run(matrix_graph_2, "Copy MatrixGraph");
 
     return EXIT_SUCCESS;
 }

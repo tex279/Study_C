@@ -1,5 +1,7 @@
 #pragma once  //  NOLINT
 
+#include "IGraph.hpp"
+
 struct SetGraph: public IGraph {
     ~SetGraph() {}
 

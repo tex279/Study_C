@@ -1,9 +1,13 @@
 #pragma once  //  NOLINT
 
+#include <cstddef>
+
 #include "IGraph.hpp"
 
 struct MatrixGraph: public IGraph {
     ~MatrixGraph() {}
+
+    MatrixGraph(const size_t size);
 
     MatrixGraph(const IGraph &graph);
 
@@ -12,4 +16,7 @@ struct MatrixGraph: public IGraph {
 
     std::vector<int> GetNextVertices(int vertex) const override;
     std::vector<int> GetPrevVertices(int vertex) const override;
+
+private:
+    std::vector<std::vector<int>> adjacency_matrix;
 };

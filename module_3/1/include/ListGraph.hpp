@@ -1,11 +1,13 @@
 #pragma once  //  NOLINT
 
+#include <cstddef>
+
 #include "IGraph.hpp"
 
 struct ListGraph: public IGraph {
     ~ListGraph() {}
 
-    ListGraph(int size) : adjacencyLists(size) {}
+    ListGraph(const size_t size): adjacency_lists(size) {}
 
     ListGraph(const IGraph &graph);
 
@@ -16,5 +18,5 @@ struct ListGraph: public IGraph {
     std::vector<int> GetPrevVertices(int vertex) const override;
 
 private:
-    std::vector<std::vector<int>> adjacencyLists;
+    std::vector<std::vector<int>> adjacency_lists;
 };
