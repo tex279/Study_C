@@ -1,5 +1,7 @@
 #pragma once  //  NOLINT
 
+#include <vector>
+
 struct IGraph {
     virtual ~IGraph() {}
 

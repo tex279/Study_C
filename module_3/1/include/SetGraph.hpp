@@ -1,11 +1,13 @@
 #pragma once  //  NOLINT
 
-struct IGraph {
-    virtual ~IGraph() {}
+struct SetGraph: public IGraph {
+    ~SetGraph() {}
 
-    virtual void AddEdge(int from, int to) = 0;
-    virtual int VerticesCount() const  = 0;
+    SetGraph(const IGraph &graph);
 
-    virtual std::vector<int> GetNextVertices(int vertex) const = 0;
-    virtual std::vector<int> GetPrevVertices(int vertex) const = 0;
+    void AddEdge(int from, int to) override;
+    int VerticesCount() const override;
+
+    std::vector<int> GetNextVertices(int vertex) const override;
+    std::vector<int> GetPrevVertices(int vertex) const override;
 };
