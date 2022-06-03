@@ -2,7 +2,7 @@
 
 all: build launch
 
-TARGET_DZ = 2
+TARGET_DZ = 3
 
 TARGET_RK = D
 
