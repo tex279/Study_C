@@ -39,11 +39,13 @@ struct ListGraph : public IGraph {
 
     bool CheckDefinitionEulerCycle() const;
 
+    size_t count_edge;
+
 private:
     std::vector <std::vector<int>> adjacency_lists;
 };
 
-ListGraph::ListGraph(const size_t size) : adjacency_lists(size){}
+ListGraph::ListGraph(const size_t size) : count_edge(0), adjacency_lists(size) {}
 
 ListGraph::ListGraph(const IGraph &graph) : ListGraph(graph.VerticesCount()) {
     for (int i = 0; i < graph.VerticesCount(); ++i) {
@@ -57,6 +59,8 @@ void ListGraph::AddEdge(int from, int to) {
     assert(0 <= to && to < (int) adjacency_lists.size());
 
     adjacency_lists[from].push_back(to);
+
+    ++count_edge;
 }
 
 void ListGraph::RmEdge(int from, int to) {
@@ -65,8 +69,15 @@ void ListGraph::RmEdge(int from, int to) {
     assert(0 <= to && to < (int) adjacency_lists.size());
 
     auto pos = std::find(adjacency_lists[from].begin(), adjacency_lists[from].end(), to);
+    if (pos == adjacency_lists[from].end()) {
+        return;
+    }
 
     adjacency_lists[from].erase(pos);
+
+    --count_edge;
+
+//    std::cout << count_edge << std::endl;
 }
 
 int ListGraph::VerticesCount() const {
@@ -105,21 +116,25 @@ bool ListGraph::CheckDefinitionEulerCycle() const {
     return true;
 }
 
-void DFS(IGraph &graph, int vertex, std::vector<bool> &visited, std::vector<int> &path_Euler) {
+void DFS(auto &graph, int vertex, std::vector<bool> &visited, std::vector<int> &path_Euler) {
+    if (graph.count_edge == 0) {
+        return;
+    }
+
     visited[vertex] = true;
 
     for (int next_vertex: graph.GetNextVertices(vertex)) {
-        if (!visited[next_vertex]) {
-            graph.RmEdge(vertex, next_vertex);
-            graph.RmEdge(next_vertex, vertex);
-            DFS(graph, next_vertex, visited, path_Euler);
-        }
+        graph.RmEdge(vertex, next_vertex);
+        graph.RmEdge(next_vertex, vertex);
+        DFS(graph, next_vertex, visited, path_Euler);
     }
+
+    std::cout << vertex << std::endl;
 
     path_Euler.push_back(vertex);
 }
 
-bool mainDFS(IGraph &graph, std::vector<int> &path_Euler) {
+bool mainDFS(auto &graph, std::vector<int> &path_Euler) {
     std::vector<bool> visited(graph.VerticesCount(), false);
 
     DFS(graph, 0, visited, path_Euler);
@@ -167,11 +182,11 @@ void run(std::istream &input, std::ostream &output) {
 //       return;
 //   }
 
-//    for (const auto &value: path_Euler){
-//        output << value << " ";
-//    }
-//
-//    output << std::endl;
+    for (const auto &value: path_Euler){
+        output << value << " ";
+    }
+
+    output << std::endl;
 
 //    output << graph.CheckDefinitionEulerCycle() << std::endl;
 }
