@@ -3,11 +3,14 @@
 #include <queue>
 #include <climits>
 #include <cassert>
+#include <algorithm>
 
 struct IGraph {
     virtual ~IGraph() {}
 
     virtual void AddEdge(int from, int to) = 0;
+
+    virtual void RmEdge(int from, int to) = 0;
 
     virtual int VerticesCount() const = 0;
 
@@ -26,17 +29,21 @@ struct ListGraph : public IGraph {
 
     void AddEdge(int from, int to) override;
 
+    void RmEdge(int from, int to) override;
+
     int VerticesCount() const override;
 
     std::vector<int> GetNextVertices(int vertex) const override;
 
     std::vector<int> GetPrevVertices(int vertex) const override;
 
+    bool CheckDefinitionEulerCycle() const;
+
 private:
     std::vector <std::vector<int>> adjacency_lists;
 };
 
-ListGraph::ListGraph(const size_t size) : adjacency_lists(size) {}
+ListGraph::ListGraph(const size_t size) : adjacency_lists(size){}
 
 ListGraph::ListGraph(const IGraph &graph) : ListGraph(graph.VerticesCount()) {
     for (int i = 0; i < graph.VerticesCount(); ++i) {
@@ -50,6 +57,16 @@ void ListGraph::AddEdge(int from, int to) {
     assert(0 <= to && to < (int) adjacency_lists.size());
 
     adjacency_lists[from].push_back(to);
+}
+
+void ListGraph::RmEdge(int from, int to) {
+    assert(0 <= from && from < (int) adjacency_lists.size());
+
+    assert(0 <= to && to < (int) adjacency_lists.size());
+
+    auto pos = std::find(adjacency_lists[from].begin(), adjacency_lists[from].end(), to);
+
+    adjacency_lists[from].erase(pos);
 }
 
 int ListGraph::VerticesCount() const {
@@ -77,34 +94,35 @@ std::vector<int> ListGraph::GetPrevVertices(int vertex) const {
     return prev_vertices;
 }
 
-bool BFS(const IGraph &graph, int vertex, std::vector<bool> &visited) {
-    std::queue<int> queue;
 
-    queue.push(vertex);
-
-    visited[vertex] = true;
-
-    while (!queue.empty()) {
-        int currentVertex = queue.front();
-
-        queue.pop();
-
-        for (int nextVertex: graph.GetNextVertices(currentVertex)) {
-            if (!visited[nextVertex]) {
-                visited[nextVertex] = true;
-
-                queue.push(nextVertex);
-            }
+bool ListGraph::CheckDefinitionEulerCycle() const {
+    for (const auto &vertex: adjacency_lists) {
+        if (vertex.size() % 2 != 0) {
+            return false;
         }
     }
 
     return true;
 }
 
-bool mainBFS(const IGraph &graph) {
+void DFS(IGraph &graph, int vertex, std::vector<bool> &visited, std::vector<int> &path_Euler) {
+    visited[vertex] = true;
+
+    for (int next_vertex: graph.GetNextVertices(vertex)) {
+        if (!visited[next_vertex]) {
+            graph.RmEdge(vertex, next_vertex);
+            graph.RmEdge(next_vertex, vertex);
+            DFS(graph, next_vertex, visited, path_Euler);
+        }
+    }
+
+    path_Euler.push_back(vertex);
+}
+
+bool mainDFS(IGraph &graph, std::vector<int> &path_Euler) {
     std::vector<bool> visited(graph.VerticesCount(), false);
 
-    BFS(graph, 0, visited);
+    DFS(graph, 0, visited, path_Euler);
 
     for (const auto &status: visited) {
         if (!status) {
@@ -115,22 +133,12 @@ bool mainBFS(const IGraph &graph) {
     return true;
 }
 
-bool check_tree(const auto &graph) {
-    return mainBFS(graph);
-}
-
 
 void run(std::istream &input, std::ostream &output) {
     int count_vertex = 0;
     int count_edge = 0;
 
     input >> count_vertex >> count_edge;
-
-    if (count_vertex - 1 != count_edge) {
-        output << "0" << std::endl;
-
-        return;
-    }
 
     ListGraph graph(count_vertex);
 
@@ -143,7 +151,29 @@ void run(std::istream &input, std::ostream &output) {
         graph.AddEdge(to, from);
     }
 
-    output << check_tree(graph) << std::endl;
+    if (!graph.CheckDefinitionEulerCycle()) {
+        output << "0" << std::endl;
+
+        return;
+    }
+
+    std::vector<int> path_Euler;
+
+    output << mainDFS(graph, path_Euler) << std::endl;
+
+//   if (!mainDFS(graph, path_Euler)) {
+//       output << "0" << std::endl;
+//
+//       return;
+//   }
+
+//    for (const auto &value: path_Euler){
+//        output << value << " ";
+//    }
+//
+//    output << std::endl;
+
+//    output << graph.CheckDefinitionEulerCycle() << std::endl;
 }
 
 
