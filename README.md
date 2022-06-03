@@ -44,3 +44,24 @@ RK - 4 - YES/NO
 
 
 https://contest.yandex.ru/contest/37595/enter/
+
+### Module 3
+
+1 - all - YES
+
+2 - all - YES
+
+3 - all - YES
+
+4 - all - NO
+
+5 - 2 - NO
+
+RK - 1 - YES
+
+RK - 2 - YES
+
+RK - 3 - YES
+
+
+https://contest.yandex.ru/contest/38081/problems/

@@ -4,7 +4,7 @@ all: build launch
 
 TARGET_DZ = 3
 
-TARGET_RK = B
+TARGET_RK = C
 
 TARGET_MODULE = module_3
 

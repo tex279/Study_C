@@ -4,6 +4,8 @@
 #include <climits>
 #include <cassert>
 
+//    Проверить, является ли неориентированный граф деревом.
+
 struct IGraph {
     virtual ~IGraph() {}
 

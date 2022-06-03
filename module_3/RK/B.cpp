@@ -5,6 +5,8 @@
 #include <cassert>
 #include <algorithm>
 
+//    Нужно проверить, является ли неориентированный граф эйлеровым.
+
 struct IGraph {
     virtual ~IGraph() {}
 
@@ -76,8 +78,6 @@ void ListGraph::RmEdge(int from, int to) {
     adjacency_lists[from].erase(pos);
 
     --count_edge;
-
-//    std::cout << count_edge << std::endl;
 }
 
 int ListGraph::VerticesCount() const {
@@ -129,8 +129,6 @@ void DFS(auto &graph, int vertex, std::vector<bool> &visited, std::vector<int> &
         DFS(graph, next_vertex, visited, path_Euler);
     }
 
-    std::cout << vertex << std::endl;
-
     path_Euler.push_back(vertex);
 }
 
@@ -175,20 +173,6 @@ void run(std::istream &input, std::ostream &output) {
     std::vector<int> path_Euler;
 
     output << mainDFS(graph, path_Euler) << std::endl;
-
-//   if (!mainDFS(graph, path_Euler)) {
-//       output << "0" << std::endl;
-//
-//       return;
-//   }
-
-    for (const auto &value: path_Euler){
-        output << value << " ";
-    }
-
-    output << std::endl;
-
-//    output << graph.CheckDefinitionEulerCycle() << std::endl;
 }
 
 
