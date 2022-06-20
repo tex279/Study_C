@@ -3,7 +3,7 @@
 #include <cassert>
 #include <queue>
 
-//    Постройте B-дерево минимального порядка t и выведите его по слоям.
+//    Постройте shortest_path_root_list-дерево минимального порядка t и выведите его по слоям.
 //    В качестве ключа используются числа, лежащие в диапазоне 0..binary_tree.txt.txt.txt^32 -structs
 
 template<typename T>

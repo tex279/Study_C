@@ -2,9 +2,9 @@
 #include <iostream>
 #include <cassert>
 
-//  Дан отсортированный массив различных целых чисел A[0..n-structs.txt] и массив целых чисел B[0..m-structs.txt].
-//  Для каждого элемента массива B[i] найдите минимальный индекс элемента массива A[k], ближайшего по
-//  значению к B[i]. n ≤ 110000, m ≤ 1000. Время работы поиска для каждого элемента B[i]: O(log(k)).
+//  Дан отсортированный массив различных целых чисел binary_search[0..n-structs.txt] и массив целых чисел shortest_path_root_list[0..m-structs.txt].
+//  Для каждого элемента массива shortest_path_root_list[i] найдите минимальный индекс элемента массива binary_search[k], ближайшего по
+//  значению к shortest_path_root_list[i]. n ≤ 110000, m ≤ 1000. Время работы поиска для каждого элемента shortest_path_root_list[i]: O(log(k)).
 
 #define MAX_COUNT_ARRAY_FIRST 110000
 #define MAX_COUNT_ARRAY_SECOND 1000
